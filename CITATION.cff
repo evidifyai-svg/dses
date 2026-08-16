@@ -51,10 +51,10 @@ references:
   - type: article
     title: "The missing layer: decision integrity as a verifiable assurance layer in interpretive clinical AI"
     authors:
-      - family-names: Henderson
-        given-names: Joshua M.
       - family-names: Thornton
         given-names: James
+      - family-names: Henderson
+        given-names: Joshua M.
     journal: "Journal of the American Medical Informatics Association"
     year: 2026
     doi: 10.1093/jamia/ocag152
