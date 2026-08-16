@@ -1,0 +1,67 @@
+cff-version: 1.2.0
+message: "If you use or reference this specification, please cite it as below."
+type: software
+title: "Decision-Sequence Evidence Schema (DSES)"
+abstract: >-
+  An open, vendor-neutral vocabulary for evidence of how humans and AI
+  make decisions together. DSES defines a ten-event vocabulary for
+  human-AI decision sequences, an eight-class exposure ontology, an
+  information-state and independence model, four integrity classes, and
+  three conformance levels, with mappings to HL7 FHIR AuditEvent and
+  Provenance, IHE Radiology AI profiles, DICOM, and OpenTelemetry.
+authors:
+  - family-names: Henderson
+    given-names: Joshua M.
+    affiliation: "Evidify LLC"
+    orcid: "https://orcid.org/0000-0001-7864-287X"
+version: 0.1.1
+date-released: 2026-08-15
+license: MIT
+repository-code: "https://github.com/evidifyai-svg/dses"
+url: "https://evidify.ai"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.21960297
+    description: "Concept DOI, resolves to the latest version"
+  - type: doi
+    value: 10.5281/zenodo.21960298
+    description: "Version DOI for v0.1.1"
+keywords:
+  - decision-sequence evidence
+  - human-AI interaction
+  - automation bias
+  - clinical AI
+  - exposure ontology
+  - AI governance
+  - reconstructability
+preferred-citation:
+  type: report
+  title: "Decision-Sequence Evidence Schema, version 0.1"
+  authors:
+    - family-names: Henderson
+      given-names: Joshua M.
+      affiliation: "Evidify LLC"
+      orcid: "https://orcid.org/0000-0001-7864-287X"
+  year: 2026
+  institution:
+    name: "Evidify LLC"
+  doi: 10.5281/zenodo.21960297
+  url: "https://github.com/evidifyai-svg/dses"
+references:
+  - type: article
+    title: "The missing layer: decision integrity as a verifiable assurance layer in interpretive clinical AI"
+    authors:
+      - family-names: Henderson
+        given-names: Joshua M.
+      - family-names: Thornton
+        given-names: James
+    journal: "Journal of the American Medical Informatics Association"
+    year: 2026
+    doi: 10.1093/jamia/ocag152
+  - type: article
+    title: "Proving the First Read: Why Cryptographic Sequential Disclosure Is Necessary for Trustworthy AI-Assisted Clinical Decisions"
+    authors:
+      - family-names: Henderson
+        given-names: Joshua M.
+    year: 2026
+    doi: 10.2139/ssrn.6643919

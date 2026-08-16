@@ -1,0 +1,42 @@
+{
+  "title": "Decision-Sequence Evidence Schema (DSES)",
+  "description": "An open, vendor-neutral vocabulary for evidence of how humans and AI make decisions together. DSES defines a ten-event vocabulary for human-AI decision sequences, an eight-class exposure ontology, an information-state and independence model, four integrity classes, and three conformance levels, with mappings to HL7 FHIR AuditEvent and Provenance, IHE Radiology AI profiles, DICOM, and OpenTelemetry.",
+  "creators": [
+    {
+      "name": "Henderson, Joshua M.",
+      "affiliation": "Evidify LLC",
+      "orcid": "0000-0001-7864-287X"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "upload_type": "software",
+  "keywords": [
+    "decision-sequence evidence",
+    "human-AI interaction",
+    "automation bias",
+    "clinical AI",
+    "exposure ontology",
+    "AI governance",
+    "reconstructability"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://www.npmjs.com/package/@evidifyresearch/event-schema",
+      "relation": "isDerivedFrom",
+      "scheme": "url",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.2139/ssrn.6643919",
+      "relation": "isDocumentedBy",
+      "scheme": "doi",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "10.1093/jamia/ocag152",
+      "relation": "isDocumentedBy",
+      "scheme": "doi",
+      "resource_type": "publication-article"
+    }
+  ]
+}
