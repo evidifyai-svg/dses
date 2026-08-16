@@ -1,0 +1,229 @@
+{
+  "description": "Worked example: one complete DSES 0.1 case sequence. Liver MRI recurrence read on a research platform at conformance L3 (sequential disclosure) and integrity I3 (database-predicate plus key-gated enforcement, RFC 3161 anchoring). Note the context_signal_recorded event: an AI triage flag reached the worklist before the read, so the first committed state is INDIRECTLY_EXPOSED, not UNEXPOSED. The record says so precisely instead of overclaiming independence. Hashes are truncated for readability.",
+  "dses_version": "0.1.0",
+  "conformance": { "level": "L3", "integrity_class": "I3" },
+  "events": [
+    {
+      "event_id": "evt-0001",
+      "event_type": "case_context_created",
+      "sequence": 0,
+      "occurred_at": "2026-08-15T14:02:11Z",
+      "recorded_at": "2026-08-15T14:02:11Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "integrity": {
+        "class": "I3",
+        "event_hash": "9c41ab...",
+        "prev_event_hash": "GENESIS",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256",
+        "enforcement": ["database_predicate", "key_gated_release"]
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver", "system_version": "2.3.0" }
+    },
+    {
+      "event_id": "evt-0002",
+      "event_type": "context_signal_recorded",
+      "sequence": 1,
+      "occurred_at": "2026-08-15T14:02:12Z",
+      "recorded_at": "2026-08-15T14:02:12Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "exposure": {
+        "classes": ["PRIORITY"],
+        "modality": "worklist_reorder",
+        "payload_commitment": "e2d90f..."
+      },
+      "ai_system": { "name": "TriageNet", "vendor": "ExampleVendor", "model_id": "triage-hcc", "model_version": "1.4.2" },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "5b77c0...",
+        "prev_event_hash": "9c41ab...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "worklist", "system_ref": "site-worklist" }
+    },
+    {
+      "event_id": "evt-0003",
+      "event_type": "ai_result_available",
+      "sequence": 2,
+      "occurred_at": "2026-08-15T14:02:40Z",
+      "recorded_at": "2026-08-15T14:02:40Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "ai_system": { "name": "RecurrenceModel", "vendor": "ExampleVendor", "model_id": "hcc-recur", "model_version": "3.1.0", "deployment_id": "dep-east-1" },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "1fa2d4...",
+        "prev_event_hash": "5b77c0...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "ai_platform", "system_ref": "inference-svc" }
+    },
+    {
+      "event_id": "evt-0004",
+      "event_type": "human_state_committed",
+      "sequence": 3,
+      "occurred_at": "2026-08-15T14:09:57Z",
+      "recorded_at": "2026-08-15T14:09:57Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "actor": { "actor_ref": "reader-0412", "actor_type": "human", "role": "reading_radiologist" },
+      "decision_state_ref": "commit-a81c22...",
+      "information_state": {
+        "exposure_classes": ["PRIORITY"],
+        "independence_class": "INDIRECTLY_EXPOSED"
+      },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "c93e10...",
+        "prev_event_hash": "1fa2d4...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver" }
+    },
+    {
+      "event_id": "evt-0005",
+      "event_type": "ai_result_presented",
+      "sequence": 4,
+      "occurred_at": "2026-08-15T14:10:03Z",
+      "recorded_at": "2026-08-15T14:10:03Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "actor": { "actor_ref": "reader-0412", "actor_type": "human", "role": "reading_radiologist" },
+      "ai_system": { "name": "RecurrenceModel", "vendor": "ExampleVendor", "model_id": "hcc-recur", "model_version": "3.1.0", "deployment_id": "dep-east-1" },
+      "exposure": {
+        "classes": ["CATEGORICAL", "LOCALIZATION", "QUANTITATIVE"],
+        "modality": "overlay",
+        "payload_commitment": "77be09..."
+      },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "42d871...",
+        "prev_event_hash": "c93e10...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256",
+        "enforcement": ["database_predicate", "key_gated_release"]
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver" }
+    },
+    {
+      "event_id": "evt-0006",
+      "event_type": "ai_result_interacted",
+      "sequence": 5,
+      "occurred_at": "2026-08-15T14:10:41Z",
+      "recorded_at": "2026-08-15T14:10:41Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "actor": { "actor_ref": "reader-0412", "actor_type": "human", "role": "reading_radiologist" },
+      "ai_system": { "name": "RecurrenceModel", "vendor": "ExampleVendor", "model_id": "hcc-recur", "model_version": "3.1.0" },
+      "exposure": { "classes": ["LOCALIZATION"], "modality": "overlay_toggle" },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "b0ff3c...",
+        "prev_event_hash": "42d871...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "viewer", "system_ref": "evidify-viewer" }
+    },
+    {
+      "event_id": "evt-0007",
+      "event_type": "human_state_revised",
+      "sequence": 6,
+      "occurred_at": "2026-08-15T14:12:19Z",
+      "recorded_at": "2026-08-15T14:12:19Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "actor": { "actor_ref": "reader-0412", "actor_type": "human", "role": "reading_radiologist" },
+      "decision_state_ref": "commit-f04d81...",
+      "prior_decision_state_ref": "commit-a81c22...",
+      "information_state": {
+        "exposure_classes": ["PRIORITY", "CATEGORICAL", "LOCALIZATION", "QUANTITATIVE"],
+        "independence_class": "DIRECTLY_EXPOSED"
+      },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "8ac54e...",
+        "prev_event_hash": "b0ff3c...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver" }
+    },
+    {
+      "event_id": "evt-0008",
+      "event_type": "attestation_recorded",
+      "sequence": 7,
+      "occurred_at": "2026-08-15T14:12:44Z",
+      "recorded_at": "2026-08-15T14:12:44Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "actor": { "actor_ref": "reader-0412", "actor_type": "human", "role": "reading_radiologist" },
+      "attestation": {
+        "attestation_type": "revision_rationale",
+        "code": "AI_LOCALIZATION_PROMPTED_REVIEW",
+        "text_ref": "attest-3391",
+        "attached_to_event_id": "evt-0007"
+      },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "d17a92...",
+        "prev_event_hash": "8ac54e...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver" }
+    },
+    {
+      "event_id": "evt-0009",
+      "event_type": "final_decision_committed",
+      "sequence": 8,
+      "occurred_at": "2026-08-15T14:13:02Z",
+      "recorded_at": "2026-08-15T14:13:02Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "actor": { "actor_ref": "reader-0412", "actor_type": "human", "role": "reading_radiologist" },
+      "decision_state_ref": "commit-f04d81...",
+      "information_state": {
+        "exposure_classes": ["PRIORITY", "CATEGORICAL", "LOCALIZATION", "QUANTITATIVE"],
+        "independence_class": "DIRECTLY_EXPOSED"
+      },
+      "integrity": {
+        "class": "I3",
+        "event_hash": "3e6b0d...",
+        "prev_event_hash": "d17a92...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver" }
+    },
+    {
+      "event_id": "evt-0010",
+      "event_type": "integrity_event",
+      "sequence": 9,
+      "occurred_at": "2026-08-15T15:00:00Z",
+      "recorded_at": "2026-08-15T15:00:00Z",
+      "case_ref": "case-7f3a",
+      "workflow_ref": "wf-liver-mri-recurrence-v2",
+      "integrity": {
+        "class": "I3",
+        "event_hash": "aa20c7...",
+        "prev_event_hash": "3e6b0d...",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256",
+        "anchor": { "method": "RFC3161", "proof_ref": "tsr-2026-08-15-0001" }
+      },
+      "source_system": { "system_type": "study_platform", "system_ref": "evidify-liver" },
+      "extensions": {
+        "dses.integrity_detail": {
+          "action": "chain_head_anchored",
+          "chain_head_hash": "3e6b0d..."
+        }
+      }
+    }
+  ]
+}

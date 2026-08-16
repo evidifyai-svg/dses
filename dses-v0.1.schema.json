@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidify.ai/schemas/dses/0.1.0/event.schema.json",
+  "title": "DSES Event Envelope",
+  "description": "Decision-Sequence Evidence Schema v0.1.0. Normative envelope for a single event in a human-AI decision sequence. License: MIT. Author: Joshua M. Henderson, Ph.D., Evidify LLC.",
+  "type": "object",
+  "required": ["event_id", "event_type", "sequence", "occurred_at", "recorded_at", "case_ref", "integrity", "source_system"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Globally unique identifier for this event.",
+      "minLength": 1
+    },
+    "event_type": {
+      "description": "One of the ten core DSES event types, or a namespaced extension type (containing a dot).",
+      "oneOf": [
+        {
+          "enum": [
+            "case_context_created",
+            "context_signal_recorded",
+            "human_state_committed",
+            "ai_result_available",
+            "ai_result_presented",
+            "ai_result_interacted",
+            "human_state_revised",
+            "final_decision_committed",
+            "attestation_recorded",
+            "integrity_event"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+\\.[a-z0-9_.]+$",
+          "description": "Extension event type in a reverse-namespace form, e.g. 'org_example.custom_event'."
+        }
+      ]
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Monotonic per-case ordinal assigned by the recording system. Ordering claims rest on this plus integrity class, never on timestamps alone."
+    },
+    "ordering": {
+      "enum": ["determinate", "indeterminate"],
+      "default": "determinate",
+      "description": "Set to 'indeterminate' when the recording system cannot establish this event's true order. An honest gap outranks a fabricated sequence."
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Wall-clock time of the underlying occurrence, as known to the source system."
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Wall-clock time the recording system durably wrote the event. Divergence from occurred_at is evidence and must not be silently normalized."
+    },
+    "case_ref": {
+      "type": "string",
+      "description": "Pseudonymous case reference. Must not contain direct identifiers.",
+      "minLength": 1
+    },
+    "workflow_ref": {
+      "type": "string",
+      "description": "Identifier of the workflow definition in force."
+    },
+    "actor": {
+      "type": "object",
+      "description": "Required for human-attributed events (human_state_committed, human_state_revised, final_decision_committed, attestation_recorded, ai_result_presented, ai_result_interacted).",
+      "required": ["actor_ref", "actor_type"],
+      "additionalProperties": false,
+      "properties": {
+        "actor_ref": {
+          "type": "string",
+          "description": "Pseudonymous actor reference."
+        },
+        "actor_type": {
+          "enum": ["human", "ai_system", "service"]
+        },
+        "role": {
+          "type": "string",
+          "description": "Workflow role, e.g. 'reading_radiologist', 'reviewer', 'adjudicator'."
+        }
+      }
+    },
+    "ai_system": {
+      "type": "object",
+      "description": "Required for ai_result_available, ai_result_presented, ai_result_interacted. Version identity is mandatory.",
+      "required": ["name", "model_id", "model_version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "vendor": { "type": "string" },
+        "model_id": { "type": "string" },
+        "model_version": { "type": "string" },
+        "deployment_id": {
+          "type": "string",
+          "description": "Identifier of the specific deployment or configuration."
+        }
+      }
+    },
+    "exposure": {
+      "type": "object",
+      "description": "Required for ai_result_presented; recommended for context_signal_recorded. Enumerates ALL exposure classes conveyed, not the most severe.",
+      "required": ["classes"],
+      "additionalProperties": false,
+      "properties": {
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["PRIORITY", "PRESENCE", "CATEGORICAL", "LOCALIZATION", "QUANTITATIVE", "NARRATIVE", "DIRECTIVE", "AGENTIC"]
+          }
+        },
+        "modality": {
+          "type": "string",
+          "description": "Presentation modality, e.g. 'worklist_reorder', 'badge', 'overlay', 'inline_text', 'popup', 'report_draft', 'order_executed'."
+        },
+        "payload_ref": {
+          "type": "string",
+          "description": "Reference to the exposed content, held in the local store."
+        },
+        "payload_commitment": {
+          "type": "string",
+          "description": "Cryptographic commitment (hash) to the exposed content, for integrity class I2 and above."
+        }
+      }
+    },
+    "decision_state_ref": {
+      "type": "string",
+      "description": "Required for human_state_committed, human_state_revised, final_decision_committed. Reference to, or at I2+ a cryptographic commitment to, the decision-state content."
+    },
+    "prior_decision_state_ref": {
+      "type": "string",
+      "description": "Required for human_state_revised. The committed state being superseded."
+    },
+    "information_state": {
+      "type": "object",
+      "description": "Required for human_state_committed, human_state_revised, final_decision_committed. The actor's accumulated exposure classes at the moment of commitment, and the derived independence class.",
+      "required": ["exposure_classes", "independence_class"],
+      "additionalProperties": false,
+      "properties": {
+        "exposure_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["PRIORITY", "PRESENCE", "CATEGORICAL", "LOCALIZATION", "QUANTITATIVE", "NARRATIVE", "DIRECTIVE", "AGENTIC"]
+          },
+          "description": "Empty array means UNEXPOSED."
+        },
+        "independence_class": {
+          "enum": ["UNEXPOSED", "INDIRECTLY_EXPOSED", "DIRECTLY_EXPOSED", "POST_ACTION"],
+          "description": "Derived per Section 6.2: UNEXPOSED iff exposure_classes is empty; INDIRECTLY_EXPOSED iff only PRIORITY and/or PRESENCE; DIRECTLY_EXPOSED if any of CATEGORICAL, LOCALIZATION, QUANTITATIVE, NARRATIVE, DIRECTIVE; POST_ACTION if AGENTIC present."
+        }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "description": "For attestation_recorded events.",
+      "additionalProperties": false,
+      "properties": {
+        "attestation_type": {
+          "type": "string",
+          "description": "e.g. 'override_reason', 'disagreement_code', 'acknowledgment'."
+        },
+        "code": { "type": "string" },
+        "text_ref": {
+          "type": "string",
+          "description": "Reference to free-text rationale, held in the local store."
+        },
+        "attached_to_event_id": { "type": "string" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["class"],
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "enum": ["I0", "I1", "I2", "I3"],
+          "description": "Integrity class of the recording pathway. A case sequence's overall class is the minimum across its events."
+        },
+        "event_hash": {
+          "type": "string",
+          "description": "Required at I2+. Hash of the canonicalized event content."
+        },
+        "prev_event_hash": {
+          "type": "string",
+          "description": "Required at I2+. Hash of the preceding event in the case chain; genesis events use a documented genesis value."
+        },
+        "canonicalization": {
+          "type": "string",
+          "description": "Canonical serialization scheme used before hashing, e.g. 'RFC8785'.",
+          "default": "RFC8785"
+        },
+        "hash_alg": {
+          "type": "string",
+          "default": "SHA-256"
+        },
+        "enforcement": {
+          "type": "array",
+          "description": "At I3 with enforced ordering: the enforcement pattern(s) in force.",
+          "items": {
+            "enum": ["key_gated_release", "database_predicate", "sole_path", "chain_bound_release"]
+          }
+        },
+        "anchor": {
+          "type": "object",
+          "description": "At I3 with external anchoring: the anchoring mechanism and proof reference.",
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "enum": ["RFC3161", "RFC6962", "RFC9162", "OpenTimestamps", "other"]
+            },
+            "proof_ref": { "type": "string" }
+          }
+        }
+      }
+    },
+    "source_system": {
+      "type": "object",
+      "required": ["system_type"],
+      "additionalProperties": false,
+      "properties": {
+        "system_type": {
+          "enum": ["pacs", "viewer", "reporting", "ehr", "ai_platform", "ai_model", "study_platform", "worklist", "other"]
+        },
+        "system_ref": { "type": "string" },
+        "system_version": { "type": "string" }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Namespaced extension payloads. Keys must contain a dot (reverse-namespace convention).",
+      "propertyNames": {
+        "pattern": "^[a-z0-9_]+\\.[a-z0-9_.]+$"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "event_type": { "const": "ai_result_presented" } } },
+      "then": { "required": ["ai_system", "exposure", "actor"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "ai_result_available" } } },
+      "then": { "required": ["ai_system"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "ai_result_interacted" } } },
+      "then": { "required": ["ai_system", "actor"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "enum": ["human_state_committed", "final_decision_committed"] } } },
+      "then": { "required": ["decision_state_ref", "information_state", "actor"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "human_state_revised" } } },
+      "then": { "required": ["decision_state_ref", "prior_decision_state_ref", "information_state", "actor"] }
+    }
+  ]
+}
