@@ -47,3 +47,6 @@ The schema generalizes and supersedes [`@evidifyresearch/event-schema`](https://
 ## Author
 
 Joshua M. Henderson, Ph.D. · Evidify LLC, East Orange, NJ · josh@evidify.ai
+
+Permanently archived in the [Software Heritage archive](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/evidifyai-svg/dses):
+`swh:1:snp:026907bace07d6d0a6c08c0670be66680e93037f`
