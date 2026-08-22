@@ -1,0 +1,10 @@
+{
+  "note": "External anchor trust store. Represents out-of-band key distribution; the verifier trusts receipts ONLY against keys bound here, never against keys carried inside the (operator-rewritable) package.",
+  "authorities": {
+    "anchor-authority-01": {
+      "alg": "ed25519",
+      "public_key": "33b64c99d036ab8f094fdaa82e7897dd4f1f38bfcc860bc81a4a2bc6f22939a6",
+      "key_ref": "anchor-authority-01-key-1"
+    }
+  }
+}

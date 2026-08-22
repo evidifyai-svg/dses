@@ -1,0 +1,114 @@
+{
+  "artifact_kind": "evaluation_criterion",
+  "criterion_type": "clinical_reference_standard",
+  "artifact_id": "https://example.org/dses/criteria/pe-90day-composite",
+  "version": "1.0.0",
+  "created_at": "2026-02-15T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "target_construct": {
+    "description": "Pulmonary embolism present at index encounter",
+    "code_sets": [
+      {
+        "system": "SNOMED CT",
+        "system_version": "2026-03-01",
+        "codes": [
+          "59282003"
+        ]
+      }
+    ]
+  },
+  "target_timepoint": "index encounter",
+  "answer_space": [
+    "positive",
+    "negative",
+    "equivocal"
+  ],
+  "answer_space_semantics": "nominal",
+  "clinical_reference_standard": {
+    "evidence_sources": [
+      "imaging_followup",
+      "clinical_course",
+      "panel_opinion"
+    ],
+    "timing": {
+      "mode": "delayed",
+      "window": "P90D"
+    },
+    "composition": {
+      "mode": "composite",
+      "composite_rule": {
+        "rule_id": "pe-composite-v1",
+        "code_artifact": {
+          "media_type": "text/x-python",
+          "locator": "rules/pe_composite_v1.py",
+          "digest": {
+            "alg": "sha-256",
+            "digest": "772487454c01fb1ed11a72958c5bfed766e722c72f3e68b297eade6efb48b885"
+          }
+        },
+        "fixtures_ref": "fixtures/pe-composite-v1.fixtures.json"
+      }
+    },
+    "determination_mechanism": {
+      "mode": "human_adjudication",
+      "adjudication_charter_ref": {
+        "artifact_id": "https://example.org/dses/charters/pe-panel-2026",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "14843deef7e58ab7271b332d9247eb22ae275cefe9f00904280a24a355a10925"
+        }
+      }
+    },
+    "outcome_window": "P90D",
+    "missing_data_handling": "No imaging and no 90-day course: not_assessable.",
+    "indeterminate_case_handling": "Treated course without confirmatory imaging: indeterminate, excluded from binary metrics.",
+    "intercurrent_event_policy": [
+      {
+        "event_class": "anticoagulation_initiated",
+        "strategy": "hypothetical"
+      }
+    ]
+  },
+  "binary_validity_projection": {
+    "correct_states": [
+      "correct"
+    ],
+    "incorrect_states": [
+      "incorrect"
+    ],
+    "excluded_states": [
+      "partially_correct",
+      "not_classifiable"
+    ],
+    "executable": {
+      "rule_id": "pe-binary-v1",
+      "code_artifact": {
+        "media_type": "text/x-python",
+        "locator": "rules/pe_binary_v1.py",
+        "digest": {
+          "alg": "sha-256",
+          "digest": "aee5183359277470a2b4e8582cd5ea3ac6bb0701eb0a2b87599d165def662bbd"
+        }
+      },
+      "fixtures_ref": "fixtures/pe-binary-v1.fixtures.json"
+    }
+  },
+  "decision_rule": {
+    "rule_id": "pe-decision-v1",
+    "code_artifact": {
+      "media_type": "text/x-python",
+      "locator": "rules/pe_decision_v1.py",
+      "digest": {
+        "alg": "sha-256",
+        "digest": "d644a595dcf754077c2d1d14e312b97a365f0ba82820f3820c37419ce4bfb7f2"
+      }
+    },
+    "fixtures_ref": "fixtures/pe-decision-v1.fixtures.json"
+  },
+  "content_hash": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+}

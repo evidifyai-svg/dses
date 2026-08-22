@@ -1,0 +1,69 @@
+{
+ "vectors": [
+  {
+   "events": [
+    {
+     "event_type": "preliminary_read_committed",
+     "sequence": 1,
+     "payload": {
+      "judgment": "negative",
+      "actor_ref": "a"
+     }
+    },
+    {
+     "event_type": "ai_output_released",
+     "sequence": 2,
+     "payload": {
+      "output": "positive",
+      "exposure_class": "CATEGORICAL"
+     }
+    },
+    {
+     "event_type": "post_exposure_read_committed",
+     "sequence": 3,
+     "payload": {
+      "judgment": "positive",
+      "actor_ref": "a"
+     }
+    }
+   ],
+   "expect": {
+    "baseline": "negative",
+    "ai": "positive",
+    "evaluation": "positive",
+    "commensurable": true
+   }
+  },
+  {
+   "events": [
+    {
+     "event_type": "preliminary_read_committed",
+     "sequence": 1,
+     "payload": {
+      "judgment": "negative",
+      "actor_ref": "a"
+     }
+    },
+    {
+     "event_type": "ai_output_released",
+     "sequence": 2,
+     "payload": {
+      "output": "positive",
+      "exposure_class": "DIRECTIVE"
+     }
+    },
+    {
+     "event_type": "post_exposure_read_committed",
+     "sequence": 3,
+     "payload": {
+      "judgment": "positive",
+      "actor_ref": "a"
+     }
+    }
+   ],
+   "expect": {
+    "commensurable": false
+   }
+  }
+ ]
+}

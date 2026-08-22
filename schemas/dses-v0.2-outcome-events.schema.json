@@ -1,0 +1,2324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc8/outcome-events.schema.json",
+  "title": "DSES v0.2.0-rc8 Outcome-Layer Events",
+  "description": "Two-level events on the cohort governance chain and per-case track chains. No self-reported capability, assurance, or state labels are permitted: the verifier derives them from evidence. Protocol hashes are bare lowercase SHA-256 hex. event_hash preimage: RFC 8785 canonical form of the event with integrity.event_hash, signatures, and payload removed.",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "chain_scope",
+    "chain_ref",
+    "sequence",
+    "occurred_at",
+    "recorded_at",
+    "payload_commitment",
+    "initial_payload_disposition",
+    "integrity",
+    "source_system"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "chain_scope": {
+      "type": "string",
+      "enum": [
+        "cohort",
+        "case"
+      ]
+    },
+    "chain_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sequence": {
+      "$ref": "#/$defs/safe_int"
+    },
+    "occurred_at": {
+      "$ref": "#/$defs/datetime"
+    },
+    "recorded_at": {
+      "$ref": "#/$defs/datetime"
+    },
+    "actor": {
+      "type": "object",
+      "required": [
+        "actor_ref",
+        "actor_type"
+      ],
+      "properties": {
+        "actor_ref": {
+          "type": "string"
+        },
+        "actor_type": {
+          "type": "string",
+          "enum": [
+            "human",
+            "ai_system",
+            "service"
+          ]
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "payload_commitment": {
+      "$ref": "#/$defs/payload_commitment"
+    },
+    "initial_payload_disposition": {
+      "type": "string",
+      "enum": [
+        "available",
+        "archived",
+        "destroyed"
+      ],
+      "description": "Disposition at creation. Current disposition is replay-derived from later outcome_integrity_event records and is never written back into this immutable event."
+    },
+    "payload": {
+      "type": "object"
+    },
+    "integrity": {
+      "$ref": "#/$defs/integrity_block"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/signature"
+      }
+    },
+    "source_system": {
+      "type": "string"
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "description": "Low-entropy payloads require randomized hiding commitments (Section 3.2).",
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "adjudicator_assessment_committed",
+              "reference_standard_adjudicated"
+            ]
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "payload_commitment": {
+            "properties": {
+              "commitment_type": {
+                "const": "hiding"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "event_type": {
+              "const": "cohort_chain_created"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_cohort_chain_created"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "anchor_evidence_recorded"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_anchor_evidence_recorded"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "anchor_distrusted"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_anchor_distrusted"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "key_rotated"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_key_rotated"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "enum": [
+                "key_revoked",
+                "key_compromise_declared"
+              ]
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_key_revoked"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "eligibility_manifest_committed"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_eligibility_manifest_committed"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "definition_set_amended"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_definition_set_amended"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "checkpoint_committed"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_checkpoint_committed"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "analysis_snapshot_committed"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_analysis_snapshot_committed"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "derived_artifact_registered"
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_derived_registered"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "enum": [
+                "derived_artifact_superseded",
+                "derived_artifact_invalidated"
+              ]
+            },
+            "chain_scope": {
+              "const": "cohort"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_derived_lifecycle"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "outcome_integrity_event"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_outcome_integrity_event"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "case_track_created"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_case_track_created"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "linkage_attempted"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_linkage_attempted"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "linkage_asserted"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_linkage_asserted"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "outcome_observed"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_outcome_observed"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "adjudicator_assessment_committed"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_adjudicator_assessment"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "reference_standard_adjudicated"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_adjudicated"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        },
+        {
+          "properties": {
+            "event_type": {
+              "const": "linkage_status_updated"
+            },
+            "chain_scope": {
+              "const": "case"
+            },
+            "payload": {
+              "$ref": "#/$defs/p_linkage_status"
+            }
+          },
+          "required": [
+            "event_type"
+          ]
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "safe_int": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "sha256hex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "datetime": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-]([01]\\d|2[0-3]):[0-5]\\d)$"
+    },
+    "duration": {
+      "type": "string",
+      "pattern": "^P(?!$)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$"
+    },
+    "digest": {
+      "type": "object",
+      "required": [
+        "alg",
+        "digest"
+      ],
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": [
+            "sha-256"
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256hex"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "artifact_ref": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "object",
+          "required": [
+            "alg",
+            "digest"
+          ],
+          "properties": {
+            "alg": {
+              "const": "sha-256"
+            },
+            "digest": {
+              "$ref": "#/$defs/sha256hex"
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "payload_commitment": {
+      "type": "object",
+      "required": [
+        "alg",
+        "digest",
+        "commitment_type"
+      ],
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": [
+            "sha-256"
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "commitment_type": {
+          "type": "string",
+          "enum": [
+            "content_digest",
+            "hiding"
+          ]
+        },
+        "nonce_bits": {
+          "type": "integer",
+          "minimum": 128,
+          "maximum": 512
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "commitment_type": {
+                "const": "hiding"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "nonce_bits"
+            ]
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "signature": {
+      "type": "object",
+      "required": [
+        "profile",
+        "alg",
+        "key_ref",
+        "context_label",
+        "target_hash",
+        "value"
+      ],
+      "properties": {
+        "profile": {
+          "const": "DSES-SIG-v1"
+        },
+        "alg": {
+          "type": "string",
+          "enum": [
+            "ed25519"
+          ]
+        },
+        "key_ref": {
+          "type": "string"
+        },
+        "context_label": {
+          "type": "string",
+          "enum": [
+            "event",
+            "export-head",
+            "eligibility-manifest",
+            "checkpoint",
+            "assessment",
+            "anchor-receipt",
+            "v0.1-verification"
+          ]
+        },
+        "target_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{128}$"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "integrity_block": {
+      "type": "object",
+      "description": "Integrity class is a configuration claim. Capabilities and rewrite detection are NOT stored here; they are derived by the verifier (Section 3.7).",
+      "required": [
+        "integrity_class"
+      ],
+      "properties": {
+        "integrity_class": {
+          "type": "string",
+          "enum": [
+            "I0",
+            "I1",
+            "I2",
+            "I3"
+          ]
+        },
+        "event_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "prev_event_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "canonicalization": {
+          "const": "RFC8785"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "inclusion_proof": {
+      "type": "object",
+      "required": [
+        "construction",
+        "root",
+        "tree_size",
+        "leaf_index",
+        "audit_path"
+      ],
+      "properties": {
+        "construction": {
+          "const": "rfc9162_sha256"
+        },
+        "root": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "tree_size": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "leaf_index": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "audit_path": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256hex"
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_cohort_chain_created": {
+      "type": "object",
+      "required": [
+        "cohort_definition_ref",
+        "analysis_plan_ref",
+        "declared_integrity_class",
+        "key_directory",
+        "definition_set"
+      ],
+      "properties": {
+        "cohort_definition_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "analysis_plan_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "declared_integrity_class": {
+          "type": "string",
+          "enum": [
+            "I0",
+            "I1",
+            "I2",
+            "I3"
+          ]
+        },
+        "key_directory": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "key_ref",
+              "alg",
+              "public_key"
+            ],
+            "properties": {
+              "key_ref": {
+                "type": "string"
+              },
+              "alg": {
+                "type": "string",
+                "enum": [
+                  "ed25519"
+                ]
+              },
+              "public_key": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "valid_from": {
+                "$ref": "#/$defs/datetime"
+              },
+              "valid_to": {
+                "$ref": "#/$defs/datetime"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "definition_set": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/artifact_ref"
+          },
+          "description": "Pinned references to every definition artifact in force at genesis. Snapshots must equal this set as amended."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_eligibility_manifest_committed": {
+      "type": "object",
+      "required": [
+        "period_start",
+        "period_end",
+        "manifest_count",
+        "attesting_system",
+        "attestation_signature"
+      ],
+      "properties": {
+        "period_start": {
+          "$ref": "#/$defs/datetime"
+        },
+        "period_end": {
+          "$ref": "#/$defs/datetime"
+        },
+        "manifest_count": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "eligible_case_commitment_root": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "membership_tree_size": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "membership_token_scheme": {
+          "type": "string"
+        },
+        "membership_leaf_encoding": {
+          "type": "string"
+        },
+        "source_census_ref": {
+          "type": "string"
+        },
+        "reconciliation_status": {
+          "type": "string",
+          "enum": [
+            "reconciled",
+            "discrepant",
+            "not_reconciled"
+          ]
+        },
+        "reconciliation_delta": {
+          "type": "integer"
+        },
+        "attesting_system": {
+          "type": "string"
+        },
+        "attestation_signature": {
+          "$ref": "#/$defs/signature"
+        },
+        "membership_multiplicity": {
+          "type": "string",
+          "const": "unique_decision_instance",
+          "description": "v0.2 supports one membership token per eligible decision instance; repeated encounters require distinct tokens."
+        }
+      },
+      "dependentRequired": {
+        "eligible_case_commitment_root": [
+          "membership_token_scheme",
+          "membership_tree_size",
+          "membership_leaf_encoding",
+          "membership_multiplicity"
+        ]
+      },
+      "unevaluatedProperties": false
+    },
+    "p_definition_set_amended": {
+      "type": "object",
+      "required": [
+        "added_artifact_ref",
+        "amendment_reason",
+        "cutoff_relation"
+      ],
+      "properties": {
+        "added_artifact_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "amendment_reason": {
+          "type": "string"
+        },
+        "cutoff_relation": {
+          "type": "object",
+          "description": "Prespecification is judged against a declared external cutoff, not against whether outcomes happen to have been ingested yet (Section 3.4).",
+          "required": [
+            "cutoff_type",
+            "cutoff_time",
+            "relation"
+          ],
+          "properties": {
+            "cutoff_type": {
+              "type": "string",
+              "enum": [
+                "before_first_enrollment",
+                "before_first_ai_exposure",
+                "before_enrollment_close",
+                "before_earliest_outcome_maturation",
+                "before_data_access_unlock",
+                "before_analysis_dataset_release"
+              ]
+            },
+            "cutoff_time": {
+              "$ref": "#/$defs/datetime"
+            },
+            "relation": {
+              "type": "string",
+              "enum": [
+                "before_cutoff",
+                "after_cutoff"
+              ]
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_checkpoint_committed": {
+      "type": "object",
+      "description": "The checkpoint log is append-only: each leaf is a head OBSERVATION at an epoch, never a replacement of a previous head. This is what makes RFC 9162 consistency proofs applicable (Section 3.3).",
+      "required": [
+        "construction",
+        "checkpoint_epoch",
+        "log_kind",
+        "checkpoint_log_root",
+        "checkpoint_log_size",
+        "leaf_encoding",
+        "head_observations",
+        "coverage"
+      ],
+      "properties": {
+        "construction": {
+          "const": "rfc9162_sha256"
+        },
+        "checkpoint_epoch": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "log_kind": {
+          "const": "append_only_head_observation_log"
+        },
+        "checkpoint_log_root": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "checkpoint_log_size": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "leaf_encoding": {
+          "const": "rfc8785_head_observation"
+        },
+        "head_observations": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The head observations appended at this epoch, so the root is recomputable by an offline verifier. Deployments above the inline threshold carry per-case inclusion proofs instead.",
+          "items": {
+            "type": "object",
+            "required": [
+              "chain_ref",
+              "head_sequence",
+              "head_hash",
+              "checkpoint_epoch"
+            ],
+            "properties": {
+              "chain_ref": {
+                "type": "string"
+              },
+              "head_sequence": {
+                "$ref": "#/$defs/safe_int"
+              },
+              "head_hash": {
+                "$ref": "#/$defs/sha256hex"
+              },
+              "checkpoint_epoch": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "consistency_proof": {
+          "type": "object",
+          "required": [
+            "previous_epoch",
+            "previous_root",
+            "previous_size",
+            "path"
+          ],
+          "properties": {
+            "previous_epoch": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "previous_root": {
+              "$ref": "#/$defs/sha256hex"
+            },
+            "previous_size": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "path": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/sha256hex"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "coverage": {
+          "type": "object",
+          "required": [
+            "eligible_track_count",
+            "observed_track_count",
+            "missing_track_refs"
+          ],
+          "properties": {
+            "eligible_track_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "observed_track_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "missing_track_refs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_analysis_snapshot_committed": {
+      "type": "object",
+      "required": [
+        "as_of_time",
+        "cohort_chain_head_before_snapshot",
+        "population_commitment",
+        "definition_versions",
+        "software_digest",
+        "population_tuples"
+      ],
+      "properties": {
+        "as_of_time": {
+          "$ref": "#/$defs/datetime"
+        },
+        "cohort_chain_head_before_snapshot": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "population_commitment": {
+          "type": "object",
+          "description": "One tree over canonical (case_ref, chain_ref, case_chain_head, case_chain_sequence) tuples, binding each case to its exact evidence state.",
+          "required": [
+            "construction",
+            "root",
+            "tree_size",
+            "leaf_encoding"
+          ],
+          "properties": {
+            "construction": {
+              "const": "rfc9162_sha256"
+            },
+            "root": {
+              "$ref": "#/$defs/sha256hex"
+            },
+            "tree_size": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "leaf_encoding": {
+              "const": "rfc8785_population_tuple"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "definition_versions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/artifact_ref"
+          }
+        },
+        "software_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "population_tuples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "case_ref",
+              "chain_ref",
+              "case_chain_head",
+              "case_chain_sequence"
+            ],
+            "properties": {
+              "case_ref": {
+                "type": "string"
+              },
+              "chain_ref": {
+                "type": "string"
+              },
+              "case_chain_head": {
+                "$ref": "#/$defs/sha256hex"
+              },
+              "case_chain_sequence": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "unevaluatedProperties": false
+          },
+          "description": "The committed population, shipped so the root is recomputable and metrics can be recomputed against frozen state."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_derived_registered": {
+      "type": "object",
+      "required": [
+        "derived_artifact_id",
+        "derived_artifact_hash",
+        "artifact_type",
+        "analysis_snapshot_ref",
+        "depends_on_event_hashes"
+      ],
+      "properties": {
+        "derived_artifact_id": {
+          "type": "string"
+        },
+        "derived_artifact_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "artifact_type": {
+          "type": "string",
+          "enum": [
+            "decision_validity_derived",
+            "trajectory_projection_derived",
+            "reliance_metric_derived"
+          ]
+        },
+        "analysis_snapshot_ref": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "depends_on_event_hashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256hex"
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_derived_lifecycle": {
+      "type": "object",
+      "required": [
+        "derived_artifact_id",
+        "reason"
+      ],
+      "properties": {
+        "derived_artifact_id": {
+          "type": "string"
+        },
+        "successor_artifact_id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "evidence_state_advanced",
+            "adjudication_revised",
+            "computation_error",
+            "non_conformant_derivation"
+          ]
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_outcome_integrity_event": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "export_generated",
+            "verification_performed",
+            "anchor_published",
+            "gap_detected",
+            "payload_archived",
+            "payload_destroyed",
+            "nonce_destroyed"
+          ]
+        },
+        "affected_commitments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256hex"
+          }
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_case_track_created": {
+      "type": "object",
+      "description": "Genesis of every eligible case, linked or not. Carries the membership leaf so the inclusion proof is self-contained. No track_state: state is replayed from attempts (Sections 6.1-6.2).",
+      "required": [
+        "membership_leaf",
+        "membership_leaf_encoding",
+        "manifest_inclusion_proof",
+        "manifest_ref"
+      ],
+      "properties": {
+        "membership_leaf": {
+          "type": "string",
+          "minLength": 1
+        },
+        "membership_leaf_encoding": {
+          "type": "string"
+        },
+        "manifest_inclusion_proof": {
+          "$ref": "#/$defs/inclusion_proof"
+        },
+        "manifest_ref": {
+          "$ref": "#/$defs/sha256hex",
+          "description": "Event hash of the eligibility_manifest_committed event whose tree contains this leaf. Periodic manifests are first-class; the verifier aggregates denominators across them."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_linkage_attempted": {
+      "type": "object",
+      "description": "Records an attempt RESULT only. Track state is derived by replay, never asserted alongside the result (Section 6.1).",
+      "required": [
+        "attempt_method",
+        "attempt_result",
+        "attempt_detail"
+      ],
+      "properties": {
+        "attempt_method": {
+          "type": "string",
+          "enum": [
+            "ttp_deterministic",
+            "deterministic",
+            "probabilistic",
+            "manual"
+          ]
+        },
+        "attempt_result": {
+          "type": "string",
+          "enum": [
+            "linked",
+            "ambiguous",
+            "failed",
+            "decision_record_missing",
+            "outcome_record_missing",
+            "withdrawn"
+          ]
+        },
+        "attempt_detail": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_linkage_asserted": {
+      "type": "object",
+      "required": [
+        "decision_sequence_ref",
+        "linkage_token_method",
+        "linkage_security",
+        "crosswalk_custodian",
+        "planned_evaluation_criterion_ref",
+        "linkage_accuracy"
+      ],
+      "properties": {
+        "linkage_token_method": {
+          "type": "string",
+          "enum": [
+            "pseudonym",
+            "tokenization",
+            "salted_hash",
+            "pprl_bloom",
+            "pprl_secure_mpc",
+            "ttp_deterministic",
+            "manual"
+          ]
+        },
+        "linkage_security": {
+          "$ref": "#/$defs/linkage_security"
+        },
+        "crosswalk_custodian": {
+          "type": "string"
+        },
+        "planned_evaluation_criterion_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "linkage_accuracy": {
+          "type": "object",
+          "required": [
+            "linkage_method",
+            "linkage_validation_status",
+            "linkage_algorithm_version"
+          ],
+          "properties": {
+            "linkage_method": {
+              "type": "string",
+              "enum": [
+                "deterministic",
+                "probabilistic",
+                "manual"
+              ]
+            },
+            "linkage_validation_status": {
+              "type": "string",
+              "enum": [
+                "validated",
+                "unvalidated"
+              ]
+            },
+            "linkage_validation_ref": {
+              "type": "string"
+            },
+            "estimated_false_match_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "estimated_false_nonmatch_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "match_confidence": {
+              "type": "object",
+              "required": [
+                "score",
+                "scale"
+              ],
+              "properties": {
+                "score": {
+                  "type": "number"
+                },
+                "scale": {
+                  "type": "string"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "ambiguous_match_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "clerical_review_status": {
+              "type": "string",
+              "enum": [
+                "not_reviewed",
+                "reviewed_confirmed",
+                "reviewed_rejected"
+              ]
+            },
+            "linkage_algorithm_version": {
+              "type": "string"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "linkage_method": {
+                    "const": "probabilistic"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "match_confidence",
+                  "ambiguous_match_count",
+                  "clerical_review_status"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "linkage_validation_status": {
+                    "const": "validated"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "linkage_validation_ref",
+                  "estimated_false_match_rate",
+                  "estimated_false_nonmatch_rate"
+                ]
+              }
+            }
+          ],
+          "unevaluatedProperties": false
+        },
+        "decision_sequence_ref": {
+          "$ref": "#/$defs/decision_sequence_ref"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "linkage_security": {
+      "description": "Method-specific security descriptors. A method name is not a security property (Section 6.5).",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "method",
+            "ttp_identity",
+            "ttp_governance_ref",
+            "crosswalk_location",
+            "threat_model_note"
+          ],
+          "properties": {
+            "method": {
+              "const": "ttp_deterministic"
+            },
+            "ttp_identity": {
+              "type": "string"
+            },
+            "ttp_governance_ref": {
+              "type": "string"
+            },
+            "crosswalk_location": {
+              "type": "string",
+              "enum": [
+                "on_premises",
+                "third_party_custody",
+                "cloud_managed"
+              ]
+            },
+            "threat_model_note": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "method",
+            "protocol",
+            "threat_model",
+            "parties",
+            "collusion_threshold",
+            "declared_leakage",
+            "implementation_ref"
+          ],
+          "properties": {
+            "method": {
+              "const": "pprl_secure_mpc"
+            },
+            "protocol": {
+              "type": "string"
+            },
+            "threat_model": {
+              "type": "string",
+              "enum": [
+                "semi_honest",
+                "malicious",
+                "covert"
+              ]
+            },
+            "parties": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "collusion_threshold": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "declared_leakage": {
+              "type": "string"
+            },
+            "implementation_ref": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "method",
+            "hardening",
+            "known_cryptanalysis_disclosure"
+          ],
+          "properties": {
+            "method": {
+              "const": "pprl_bloom"
+            },
+            "hardening": {
+              "type": "string"
+            },
+            "known_cryptanalysis_disclosure": {
+              "const": "Bloom-filter encodings have published practical cryptanalysis, including against hardened variants, and are not represented as private."
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "method",
+            "key_custody",
+            "threat_model_note"
+          ],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "pseudonym",
+                "tokenization",
+                "salted_hash",
+                "manual"
+              ]
+            },
+            "key_custody": {
+              "type": "string"
+            },
+            "threat_model_note": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "p_outcome_observed": {
+      "type": "object",
+      "required": [
+        "observed_fact",
+        "observation_date",
+        "evidence_source",
+        "observability_determinants",
+        "intervening_events"
+      ],
+      "properties": {
+        "observed_fact": {
+          "type": "object",
+          "required": [
+            "description",
+            "code_system",
+            "code_system_version"
+          ],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "code_system": {
+              "type": "string"
+            },
+            "code_system_version": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "value": {
+              "type": [
+                "string",
+                "integer",
+                "boolean"
+              ]
+            },
+            "units": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "observation_date": {
+          "$ref": "#/$defs/datetime"
+        },
+        "evidence_source": {
+          "type": "object",
+          "required": [
+            "category",
+            "provenance"
+          ],
+          "properties": {
+            "category": {
+              "type": "string"
+            },
+            "reference": {
+              "type": "string"
+            },
+            "content_hash": {
+              "$ref": "#/$defs/sha256hex"
+            },
+            "provenance": {
+              "type": "object",
+              "required": [
+                "source_authenticity",
+                "source_immutability",
+                "source_signature",
+                "source_timestamp_assurance",
+                "source_revision_history"
+              ],
+              "properties": {
+                "source_authenticity": {
+                  "type": "string"
+                },
+                "source_immutability": {
+                  "type": "string"
+                },
+                "source_signature": {
+                  "type": "string",
+                  "enum": [
+                    "present",
+                    "absent",
+                    "UNKNOWN"
+                  ]
+                },
+                "source_timestamp_assurance": {
+                  "type": "string"
+                },
+                "source_revision_history": {
+                  "type": "string",
+                  "enum": [
+                    "available",
+                    "unavailable",
+                    "UNKNOWN"
+                  ]
+                }
+              },
+              "unevaluatedProperties": false
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "observability_determinants": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "mechanism"
+            ],
+            "properties": {
+              "mechanism": {
+                "type": "string",
+                "enum": [
+                  "unconditional",
+                  "decision_gated",
+                  "patient_adherence",
+                  "access_or_coverage",
+                  "system_retention",
+                  "referral_completion",
+                  "mortality",
+                  "external_records",
+                  "other"
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "gating_decision_refs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "mechanism": {
+                      "const": "decision_gated"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "gating_decision_refs"
+                  ]
+                }
+              }
+            ],
+            "unevaluatedProperties": false
+          }
+        },
+        "intervening_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "event_type",
+              "timing",
+              "may_alter_state",
+              "may_alter_ascertainment",
+              "policy_strategy"
+            ],
+            "properties": {
+              "event_type": {
+                "type": "string"
+              },
+              "timing": {
+                "$ref": "#/$defs/datetime"
+              },
+              "may_alter_state": {
+                "type": "boolean"
+              },
+              "may_alter_ascertainment": {
+                "type": "boolean"
+              },
+              "policy_strategy": {
+                "type": "string"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_adjudicator_assessment": {
+      "type": "object",
+      "required": [
+        "adjudicator_ref",
+        "packet_manifest",
+        "blinding_planned",
+        "blinding_actual",
+        "blinding_breach",
+        "assessment",
+        "pre_consensus",
+        "charter_ref"
+      ],
+      "properties": {
+        "adjudicator_ref": {
+          "type": "string"
+        },
+        "packet_manifest": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "evidence_category",
+              "content_hash"
+            ],
+            "properties": {
+              "evidence_category": {
+                "type": "string"
+              },
+              "content_hash": {
+                "$ref": "#/$defs/sha256hex"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "blinding_planned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blinding_actual": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blinding_breach": {
+          "type": "boolean"
+        },
+        "breach_reason": {
+          "type": "string"
+        },
+        "assessment": {
+          "type": "object",
+          "required": [
+            "assessable"
+          ],
+          "properties": {
+            "assessable": {
+              "type": "boolean"
+            },
+            "conclusion": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "inability_reason": {
+              "type": "string"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "assessable": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "conclusion"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "assessable": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "inability_reason"
+                ],
+                "not": {
+                  "required": [
+                    "conclusion"
+                  ]
+                }
+              }
+            }
+          ],
+          "unevaluatedProperties": false
+        },
+        "certainty": {
+          "type": "string"
+        },
+        "pre_consensus": {
+          "type": "boolean"
+        },
+        "charter_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "nested_sequence_ref": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "blinding_breach": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "breach_reason"
+            ]
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "p_adjudicated": {
+      "type": "object",
+      "description": "Each determination is its own event with its own identity. A revision is a new adjudication citing the one it revises; there is no nested-payload revision event (Section 6.8).",
+      "required": [
+        "evaluation_criterion_ref",
+        "resolution_process",
+        "conclusion_status",
+        "process_flags",
+        "time_to_adjudication",
+        "charter_ref"
+      ],
+      "properties": {
+        "evaluation_criterion_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "assessment_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256hex"
+          }
+        },
+        "resolution_process": {
+          "type": "object",
+          "required": [
+            "method"
+          ],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "single_reader",
+                "consensus",
+                "third_reader",
+                "chair_ruling",
+                "mechanical_rule",
+                "algorithmic"
+              ]
+            },
+            "procedure_ref": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "conclusion_status": {
+          "type": "string",
+          "enum": [
+            "determinate",
+            "indeterminate",
+            "not_assessable"
+          ]
+        },
+        "conclusion": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "process_flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "charter_deviation",
+              "contamination_suspected",
+              "blinding_breach_recorded",
+              "disagreement_unresolved",
+              "insufficient_followup",
+              "minimum_data_not_met"
+            ]
+          }
+        },
+        "certainty": {
+          "type": "string"
+        },
+        "inter_adjudicator_agreement": {
+          "type": "object",
+          "required": [
+            "statistic",
+            "value",
+            "computed_over_pre_consensus_only"
+          ],
+          "properties": {
+            "statistic": {
+              "type": "string"
+            },
+            "value": {
+              "type": "number"
+            },
+            "computed_over_pre_consensus_only": {
+              "const": true
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "time_to_adjudication": {
+          "$ref": "#/$defs/duration"
+        },
+        "revises_event_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "revision_reason": {
+          "type": "string",
+          "enum": [
+            "new_evidence",
+            "error_correction",
+            "charter_amendment",
+            "contamination_discovered",
+            "other"
+          ]
+        },
+        "revision_reason_description": {
+          "type": "string"
+        },
+        "charter_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "deciding_adjudicator_ref": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "conclusion_status": {
+                "const": "determinate"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "conclusion"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "conclusion_status": {
+                "enum": [
+                  "indeterminate",
+                  "not_assessable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "conclusion"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "revises_event_hash"
+            ]
+          },
+          "then": {
+            "required": [
+              "revision_reason"
+            ]
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "p_linkage_status": {
+      "type": "object",
+      "required": [
+        "followup_state",
+        "criterion_states",
+        "index_date_ref",
+        "data_availability_cutoff"
+      ],
+      "properties": {
+        "followup_state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "lost",
+            "withdrawn",
+            "transferred_out"
+          ]
+        },
+        "criterion_states": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "evaluation_criterion_ref",
+              "maturation_state",
+              "adjudication_state",
+              "risk_window"
+            ],
+            "properties": {
+              "evaluation_criterion_ref": {
+                "$ref": "#/$defs/artifact_ref"
+              },
+              "maturation_state": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "mature"
+                ]
+              },
+              "adjudication_state": {
+                "type": "string",
+                "enum": [
+                  "not_started",
+                  "in_progress",
+                  "concluded",
+                  "superseded"
+                ]
+              },
+              "risk_window": {
+                "$ref": "#/$defs/duration"
+              },
+              "event_date": {
+                "$ref": "#/$defs/datetime"
+              },
+              "censoring_date": {
+                "$ref": "#/$defs/datetime"
+              },
+              "censoring_reason": {
+                "type": "string"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "intercurrent_flags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "flag"
+            ],
+            "properties": {
+              "flag": {
+                "type": "string",
+                "enum": [
+                  "competing_event",
+                  "rescue_intervention",
+                  "treatment_switch",
+                  "other"
+                ]
+              },
+              "competing_event_code": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              },
+              "timing": {
+                "$ref": "#/$defs/datetime"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "flag": {
+                      "const": "competing_event"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "competing_event_code",
+                    "timing"
+                  ]
+                }
+              }
+            ],
+            "unevaluatedProperties": false
+          }
+        },
+        "index_date_ref": {
+          "type": "string"
+        },
+        "data_availability_cutoff": {
+          "$ref": "#/$defs/datetime"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "anchor_receipt": {
+      "type": "object",
+      "required": [
+        "receipt_body",
+        "receipt_signature"
+      ],
+      "properties": {
+        "receipt_body": {
+          "type": "object",
+          "required": [
+            "artifact_hash",
+            "anchor_time",
+            "tsa_identity"
+          ],
+          "properties": {
+            "artifact_hash": {
+              "$ref": "#/$defs/sha256hex"
+            },
+            "anchor_time": {
+              "$ref": "#/$defs/datetime"
+            },
+            "tsa_identity": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "receipt_signature": {
+          "$ref": "#/$defs/signature"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_anchor_evidence_recorded": {
+      "type": "object",
+      "description": "Anchor evidence recorded outside the object it attests. The event name states what it is: recorded evidence. Whether the target is externally anchored is DERIVED by verifying the receipt (Section 3.5).",
+      "required": [
+        "target_kind",
+        "artifact_id",
+        "artifact_version",
+        "artifact_hash",
+        "anchor_profile",
+        "receipt_body",
+        "receipt_signature"
+      ],
+      "properties": {
+        "target_kind": {
+          "type": "string",
+          "enum": [
+            "definition_artifact",
+            "checkpoint_event",
+            "export_head"
+          ]
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_version": {
+          "type": "string"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "anchor_profile": {
+          "type": "string",
+          "enum": [
+            "DSES-ANCHOR-v1",
+            "rfc3161"
+          ]
+        },
+        "receipt_body": {
+          "type": "object",
+          "required": [
+            "artifact_hash",
+            "anchor_time",
+            "tsa_identity"
+          ],
+          "properties": {
+            "artifact_hash": {
+              "$ref": "#/$defs/sha256hex"
+            },
+            "anchor_time": {
+              "$ref": "#/$defs/datetime"
+            },
+            "tsa_identity": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "receipt_signature": {
+          "$ref": "#/$defs/signature"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_anchor_distrusted": {
+      "type": "object",
+      "required": [
+        "anchor_authority",
+        "reason",
+        "effective_at"
+      ],
+      "properties": {
+        "anchor_authority": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "key_compromise",
+            "equivocation_detected",
+            "policy_withdrawal",
+            "other"
+          ]
+        },
+        "effective_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_key_rotated": {
+      "type": "object",
+      "required": [
+        "retired_key_ref",
+        "successor_key_ref",
+        "effective_at",
+        "reason"
+      ],
+      "properties": {
+        "retired_key_ref": {
+          "type": "string"
+        },
+        "successor_key_ref": {
+          "type": "string"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "scheduled_rotation",
+            "custodian_change",
+            "policy"
+          ]
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "p_key_revoked": {
+      "type": "object",
+      "required": [
+        "key_ref",
+        "effective_at",
+        "reason"
+      ],
+      "properties": {
+        "key_ref": {
+          "type": "string"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "compromise_suspected",
+            "compromise_confirmed",
+            "retirement",
+            "custodian_change"
+          ]
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "decision_sequence_ref": {
+      "type": "object",
+      "description": "A resolvable, replayable reference to the DSES v0.1 decision sequence this outcome evidence is about. The verifier resolves and replays it; an unresolvable reference is a conformance failure (Section 6.3).",
+      "required": [
+        "dses_version",
+        "sequence_head_hash",
+        "final_decision_hash",
+        "resolver",
+        "declared_integrity_class"
+      ],
+      "properties": {
+        "dses_version": {
+          "type": "string",
+          "pattern": "^0\\.1\\.\\d+$"
+        },
+        "sequence_head_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "final_decision_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "resolver": {
+          "type": "string",
+          "minLength": 1
+        },
+        "declared_integrity_class": {
+          "type": "string",
+          "enum": [
+            "I0",
+            "I1",
+            "I2",
+            "I3"
+          ]
+        },
+        "verification_receipt": {
+          "$ref": "#/$defs/signature"
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

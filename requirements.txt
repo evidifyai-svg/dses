@@ -1,0 +1,5 @@
+# DSES v0.2.0-rc8 reference implementation dependencies.
+# Python 3.11 or later.
+jcs==0.2.1
+jsonschema==4.23.0
+cryptography==43.0.1

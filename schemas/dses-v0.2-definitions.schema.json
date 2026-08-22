@@ -1,0 +1,1926 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc8/definitions.schema.json",
+  "title": "DSES v0.2.0-rc8 Definition Artifacts",
+  "description": "Six immutable, content-addressed definition artifacts. content_hash preimage: RFC 8785 canonical form with content_hash removed. Anchor evidence is PROHIBITED inside an artifact (it lives in artifact_anchored events), so timing evidence can improve without changing artifact identity. Prespecification is declared against an external cutoff, never against DSES ingestion order.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/cohort_definition"
+    },
+    {
+      "$ref": "#/$defs/evaluation_criterion"
+    },
+    {
+      "$ref": "#/$defs/adjudication_charter"
+    },
+    {
+      "$ref": "#/$defs/metric_definition"
+    },
+    {
+      "$ref": "#/$defs/analysis_plan"
+    },
+    {
+      "$ref": "#/$defs/projection_rule"
+    },
+    {
+      "$ref": "#/$defs/secondary_use_governance"
+    },
+    {
+      "$ref": "#/$defs/responsibility_assignments"
+    }
+  ],
+  "$defs": {
+    "datetime": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-]([01]\\d|2[0-3]):[0-5]\\d)$"
+    },
+    "duration": {
+      "type": "string",
+      "pattern": "^P(?!$)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$"
+    },
+    "sha256hex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "digest": {
+      "type": "object",
+      "required": [
+        "alg",
+        "digest"
+      ],
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": [
+            "sha-256"
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256hex"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "uri": {
+      "type": "string",
+      "pattern": "^(https?://[^\\s]+|urn:[^\\s]+)$"
+    },
+    "cutoff": {
+      "type": "object",
+      "required": [
+        "cutoff_type",
+        "cutoff_time"
+      ],
+      "properties": {
+        "cutoff_type": {
+          "type": "string",
+          "enum": [
+            "before_first_enrollment",
+            "before_first_ai_exposure",
+            "before_enrollment_close",
+            "before_earliest_outcome_maturation",
+            "before_data_access_unlock",
+            "before_analysis_dataset_release"
+          ]
+        },
+        "cutoff_time": {
+          "$ref": "#/$defs/datetime"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "executable_rule": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "fixtures_ref",
+        "code_artifact"
+      ],
+      "description": "A machine-executable rule: identifier, SHA-256 of the actual code artifact bytes, and shipped conformance fixtures. Names are not code; the verifier recomputes the digest from the module and executes the fixtures.",
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fixtures_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "code_artifact": {
+          "type": "object",
+          "required": [
+            "media_type",
+            "locator",
+            "digest"
+          ],
+          "description": "Explicit locator for the bytes the digest covers. Without it, a second implementation receives a digest with no normative answer to 'of which object?', and must reverse-engineer a path convention private to one implementation.",
+          "properties": {
+            "media_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Package-relative path, or a locator appropriate to the media type (OCI descriptor, wheel filename, WASM module path)."
+            },
+            "digest": {
+              "type": "object",
+              "required": [
+                "alg",
+                "digest"
+              ],
+              "properties": {
+                "alg": {
+                  "const": "sha-256"
+                },
+                "digest": {
+                  "$ref": "#/$defs/sha256hex"
+                }
+              },
+              "unevaluatedProperties": false
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Declared parameters a verifier needs to check the rule WITHOUT reading the reference module. A constant that lives only in one implementation's source is the same defect as a digest without a locator: it answers what to check but not from where.",
+          "properties": {
+            "answer_space_requirement": {
+              "type": "string",
+              "enum": [
+                "nominal",
+                "ordinal",
+                "interval",
+                "continuous"
+              ]
+            },
+            "interval_method": {
+              "type": "string"
+            },
+            "level": {
+              "type": "number"
+            },
+            "tolerance": {
+              "type": "number"
+            },
+            "tolerance_kind": {
+              "type": "string",
+              "enum": [
+                "absolute",
+                "relative"
+              ]
+            },
+            "quantiles": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "coded_criteria": {
+      "type": "object",
+      "required": [
+        "description",
+        "code_sets"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "code_sets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "system",
+              "system_version"
+            ],
+            "properties": {
+              "system": {
+                "type": "string"
+              },
+              "system_version": {
+                "type": "string"
+              },
+              "codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "estimate_with_ci": {
+      "type": "object",
+      "required": [
+        "estimate"
+      ],
+      "properties": {
+        "estimate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ci_lower": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ci_upper": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ci_level": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "no_anchor_inside": {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "anchor"
+            ]
+          },
+          {
+            "required": [
+              "prespecification_assurance"
+            ]
+          },
+          {
+            "required": [
+              "anchor_ref"
+            ]
+          },
+          {
+            "required": [
+              "anchor_time"
+            ]
+          }
+        ]
+      }
+    },
+    "cohort_definition": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "content_hash",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "eligibility_rule",
+        "workflow_refs",
+        "enrollment_window",
+        "expected_source_systems",
+        "sampling_scheme",
+        "manifest_membership",
+        "manifest_cadence",
+        "evaluation_criteria",
+        "analysis_plan_ref",
+        "membership_multiplicity",
+        "checkpoint_policy",
+        "unit_of_analysis"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_anchor_inside"
+        }
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "cohort_definition"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "eligibility_rule": {
+          "type": "object",
+          "required": [
+            "inclusion",
+            "exclusion",
+            "executable"
+          ],
+          "properties": {
+            "inclusion": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coded_criteria"
+              }
+            },
+            "exclusion": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/coded_criteria"
+              }
+            },
+            "executable": {
+              "$ref": "#/$defs/executable_rule"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "workflow_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "enrollment_window": {
+          "type": "object",
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "$ref": "#/$defs/datetime"
+            },
+            "end": {
+              "$ref": "#/$defs/datetime"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "expected_source_systems": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "sampling_scheme": {
+          "type": "object",
+          "required": [
+            "scheme"
+          ],
+          "properties": {
+            "scheme": {
+              "type": "string",
+              "enum": [
+                "census",
+                "consecutive",
+                "random",
+                "stratified"
+              ]
+            },
+            "parameters": {
+              "type": "object"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "manifest_membership": {
+          "type": "boolean"
+        },
+        "manifest_cadence": {
+          "type": "object",
+          "required": [
+            "max_interval",
+            "max_latency_after_period_end"
+          ],
+          "properties": {
+            "max_interval": {
+              "$ref": "#/$defs/duration"
+            },
+            "max_latency_after_period_end": {
+              "$ref": "#/$defs/duration"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "evaluation_criteria": {
+          "type": "object",
+          "required": [
+            "primary",
+            "additional"
+          ],
+          "properties": {
+            "primary": {
+              "$ref": "#/$defs/artifact_ref"
+            },
+            "additional": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/artifact_ref"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "analysis_plan_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "extensions": {
+          "type": "object"
+        },
+        "membership_multiplicity": {
+          "type": "string",
+          "const": "unique_decision_instance",
+          "description": "v0.2 supports one membership token per eligible decision instance. Repeated encounters are distinct decision instances and MUST use distinct tokens."
+        },
+        "checkpoint_policy": {
+          "type": "object",
+          "required": [
+            "observation_scope",
+            "max_interval"
+          ],
+          "properties": {
+            "observation_scope": {
+              "type": "string",
+              "enum": [
+                "all_tracks",
+                "all_open_tracks",
+                "declared_subset"
+              ]
+            },
+            "max_interval": {
+              "$ref": "#/$defs/duration"
+            },
+            "declared_subset_rule": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "unit_of_analysis": {
+          "type": "string",
+          "enum": [
+            "system",
+            "site",
+            "cohort",
+            "care_team",
+            "individual_clinician"
+          ],
+          "description": "The level at which metrics derived from this cohort may be reported. Declared BEFORE enrollment and anchored like every other definition, because a cohort assembled to evaluate an AI system and later re-cut per clinician is a different study than the one that was prespecified."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "evaluation_criterion": {
+      "type": "object",
+      "description": "The general criterion abstraction. criterion_type selects a specialization; the clinical reference standard is one of them, not the only one.",
+      "required": [
+        "artifact_kind",
+        "criterion_type",
+        "artifact_id",
+        "version",
+        "content_hash",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "target_construct",
+        "target_timepoint",
+        "binary_validity_projection",
+        "decision_rule",
+        "answer_space",
+        "answer_space_semantics"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_anchor_inside"
+        },
+        {
+          "if": {
+            "properties": {
+              "criterion_type": {
+                "const": "clinical_reference_standard"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "clinical_reference_standard"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "criterion_type": {
+                "const": "policy_rule"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "policy_rule"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "criterion_type": {
+                "const": "benchmark"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "benchmark"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "evaluation_criterion"
+        },
+        "criterion_type": {
+          "type": "string",
+          "enum": [
+            "clinical_reference_standard",
+            "policy_rule",
+            "benchmark",
+            "other"
+          ]
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "type": "string"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "target_construct": {
+          "$ref": "#/$defs/coded_criteria"
+        },
+        "target_timepoint": {
+          "type": "string"
+        },
+        "binary_validity_projection": {
+          "type": "object",
+          "description": "Required because RAIR, RSR, SRF, and EAR are only defined over a binary validity partition (Section 8.2).",
+          "required": [
+            "correct_states",
+            "incorrect_states",
+            "excluded_states",
+            "executable"
+          ],
+          "properties": {
+            "correct_states": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "incorrect_states": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "excluded_states": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "executable": {
+              "$ref": "#/$defs/executable_rule"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "decision_rule": {
+          "$ref": "#/$defs/executable_rule"
+        },
+        "clinical_reference_standard": {
+          "type": "object",
+          "required": [
+            "evidence_sources",
+            "timing",
+            "composition",
+            "determination_mechanism",
+            "outcome_window",
+            "missing_data_handling",
+            "indeterminate_case_handling",
+            "intercurrent_event_policy"
+          ],
+          "properties": {
+            "evidence_sources": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pathology",
+                  "imaging_followup",
+                  "clinical_course",
+                  "registry",
+                  "phenotype",
+                  "panel_opinion",
+                  "death_index",
+                  "laboratory",
+                  "other"
+                ]
+              }
+            },
+            "timing": {
+              "type": "object",
+              "required": [
+                "mode"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "contemporaneous",
+                    "delayed"
+                  ]
+                },
+                "window": {
+                  "$ref": "#/$defs/duration"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "mode": {
+                        "const": "delayed"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "window"
+                    ]
+                  }
+                }
+              ],
+              "unevaluatedProperties": false
+            },
+            "composition": {
+              "type": "object",
+              "required": [
+                "mode"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "single_source",
+                    "composite"
+                  ]
+                },
+                "composite_rule": {
+                  "$ref": "#/$defs/executable_rule"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "mode": {
+                        "const": "composite"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "composite_rule"
+                    ]
+                  }
+                }
+              ],
+              "unevaluatedProperties": false
+            },
+            "determination_mechanism": {
+              "type": "object",
+              "required": [
+                "mode"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "mechanical_rule",
+                    "algorithmic",
+                    "human_adjudication"
+                  ]
+                },
+                "algorithm_version": {
+                  "type": "string"
+                },
+                "adjudication_charter_ref": {
+                  "$ref": "#/$defs/artifact_ref"
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "mode": {
+                        "const": "algorithmic"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "algorithm_version"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "mode": {
+                        "const": "human_adjudication"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "adjudication_charter_ref"
+                    ]
+                  }
+                }
+              ],
+              "unevaluatedProperties": false
+            },
+            "outcome_window": {
+              "$ref": "#/$defs/duration"
+            },
+            "missing_data_handling": {
+              "type": "string"
+            },
+            "indeterminate_case_handling": {
+              "type": "string"
+            },
+            "intercurrent_event_policy": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "event_class",
+                  "strategy"
+                ],
+                "properties": {
+                  "event_class": {
+                    "type": "string"
+                  },
+                  "strategy": {
+                    "type": "string"
+                  }
+                },
+                "unevaluatedProperties": false
+              }
+            },
+            "validation": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "validation_population",
+                  "sensitivity",
+                  "specificity",
+                  "source",
+                  "validation_date"
+                ],
+                "properties": {
+                  "validation_population": {
+                    "type": "string"
+                  },
+                  "subgroup": {
+                    "type": "string"
+                  },
+                  "sensitivity": {
+                    "$ref": "#/$defs/estimate_with_ci"
+                  },
+                  "specificity": {
+                    "$ref": "#/$defs/estimate_with_ci"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "phenotype_software_version": {
+                    "type": "string"
+                  },
+                  "dependence_assumptions": {
+                    "type": "string"
+                  },
+                  "applicability_judgment": {
+                    "type": "string"
+                  },
+                  "validation_date": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "unevaluatedProperties": false
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "policy_rule": {
+          "type": "object",
+          "required": [
+            "authority",
+            "rule_version",
+            "adherence_rule",
+            "determination_mechanism"
+          ],
+          "properties": {
+            "authority": {
+              "type": "string"
+            },
+            "rule_version": {
+              "type": "string"
+            },
+            "adherence_rule": {
+              "$ref": "#/$defs/executable_rule"
+            },
+            "determination_mechanism": {
+              "type": "string",
+              "enum": [
+                "mechanical_rule",
+                "algorithmic",
+                "human_adjudication"
+              ]
+            },
+            "discretion_note": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "benchmark": {
+          "type": "object",
+          "required": [
+            "benchmark_ref",
+            "benchmark_version",
+            "scoring_rule"
+          ],
+          "properties": {
+            "benchmark_ref": {
+              "type": "string"
+            },
+            "benchmark_version": {
+              "type": "string"
+            },
+            "scoring_rule": {
+              "$ref": "#/$defs/executable_rule"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "extensions": {
+          "type": "object"
+        },
+        "answer_space": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "answer_space_semantics": {
+          "type": "string",
+          "enum": [
+            "nominal",
+            "ordinal",
+            "interval",
+            "continuous"
+          ],
+          "description": "The measurement semantics of answer_space. Alignment relations declare which semantics they are valid for; a relation defined by exact agreement is meaningless over an ordered space and vice versa."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "adjudication_charter": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "content_hash",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "roster",
+        "independence_attestations",
+        "blinding_plan",
+        "assessment_protocol",
+        "disagreement_pathway",
+        "minimum_data_rule",
+        "status_tracking_cadence",
+        "deviation_handling",
+        "agreement_statistic",
+        "revision_protocol"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_anchor_inside"
+        }
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "adjudication_charter"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "type": "string"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "roster": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "adjudicator_ref",
+              "role",
+              "qualification_ref"
+            ],
+            "properties": {
+              "adjudicator_ref": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "chair",
+                  "member",
+                  "coordinator",
+                  "third_reader"
+                ]
+              },
+              "qualification_ref": {
+                "type": "string"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "independence_attestations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "blinding_plan": {
+          "type": "object",
+          "required": [
+            "included_evidence_categories",
+            "excluded_evidence_categories"
+          ],
+          "properties": {
+            "included_evidence_categories": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "excluded_evidence_categories": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "assessment_protocol": {
+          "type": "object",
+          "required": [
+            "committed_before_consensus",
+            "min_independent_assessments"
+          ],
+          "properties": {
+            "committed_before_consensus": {
+              "type": "boolean"
+            },
+            "min_independent_assessments": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "disagreement_pathway": {
+          "type": "object",
+          "required": [
+            "method"
+          ],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "consensus",
+                "third_reader",
+                "chair_ruling"
+              ]
+            },
+            "procedure": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "minimum_data_rule": {
+          "type": "string"
+        },
+        "status_tracking_cadence": {
+          "$ref": "#/$defs/duration"
+        },
+        "deviation_handling": {
+          "type": "string"
+        },
+        "extensions": {
+          "type": "object"
+        },
+        "agreement_statistic": {
+          "$ref": "#/$defs/executable_rule",
+          "description": "The executable definition of the charter's agreement statistic, including how non-assessable assessments compare."
+        },
+        "revision_protocol": {
+          "type": "object",
+          "required": [
+            "authorized_methods",
+            "assessment_free_methods",
+            "deciding_role"
+          ],
+          "description": "How a determination may be revised. Without this, a revision citing no assessments escapes every charter constraint, which is a laundering path beside the one Section 6.10 closes.",
+          "properties": {
+            "authorized_methods": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "assessment_free_methods": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Methods that may resolve without citing new independent assessments. An adjudication resolved this way MUST NOT record an inter-adjudicator agreement statistic, since there are no assessments to compute it over."
+            },
+            "deciding_role": {
+              "type": "string",
+              "description": "Charter role authorized to decide an assessment-free revision."
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "metric_definition": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "content_hash",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "metric_name",
+        "formal_definition",
+        "binary_validity_required",
+        "validity_dimension_spec",
+        "commensurability",
+        "aggregation_and_uncertainty"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_anchor_inside"
+        },
+        {
+          "if": {
+            "properties": {
+              "metric_name": {
+                "const": "EAR"
+              }
+            },
+            "required": [
+              "metric_name"
+            ]
+          },
+          "then": {
+            "required": [
+              "alignment_relation"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "metric_definition"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "type": "string"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "metric_name": {
+          "type": "string"
+        },
+        "formal_definition": {
+          "type": "object",
+          "required": [
+            "numerator",
+            "denominator",
+            "executable"
+          ],
+          "properties": {
+            "numerator": {
+              "type": "string"
+            },
+            "denominator": {
+              "type": "string"
+            },
+            "exclusions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "executable": {
+              "$ref": "#/$defs/executable_rule"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "binary_validity_required": {
+          "type": "boolean"
+        },
+        "validity_dimension_spec": {
+          "type": "object",
+          "required": [
+            "mode",
+            "executable"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "binary",
+                "graded",
+                "probabilistic"
+              ]
+            },
+            "scale": {
+              "type": "string"
+            },
+            "transform": {
+              "type": "string"
+            },
+            "correctness_tolerance": {
+              "type": "string"
+            },
+            "executable": {
+              "$ref": "#/$defs/executable_rule"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "commensurability": {
+          "type": "object",
+          "required": [
+            "same_answer_space_required"
+          ],
+          "properties": {
+            "same_answer_space_required": {
+              "type": "boolean"
+            },
+            "mapping": {
+              "$ref": "#/$defs/executable_rule"
+            },
+            "mapping_validation_ref": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "woa_handling": {
+          "type": "object",
+          "required": [
+            "raw_mandatory",
+            "scale",
+            "equal_advice_exclusion",
+            "full_distribution_reporting",
+            "near_zero_vs_negative_interpretation"
+          ],
+          "properties": {
+            "raw_mandatory": {
+              "const": true
+            },
+            "bounded_secondary": {
+              "type": "boolean"
+            },
+            "winsorization_bounds": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "scale": {
+              "type": "string"
+            },
+            "transform": {
+              "type": "string"
+            },
+            "equal_advice_exclusion": {
+              "const": true
+            },
+            "aggregation": {
+              "type": "string"
+            },
+            "full_distribution_reporting": {
+              "const": true
+            },
+            "near_zero_vs_negative_interpretation": {
+              "const": "woa_near_zero_with_correct_advice_is_under_reliance; negative_woa_is_movement_away"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "aggregation_and_uncertainty": {
+          "type": "object",
+          "required": [
+            "estimator",
+            "min_cell_size",
+            "interval_method"
+          ],
+          "properties": {
+            "estimator": {
+              "$ref": "#/$defs/executable_rule"
+            },
+            "min_cell_size": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "interval_method": {
+              "type": "string"
+            },
+            "hierarchical_shrinkage": {
+              "type": "boolean"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "extensions": {
+          "type": "object"
+        },
+        "alignment_relation": {
+          "$ref": "#/$defs/executable_rule",
+          "description": "Required when the metric's definition depends on an alignment relation (EAR). Section 4: alignment relations are executable, digested, and fixtured like any other recomputation-affecting rule."
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "analysis_plan": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "content_hash",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "primary_metric_ref",
+        "primary_evaluation_criterion_ref",
+        "primary_population",
+        "primary_projection_rule_ref",
+        "disclosure_commitments"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_anchor_inside"
+        }
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "analysis_plan"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "type": "string"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "primary_metric_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "primary_evaluation_criterion_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "primary_population": {
+          "type": "string"
+        },
+        "primary_projection_rule_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "prespecified_subgroups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "disclosure_commitments": {
+          "const": true
+        },
+        "extensions": {
+          "type": "object"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "projection_rule": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "content_hash",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "baseline_selection",
+        "target_exposure_selection",
+        "evaluation_state",
+        "coexposure_handling",
+        "actor_identity_requirement",
+        "executable",
+        "eligible_exposure_classes"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_anchor_inside"
+        },
+        {
+          "if": {
+            "properties": {
+              "evaluation_state": {
+                "const": "declared_other"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "evaluation_state_declaration"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "projection_rule"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/uri"
+        },
+        "version": {
+          "type": "string"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "baseline_selection": {
+          "type": "string"
+        },
+        "target_exposure_selection": {
+          "type": "string"
+        },
+        "evaluation_state": {
+          "type": "string",
+          "enum": [
+            "proximal_post_exposure",
+            "final",
+            "declared_other"
+          ]
+        },
+        "evaluation_state_declaration": {
+          "type": "string"
+        },
+        "coexposure_handling": {
+          "type": "string",
+          "enum": [
+            "disclose",
+            "exclude_projection",
+            "stratify"
+          ]
+        },
+        "actor_identity_requirement": {
+          "type": "string",
+          "enum": [
+            "baseline_equals_evaluation_actor",
+            "team_construct"
+          ]
+        },
+        "executable": {
+          "$ref": "#/$defs/executable_rule"
+        },
+        "extensions": {
+          "type": "object"
+        },
+        "eligible_exposure_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "PRIORITY",
+              "PRESENCE",
+              "CATEGORICAL",
+              "LOCALIZATION",
+              "QUANTITATIVE",
+              "NARRATIVE",
+              "DIRECTIVE",
+              "AGENTIC"
+            ]
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "artifact_ref": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "type": "object",
+          "required": [
+            "alg",
+            "digest"
+          ],
+          "properties": {
+            "alg": {
+              "const": "sha-256"
+            },
+            "digest": {
+              "$ref": "#/$defs/sha256hex"
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "secondary_use_governance": {
+      "type": "object",
+      "description": "Required before any metric may be derived at individual-clinician level. DSES makes per-clinician derivation mechanically trivial; this artifact makes it procedurally deliberate, prespecified, and attributable.",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "created_at",
+        "author_ref",
+        "prespecification_cutoff",
+        "purpose",
+        "authorized_recipients",
+        "review_body",
+        "min_cell_size",
+        "case_mix_adjustment",
+        "subject_notification",
+        "appeal_pathway",
+        "retention",
+        "purpose_code",
+        "decision_consequence",
+        "max_observation_window_days",
+        "high_stakes_safeguards",
+        "governance_timing",
+        "privacy_basis"
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "secondary_use_governance"
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the individual-level derivation is for. Quality improvement, credentialing, and litigation support are different purposes with different governance; a single artifact may not silently serve all three."
+        },
+        "authorized_recipients": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "review_body": {
+          "type": "string",
+          "minLength": 1
+        },
+        "min_cell_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Minimum denominator below which an individual-level metric MUST NOT be reported. A rate over a handful of eligible cases carries an interval so wide it cannot support any determination, and reporting the point estimate alone invites one anyway."
+        },
+        "case_mix_adjustment": {
+          "type": "object",
+          "required": [
+            "required",
+            "method_ref"
+          ],
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "method_ref": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false,
+          "description": "Without case-mix disclosure a clinician who takes harder cases is penalised by construction."
+        },
+        "subject_notification": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Whether and how the clinician whose record is being derived is informed."
+        },
+        "appeal_pathway": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retention": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose_code": {
+          "type": "string",
+          "enum": [
+            "quality_improvement",
+            "research",
+            "education",
+            "safety_monitoring",
+            "credentialing",
+            "employment",
+            "litigation_support",
+            "regulatory_oversight",
+            "other"
+          ],
+          "description": "Structured secondary-use purpose. High-stakes purposes trigger additional safeguards; the free-text purpose remains explanatory only."
+        },
+        "decision_consequence": {
+          "type": "string",
+          "enum": [
+            "none",
+            "advisory",
+            "remediation",
+            "privileging",
+            "credentialing",
+            "employment",
+            "litigation",
+            "regulatory"
+          ],
+          "description": "The maximum consequence the governance artifact authorizes the analysis to inform. DSES records this authorization; it does not establish the legal authority to impose the consequence."
+        },
+        "max_observation_window_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum longitudinal window for an individual-level metric. The value is governance-defined rather than supplied by DSES; each metric must state its actual bounded window."
+        },
+        "high_stakes_safeguards": {
+          "type": "object",
+          "required": [
+            "aggregate_metric_sole_basis_prohibited",
+            "case_level_review_required",
+            "subject_access_to_evidence",
+            "appeal_available",
+            "subject_notification_required"
+          ],
+          "properties": {
+            "aggregate_metric_sole_basis_prohibited": {
+              "type": "boolean"
+            },
+            "case_level_review_required": {
+              "type": "boolean"
+            },
+            "subject_access_to_evidence": {
+              "type": "boolean"
+            },
+            "appeal_available": {
+              "type": "boolean"
+            },
+            "subject_notification_required": {
+              "type": "boolean"
+            }
+          },
+          "unevaluatedProperties": false,
+          "description": "Declared procedural safeguards. For credentialing, employment, litigation support, or regulatory oversight all four are required true. Actual compliance remains external to DSES."
+        },
+        "governance_timing": {
+          "type": "string",
+          "enum": [
+            "prospective",
+            "retrospective"
+          ],
+          "description": "Whether this authorization preceded the observations it governs. Prespecified relative to an analysis cutoff MUST NOT be used to imply prospective authorization of professional surveillance."
+        },
+        "privacy_basis": {
+          "type": "object",
+          "required": [
+            "patient_data_basis",
+            "professional_identity_mode"
+          ],
+          "description": "Declared, not validated: DSES requires the declaration and binds it; it does not determine whether the selected legal basis is valid.",
+          "properties": {
+            "patient_data_basis": {
+              "type": "string",
+              "enum": [
+                "hipaa_operations",
+                "authorization",
+                "limited_dataset",
+                "deidentified_expert",
+                "deidentified_safe_harbor",
+                "other"
+              ]
+            },
+            "professional_identity_mode": {
+              "type": "string",
+              "enum": [
+                "pseudonymous",
+                "organization_resolvable",
+                "identified"
+              ]
+            },
+            "identity_binding_holder": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "anyOf": [
+              {
+                "properties": {
+                  "purpose_code": {
+                    "enum": [
+                      "credentialing",
+                      "employment",
+                      "litigation_support",
+                      "regulatory_oversight"
+                    ]
+                  }
+                },
+                "required": [
+                  "purpose_code"
+                ]
+              },
+              {
+                "properties": {
+                  "decision_consequence": {
+                    "enum": [
+                      "remediation",
+                      "privileging",
+                      "credentialing",
+                      "employment",
+                      "litigation",
+                      "regulatory"
+                    ]
+                  }
+                },
+                "required": [
+                  "decision_consequence"
+                ]
+              }
+            ]
+          },
+          "then": {
+            "properties": {
+              "high_stakes_safeguards": {
+                "properties": {
+                  "aggregate_metric_sole_basis_prohibited": {
+                    "const": true
+                  },
+                  "case_level_review_required": {
+                    "const": true
+                  },
+                  "subject_access_to_evidence": {
+                    "const": true
+                  },
+                  "subject_notification_required": {
+                    "const": true
+                  },
+                  "appeal_available": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "aggregate_metric_sole_basis_prohibited",
+                  "case_level_review_required",
+                  "subject_access_to_evidence",
+                  "subject_notification_required",
+                  "appeal_available"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "responsibility_assignments": {
+      "type": "object",
+      "description": "Prospective binding of decision instances to responsible professionals, independent of later linkage. Cohort denominator closure does not confer clinician denominator closure: subject attribution derived only from linked trajectories lets a subject's failed linkages vanish from their own record.",
+      "required": [
+        "artifact_kind",
+        "artifact_id",
+        "version",
+        "created_at",
+        "author_ref",
+        "assignment_source",
+        "assignments",
+        "prespecification_cutoff"
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "responsibility_assignments"
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "author_ref": {
+          "type": "string"
+        },
+        "assignment_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "assignments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "case_ref",
+              "subject_ref",
+              "role",
+              "decision_time"
+            ],
+            "properties": {
+              "case_ref": {
+                "type": "string"
+              },
+              "subject_ref": {
+                "type": "string"
+              },
+              "role": {
+                "const": "responsible_decision_maker"
+              },
+              "decision_time": {
+                "$ref": "#/$defs/datetime"
+              }
+            },
+            "unevaluatedProperties": false
+          }
+        },
+        "prespecification_cutoff": {
+          "$ref": "#/$defs/cutoff"
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

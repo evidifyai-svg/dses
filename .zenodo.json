@@ -1,42 +1,36 @@
 {
-  "title": "Decision-Sequence Evidence Schema (DSES)",
-  "description": "An open, vendor-neutral vocabulary for evidence of how humans and AI make decisions together. DSES defines a ten-event vocabulary for human-AI decision sequences, an eight-class exposure ontology, an information-state and independence model, four integrity classes, and three conformance levels, with mappings to HL7 FHIR AuditEvent and Provenance, IHE Radiology AI profiles, DICOM, and OpenTelemetry.",
+  "title": "DSES: Decision-Sequence Evidence Schema",
+  "upload_type": "software",
+  "description": "Open specification for cryptographically verifiable human-AI decision evidence. The v0.1 sequence layer proves the order in which a clinician's judgment formed relative to AI exposure via commit-then-reveal sequential disclosure (hash-chained events, RFC 8785 canonicalization, payload commitments with hiding nonces, ed25519 signatures, RFC 9162 inclusion and consistency proofs, external timestamp anchoring). The v0.2 outcome layer adds denominator-closed eligibility manifests, outcome linkage, blinded pre-consensus adjudication under enforceable charters, content-addressed executable rules, recomputable reliance metrics (RAIR, RSR, EAR) with Wilson intervals, and a secondary-use governance layer constraining unit of analysis and individual-level derivation. Every normative requirement is classified by verification class and enforced by release lint, an adversarial regression suite, and a reference verifier. Specification text is licensed CC BY 4.0 (LICENSE-SPEC.md); reference code is licensed MIT (LICENSE-CODE.md).",
+  "license": "cc-by-4.0",
   "creators": [
     {
       "name": "Henderson, Joshua M.",
-      "affiliation": "Evidify LLC",
-      "orcid": "0000-0001-7864-287X"
+      "affiliation": "Evidify LLC"
     }
   ],
-  "license": "CC-BY-4.0",
-  "upload_type": "software",
   "keywords": [
     "decision-sequence evidence",
-    "human-AI interaction",
-    "automation bias",
+    "commit-then-reveal",
+    "human-AI decision ordering",
     "clinical AI",
-    "exposure ontology",
-    "AI governance",
-    "reconstructability"
+    "automation bias",
+    "audit evidence",
+    "outcome adjudication",
+    "reliance metrics",
+    "certificate transparency",
+    "verifiable claims"
   ],
   "related_identifiers": [
     {
-      "identifier": "https://www.npmjs.com/package/@evidifyresearch/event-schema",
-      "relation": "isDerivedFrom",
-      "scheme": "url",
-      "resource_type": "software"
+      "identifier": "10.5281/zenodo.21960297",
+      "relation": "isVersionOf",
+      "scheme": "doi"
     },
     {
-      "identifier": "10.2139/ssrn.6643919",
+      "identifier": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6643919",
       "relation": "isDocumentedBy",
-      "scheme": "doi",
-      "resource_type": "publication-preprint"
-    },
-    {
-      "identifier": "10.1093/jamia/ocag152",
-      "relation": "isDocumentedBy",
-      "scheme": "doi",
-      "resource_type": "publication-article"
+      "scheme": "url"
     }
   ]
 }

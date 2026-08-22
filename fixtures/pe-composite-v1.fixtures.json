@@ -1,0 +1,19 @@
+{
+ "vectors": [
+  {
+   "imaging": "positive",
+   "course": "negative",
+   "expect": "positive"
+  },
+  {
+   "imaging": "negative",
+   "course": "negative",
+   "expect": "negative"
+  },
+  {
+   "imaging": null,
+   "course": "negative",
+   "expect": null
+  }
+ ]
+}

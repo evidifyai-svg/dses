@@ -1,0 +1,94 @@
+{
+  "artifact_kind": "metric_definition",
+  "artifact_id": "https://example.org/dses/metrics/ear-primary",
+  "version": "1.0.0",
+  "created_at": "2026-02-15T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "metric_name": "EAR",
+  "formal_definition": {
+    "numerator": "EAR numerator per Section 8.2",
+    "denominator": "EAR denominator per Section 8.2",
+    "exclusions": [
+      "indeterminate adjudication",
+      "commensurability ineligible",
+      "binary projection excluded"
+    ],
+    "executable": {
+      "rule_id": "ear-v1",
+      "code_artifact": {
+        "media_type": "text/x-python",
+        "locator": "rules/ear_v1.py",
+        "digest": {
+          "alg": "sha-256",
+          "digest": "93b55c9c3fec15b3add11560e02c705d326bec5a98daaabf34b885fe8d3b0618"
+        }
+      },
+      "fixtures_ref": "fixtures/ear-v1.fixtures.json"
+    }
+  },
+  "binary_validity_required": true,
+  "validity_dimension_spec": {
+    "mode": "binary",
+    "executable": {
+      "rule_id": "pe-binary-v1",
+      "code_artifact": {
+        "media_type": "text/x-python",
+        "locator": "rules/pe_binary_v1.py",
+        "digest": {
+          "alg": "sha-256",
+          "digest": "aee5183359277470a2b4e8582cd5ea3ac6bb0701eb0a2b87599d165def662bbd"
+        }
+      },
+      "fixtures_ref": "fixtures/pe-binary-v1.fixtures.json"
+    }
+  },
+  "commensurability": {
+    "same_answer_space_required": true
+  },
+  "alignment_relation": {
+    "rule_id": "alignment-same-v1",
+    "code_artifact": {
+      "media_type": "text/x-python",
+      "locator": "rules/alignment_same_v1.py",
+      "digest": {
+        "alg": "sha-256",
+        "digest": "68b966f71a329c86d05b390ac2a5d995a5779be4aa6a2bee363fd18e3ac23953"
+      }
+    },
+    "fixtures_ref": "fixtures/alignment-same-v1.fixtures.json",
+    "parameters": {
+      "answer_space_requirement": "nominal"
+    }
+  },
+  "aggregation_and_uncertainty": {
+    "estimator": {
+      "rule_id": "binomial-point-v1",
+      "code_artifact": {
+        "media_type": "text/x-python",
+        "locator": "rules/binomial_point_v1.py",
+        "digest": {
+          "alg": "sha-256",
+          "digest": "66d03845ad7e7f04b6d11b93c16af9a499c005119543725858b00b8e670ca8ae"
+        }
+      },
+      "fixtures_ref": "fixtures/binomial-point-v1.fixtures.json",
+      "parameters": {
+        "interval_method": "Wilson",
+        "level": 0.95,
+        "tolerance": 1e-09,
+        "tolerance_kind": "absolute",
+        "quantiles": {
+          "0.95": 1.959963984540054,
+          "0.99": 2.5758293035489004
+        }
+      }
+    },
+    "min_cell_size": 1,
+    "interval_method": "Wilson"
+  },
+  "content_hash": "cf72fe5d26b9e587fef359511348ee95eb170935a2e1a69afac72e873f32232e"
+}

@@ -1,0 +1,87 @@
+{
+  "artifact_kind": "responsibility_assignments",
+  "artifact_id": "https://example.org/dses/assignments/pe-2026",
+  "version": "1.0.0",
+  "created_at": "2026-02-20T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "assignment_source": "credentialed_workflow_directory",
+  "assignments": [
+    {
+      "case_ref": "case-chain-c00",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c01",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c02",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c03",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c04",
+      "subject_ref": "clinician-c04",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c05",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c06",
+      "subject_ref": "clinician-c06",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c07",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c08",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c09",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c10",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    },
+    {
+      "case_ref": "case-chain-c11",
+      "subject_ref": "clinician-0417",
+      "role": "responsible_decision_maker",
+      "decision_time": "2026-03-10T03:00:00Z"
+    }
+  ],
+  "content_hash": "ae517e889dcb56b91e7d4d52fc1a183825e35fd03ae778f33520a08a4727cee5"
+}

@@ -1,0 +1,1036 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc8/derived.schema.json",
+  "title": "DSES v0.2.0-rc8 Derived Analytic Artifacts",
+  "description": "Immutable derived artifacts. They carry NO lifecycle field: effective status is replayed from derived_artifact_registered, derived_artifact_superseded, and derived_artifact_invalidated events on the cohort chain (Section 7.1). Singletons carry an assurance vector; aggregates carry inclusion filters and do not collapse heterogeneous assurance into a single vector.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/decision_validity_derived"
+    },
+    {
+      "$ref": "#/$defs/trajectory_projection_derived"
+    },
+    {
+      "$ref": "#/$defs/reliance_metric_derived"
+    }
+  ],
+  "$defs": {
+    "safe_int": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "sha256hex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "datetime": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?(Z|[+-]([01]\\d|2[0-3]):[0-5]\\d)$"
+    },
+    "digest": {
+      "type": "object",
+      "required": [
+        "alg",
+        "digest"
+      ],
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": [
+            "sha-256"
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256hex"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "artifact_ref": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "version",
+        "content_hash"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "content_hash": {
+          "$ref": "#/$defs/digest"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "no_lifecycle": {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "lifecycle"
+            ]
+          },
+          {
+            "required": [
+              "status"
+            ]
+          },
+          {
+            "required": [
+              "superseded_by"
+            ]
+          }
+        ]
+      }
+    },
+    "input_set": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "mode",
+            "input_event_hashes"
+          ],
+          "properties": {
+            "mode": {
+              "const": "inline"
+            },
+            "input_event_hashes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10000,
+              "items": {
+                "$ref": "#/$defs/sha256hex"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "mode",
+            "construction",
+            "input_count",
+            "input_manifest_root",
+            "input_manifest_tree_size",
+            "manifest_location"
+          ],
+          "properties": {
+            "mode": {
+              "const": "committed_manifest"
+            },
+            "construction": {
+              "const": "rfc9162_sha256"
+            },
+            "input_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "input_manifest_root": {
+              "$ref": "#/$defs/sha256hex"
+            },
+            "input_manifest_tree_size": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "manifest_location": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "recomputability": {
+      "type": "object",
+      "required": [
+        "analysis_snapshot_ref",
+        "definition_hashes",
+        "derivation_software_digest",
+        "canonicalization",
+        "input_artifact_availability"
+      ],
+      "properties": {
+        "analysis_snapshot_ref": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "definition_hashes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/artifact_ref"
+          }
+        },
+        "terminology_snapshot_hashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256hex"
+          }
+        },
+        "derivation_software_digest": {
+          "type": "object",
+          "required": [
+            "media_type",
+            "locator",
+            "digest"
+          ],
+          "description": "The derivation engine, located and digested. Every other digest gained a locator in rc3; this one, whose provenance matters most, did not.",
+          "properties": {
+            "media_type": {
+              "type": "string"
+            },
+            "locator": {
+              "type": "string"
+            },
+            "digest": {
+              "type": "object",
+              "required": [
+                "alg",
+                "digest"
+              ],
+              "properties": {
+                "alg": {
+                  "const": "sha-256"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "unevaluatedProperties": false
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "runtime_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "canonicalization": {
+          "const": "RFC8785"
+        },
+        "input_artifact_availability": {
+          "type": "object",
+          "required": [
+            "available",
+            "archived",
+            "unavailable"
+          ],
+          "properties": {
+            "available": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "archived": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "unavailable": {
+              "$ref": "#/$defs/safe_int"
+            }
+          },
+          "unevaluatedProperties": false
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "provenance_capability": {
+      "type": "object",
+      "required": [
+        "source_authenticity",
+        "source_immutability",
+        "source_signature",
+        "source_timestamp_assurance",
+        "source_revision_history"
+      ],
+      "properties": {
+        "source_authenticity": {
+          "type": "string"
+        },
+        "source_immutability": {
+          "type": "string"
+        },
+        "source_signature": {
+          "type": "string",
+          "enum": [
+            "present",
+            "absent",
+            "UNKNOWN"
+          ]
+        },
+        "source_timestamp_assurance": {
+          "type": "string"
+        },
+        "source_revision_history": {
+          "type": "string",
+          "enum": [
+            "available",
+            "unavailable",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "assurance_vector": {
+      "type": "object",
+      "required": [
+        "sequence_integrity",
+        "linkage_method",
+        "linkage_validation_status",
+        "reference_record_provenance",
+        "adjudication_process_profile"
+      ],
+      "properties": {
+        "sequence_integrity": {
+          "type": "string",
+          "enum": [
+            "I0",
+            "I1",
+            "I2",
+            "I3",
+            "UNKNOWN"
+          ]
+        },
+        "linkage_method": {
+          "type": "string",
+          "enum": [
+            "deterministic",
+            "probabilistic",
+            "manual",
+            "UNKNOWN"
+          ]
+        },
+        "linkage_validation_status": {
+          "type": "string",
+          "enum": [
+            "validated",
+            "unvalidated",
+            "UNKNOWN"
+          ]
+        },
+        "reference_record_provenance": {
+          "$ref": "#/$defs/provenance_capability"
+        },
+        "adjudication_process_profile": {
+          "type": "string",
+          "enum": [
+            "charter_blinded_committed",
+            "charter_blinded",
+            "charter_unblinded",
+            "unchartered",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "decision_validity_derived": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "artifact_hash",
+        "derived_at",
+        "subject_ref",
+        "validity",
+        "evaluation_criterion_ref",
+        "adjudication_ref",
+        "recomputability",
+        "assurance_vector"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_lifecycle"
+        }
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "decision_validity_derived"
+        },
+        "artifact_id": {
+          "type": "string"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "derived_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "subject_ref": {
+          "type": "string"
+        },
+        "validity": {
+          "type": "string",
+          "enum": [
+            "correct",
+            "incorrect",
+            "partially_correct",
+            "not_classifiable"
+          ]
+        },
+        "score": {
+          "type": "number"
+        },
+        "evaluation_criterion_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "adjudication_ref": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "alignment": {
+          "type": "object",
+          "properties": {
+            "baseline_ai_relation": {
+              "$ref": "#/$defs/rel"
+            },
+            "e_ai_relation": {
+              "$ref": "#/$defs/rel"
+            },
+            "e_baseline_relation": {
+              "$ref": "#/$defs/rel"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "recomputability": {
+          "$ref": "#/$defs/recomputability"
+        },
+        "assurance_vector": {
+          "$ref": "#/$defs/assurance_vector"
+        },
+        "extensions": {
+          "type": "object"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "rel": {
+      "type": "string",
+      "enum": [
+        "same",
+        "different",
+        "partial_overlap",
+        "toward",
+        "away",
+        "incomparable"
+      ]
+    },
+    "trajectory_projection_derived": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "artifact_hash",
+        "derived_at",
+        "projection_rule_ref",
+        "baseline_actor",
+        "evaluation_actor",
+        "baseline_state_ref",
+        "target_ai_exposure_ref",
+        "target_exposure_classes",
+        "coexposure_refs",
+        "evaluation_state_ref",
+        "commensurability_status",
+        "actor_identity_satisfied",
+        "recomputability",
+        "assurance_vector"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_lifecycle"
+        }
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "trajectory_projection_derived"
+        },
+        "artifact_id": {
+          "type": "string"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "derived_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "projection_rule_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "baseline_actor": {
+          "type": "string"
+        },
+        "evaluation_actor": {
+          "type": "string"
+        },
+        "actor_identity_satisfied": {
+          "type": "boolean",
+          "description": "false means self-reliance constructs are unavailable; only team constructs may be computed"
+        },
+        "baseline_state_ref": {
+          "type": "string"
+        },
+        "target_ai_exposure_ref": {
+          "type": "string"
+        },
+        "target_exposure_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "PRIORITY",
+              "PRESENCE",
+              "CATEGORICAL",
+              "LOCALIZATION",
+              "QUANTITATIVE",
+              "NARRATIVE",
+              "DIRECTIVE",
+              "AGENTIC"
+            ]
+          }
+        },
+        "coexposure_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evaluation_state_ref": {
+          "type": "string"
+        },
+        "final_state_ref": {
+          "type": "string"
+        },
+        "commensurability_status": {
+          "type": "string",
+          "enum": [
+            "eligible",
+            "ineligible_answer_space",
+            "eligible_via_validated_mapping"
+          ]
+        },
+        "recomputability": {
+          "$ref": "#/$defs/recomputability"
+        },
+        "assurance_vector": {
+          "$ref": "#/$defs/assurance_vector"
+        },
+        "extensions": {
+          "type": "object"
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "reliance_metric_derived": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "artifact_hash",
+        "derived_at",
+        "metric_definition_ref",
+        "projection_set",
+        "numerator",
+        "denominator",
+        "value",
+        "disclosures",
+        "recomputability",
+        "inclusion_filters",
+        "unit_of_analysis"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/no_lifecycle"
+        },
+        {
+          "if": {
+            "properties": {
+              "denominator": {
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "denominator"
+            ]
+          },
+          "then": {
+            "required": [
+              "interval"
+            ],
+            "description": "The declared estimator's interval is normative: a point estimate over a nonzero denominator ships with its interval."
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "unit_of_analysis": {
+                "const": "individual_clinician"
+              }
+            },
+            "required": [
+              "unit_of_analysis"
+            ]
+          },
+          "then": {
+            "required": [
+              "governance_ref",
+              "case_mix_disclosure",
+              "subject_ref",
+              "interval",
+              "observation_window",
+              "reliance_context"
+            ],
+            "description": "Individual-level metrics require governance, case-mix disclosure, an identified subject, and an interval. A point estimate without an interval is the form in which a small denominator does its damage."
+          }
+        }
+      ],
+      "properties": {
+        "artifact_type": {
+          "const": "reliance_metric_derived"
+        },
+        "artifact_id": {
+          "type": "string"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "derived_at": {
+          "$ref": "#/$defs/datetime"
+        },
+        "metric_definition_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "projection_set": {
+          "$ref": "#/$defs/input_set"
+        },
+        "numerator": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "denominator": {
+          "$ref": "#/$defs/safe_int"
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "interval": {
+          "type": "object",
+          "required": [
+            "lower",
+            "upper",
+            "level",
+            "method"
+          ],
+          "properties": {
+            "lower": {
+              "type": "number"
+            },
+            "upper": {
+              "type": "number"
+            },
+            "level": {
+              "type": "number"
+            },
+            "method": {
+              "type": "string"
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "woa_distribution_ref": {
+          "type": "string"
+        },
+        "disclosures": {
+          "type": "object",
+          "required": [
+            "completeness_accounting",
+            "verification_rule",
+            "blinding_breakdown",
+            "primary_evaluation_criterion",
+            "criterion_validation_present",
+            "commensurability_exclusions",
+            "binary_projection_exclusions",
+            "plan_reference"
+          ],
+          "properties": {
+            "completeness_accounting": {
+              "type": "object",
+              "required": [
+                "membership_committed_population",
+                "tracked",
+                "linked",
+                "linkage_failed",
+                "linkage_ambiguous",
+                "pending_maturation",
+                "mature",
+                "concluded_determinate",
+                "conclusion_status_breakdown",
+                "followup_state_breakdown"
+              ],
+              "properties": {
+                "membership_committed_population": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "tracked": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "linked": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "linkage_failed": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "linkage_ambiguous": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "pending_maturation": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "mature": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "concluded_determinate": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "conclusion_status_breakdown": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/$defs/safe_int"
+                  }
+                },
+                "followup_state_breakdown": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/$defs/safe_int"
+                  }
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "verification_rule": {
+              "type": "string",
+              "const": "OL-ADJUDICATED",
+              "description": "Stable conformance rule identifier for the mature-linked-case adjudication disclosure."
+            },
+            "blinding_breakdown": {
+              "type": "object",
+              "required": [
+                "blinded_committed",
+                "blinded",
+                "unblinded_or_breached"
+              ],
+              "properties": {
+                "blinded_committed": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "blinded": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "unblinded_or_breached": {
+                  "$ref": "#/$defs/safe_int"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "primary_evaluation_criterion": {
+              "type": "boolean"
+            },
+            "criterion_validation_present": {
+              "type": "boolean"
+            },
+            "commensurability_exclusions": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "binary_projection_exclusions": {
+              "type": "object",
+              "required": [
+                "indeterminate",
+                "partially_correct",
+                "not_classifiable"
+              ],
+              "properties": {
+                "indeterminate": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "partially_correct": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "not_classifiable": {
+                  "$ref": "#/$defs/safe_int"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "plan_reference": {
+              "type": "object",
+              "required": [
+                "analysis_plan_ref"
+              ],
+              "description": "A reference, not a conclusion. Prespecification assurance is DERIVED by the verifier from the plan artifact, its anchor receipt, and its declared cutoff (Section 7.5).",
+              "properties": {
+                "analysis_plan_ref": {
+                  "$ref": "#/$defs/artifact_ref"
+                }
+              },
+              "unevaluatedProperties": false
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "recomputability": {
+          "$ref": "#/$defs/recomputability"
+        },
+        "inclusion_filters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "extensions": {
+          "type": "object"
+        },
+        "unit_of_analysis": {
+          "type": "string",
+          "enum": [
+            "system",
+            "site",
+            "cohort",
+            "care_team",
+            "individual_clinician"
+          ]
+        },
+        "governance_ref": {
+          "$ref": "#/$defs/artifact_ref"
+        },
+        "case_mix_disclosure": {
+          "type": "object",
+          "required": [
+            "method_ref",
+            "covariates",
+            "adjusted"
+          ],
+          "properties": {
+            "method_ref": {
+              "type": "string"
+            },
+            "adjusted": {
+              "type": "boolean"
+            },
+            "covariates": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "unevaluatedProperties": false
+        },
+        "subject_ref": {
+          "type": "string",
+          "description": "Pseudonymous identifier of the individual the metric describes."
+        },
+        "standard_of_care_determination": false,
+        "reasonable_use_determination": false,
+        "competence_determination": false,
+        "observation_window": {
+          "type": "object",
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "$ref": "#/$defs/datetime"
+            },
+            "end": {
+              "$ref": "#/$defs/datetime"
+            }
+          },
+          "unevaluatedProperties": false,
+          "description": "The bounded longitudinal window used for an individual-level derivation. The verifier filters the subject trajectory set to this interval and checks it against the governing maximum."
+        },
+        "reliance_context": {
+          "type": "object",
+          "required": [
+            "subject_case_count",
+            "adjudication_status_breakdown",
+            "commensurability_breakdown",
+            "baseline_validity_breakdown",
+            "ai_validity_breakdown",
+            "evaluation_validity_breakdown",
+            "ai_system_breakdown",
+            "exposure_class_breakdown",
+            "subject_decision_instance_count",
+            "linkage_breakdown",
+            "maturation_breakdown",
+            "adjudication_breakdown",
+            "metric_eligible_count",
+            "assignment_ref"
+          ],
+          "properties": {
+            "subject_case_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "adjudication_status_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "commensurability_breakdown": {
+              "type": "object",
+              "required": [
+                "commensurable",
+                "noncommensurable"
+              ],
+              "properties": {
+                "commensurable": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "noncommensurable": {
+                  "$ref": "#/$defs/safe_int"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "baseline_validity_breakdown": {
+              "type": "object",
+              "required": [
+                "correct",
+                "incorrect",
+                "excluded"
+              ],
+              "properties": {
+                "correct": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "incorrect": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "excluded": {
+                  "$ref": "#/$defs/safe_int"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "ai_validity_breakdown": {
+              "type": "object",
+              "required": [
+                "correct",
+                "incorrect",
+                "excluded"
+              ],
+              "properties": {
+                "correct": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "incorrect": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "excluded": {
+                  "$ref": "#/$defs/safe_int"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "evaluation_validity_breakdown": {
+              "type": "object",
+              "required": [
+                "correct",
+                "incorrect",
+                "excluded"
+              ],
+              "properties": {
+                "correct": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "incorrect": {
+                  "$ref": "#/$defs/safe_int"
+                },
+                "excluded": {
+                  "$ref": "#/$defs/safe_int"
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "ai_system_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "exposure_class_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "subject_decision_instance_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "metric_eligible_count": {
+              "$ref": "#/$defs/safe_int"
+            },
+            "assignment_ref": {
+              "type": "object",
+              "required": [
+                "artifact_id",
+                "version"
+              ],
+              "properties": {
+                "artifact_id": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "content_hash": {
+                  "type": "object"
+                }
+              },
+              "unevaluatedProperties": true
+            },
+            "linkage_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "maturation_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "adjudication_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            },
+            "index_period_breakdown": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/safe_int"
+              }
+            }
+          },
+          "unevaluatedProperties": false,
+          "description": "Balanced context that travels with every individual metric so a single conditioned rate cannot be detached from the subject's AI-error exposure, human baseline performance, model mix, and adjudication mix."
+        },
+        "legal_authority_determination": false,
+        "admissibility_determination": false,
+        "adverse_action_recommendation": false,
+        "credentialing_action_recommendation": false,
+        "employment_action_recommendation": false,
+        "negligence_determination": false
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

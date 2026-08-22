@@ -1,0 +1,24 @@
+{
+ "vectors": [
+  {
+   "judgment": "positive",
+   "conclusion": "positive",
+   "expect": "correct"
+  },
+  {
+   "judgment": "negative",
+   "conclusion": "positive",
+   "expect": "incorrect"
+  },
+  {
+   "judgment": "equivocal",
+   "conclusion": "positive",
+   "expect": "partially_correct"
+  },
+  {
+   "judgment": null,
+   "conclusion": "positive",
+   "expect": "not_classifiable"
+  }
+ ]
+}
