@@ -94,10 +94,18 @@ def row_support(row):
 def check_changelog_counts(problems):
     import re, subprocess
     spec = open(os.path.join(ROOT, "DSES-v0.2.md")).read()
-    m = re.search(r"suite stands at (\d+)", spec)
+    # scope to the NEWEST changelog entry only: a global search would bind to an
+    # older entry's count when the newest omits the claim, reporting the wrong
+    # failure (found while negative-testing the missing-claim branch)
+    entries = re.split(r"\n\*\*0\.2\.0-", spec.split("## Annex C", 1)[-1])
+    newest = entries[1] if len(entries) > 1 else ""
+    m = re.search(r"suite stands at (\d+)", newest)
     t = open(os.path.join(ROOT, "tests", "run_regression.py")).read()
     actual = len(re.findall(r"^@case\(", t, re.M))
-    if m and int(m.group(1)) != actual:
+    if m is None:
+        problems.append("L11 Annex C carries no 'suite stands at N' claim to check; "
+                        "the newest changelog entry must state the suite count so it can be verified")
+    elif int(m.group(1)) != actual:
         problems.append(f"L11 Annex C claims a suite of {m.group(1)} but tests/run_regression.py defines {actual} cases")
 
 def main():
