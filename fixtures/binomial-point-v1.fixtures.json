@@ -1,0 +1,35 @@
+{
+ "vectors": [
+  {
+   "n": 1,
+   "d": 2,
+   "expect": 0.5
+  },
+  {
+   "n": 0,
+   "d": 0,
+   "expect": null
+  }
+ ],
+ "interval_vectors": [
+  {
+   "n": 1,
+   "d": 2,
+   "expect_lower": 0.09453120573423074,
+   "expect_upper": 0.9054687942657693,
+   "tolerance": 1e-09
+  },
+  {
+   "n": 1,
+   "d": 1,
+   "expect_lower": 0.20654931437723745,
+   "expect_upper": 1.0,
+   "tolerance": 1e-09
+  },
+  {
+   "n": 0,
+   "d": 0,
+   "expect": null
+  }
+ ]
+}

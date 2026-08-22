@@ -1,0 +1,210 @@
+{
+  "artifact_type": "reliance_metric_derived",
+  "artifact_id": "urn:dses:derived:rair-subject-0417-v1",
+  "derived_at": "2026-08-12T01:00:00Z",
+  "metric_definition_ref": {
+    "artifact_id": "https://example.org/dses/metrics/rair-primary",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "7fef6c024c5fd7a0ed02ee9d35c4e289f31a262d9a5e09cf0cad38a5d827eae9"
+    }
+  },
+  "projection_set": {
+    "mode": "inline",
+    "input_event_hashes": [
+      "1cbc92f87b5e14502a0a2af1a35e54a41eec37e88b27f904c680b8802cbc779d",
+      "46a4c4558d2e28497b4980ce2baaab112abf7b4854e4b267070b1464fb9aa587",
+      "54ab808bbca272dc35b3df92d718b1bf10c68ff6597348420340345127e63606"
+    ]
+  },
+  "numerator": 1,
+  "denominator": 3,
+  "value": 0.3333333333333333,
+  "unit_of_analysis": "individual_clinician",
+  "subject_ref": "clinician-0417",
+  "governance_ref": {
+    "artifact_id": "https://example.org/dses/governance/pe-reader-review-2026",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "645144ab14d8990725ea1951d6f803eb037070b4ce64f3cdd2804145ed2e707c"
+    }
+  },
+  "observation_window": {
+    "start": "2026-03-01T00:00:00Z",
+    "end": "2026-06-30T23:59:59Z"
+  },
+  "reliance_context": {
+    "subject_decision_instance_count": 10,
+    "assignment_ref": {
+      "artifact_id": "https://example.org/dses/assignments/pe-2026",
+      "version": "1.0.0",
+      "content_hash": {
+        "alg": "sha-256",
+        "digest": "ae517e889dcb56b91e7d4d52fc1a183825e35fd03ae778f33520a08a4727cee5"
+      }
+    },
+    "linkage_breakdown": {
+      "decision_record_missing": 1,
+      "linked": 9
+    },
+    "maturation_breakdown": {
+      "mature": 8,
+      "not_applicable": 1,
+      "pending": 1
+    },
+    "adjudication_breakdown": {
+      "determinate": 7,
+      "indeterminate": 1,
+      "not_adjudicated": 2
+    },
+    "metric_eligible_count": 8,
+    "subject_case_count": 8,
+    "adjudication_status_breakdown": {
+      "determinate": 7,
+      "indeterminate": 1
+    },
+    "commensurability_breakdown": {
+      "commensurable": 7,
+      "noncommensurable": 1
+    },
+    "baseline_validity_breakdown": {
+      "correct": 2,
+      "incorrect": 5,
+      "excluded": 1
+    },
+    "ai_validity_breakdown": {
+      "correct": 6,
+      "incorrect": 1,
+      "excluded": 1
+    },
+    "evaluation_validity_breakdown": {
+      "correct": 3,
+      "incorrect": 3,
+      "excluded": 2
+    },
+    "ai_system_breakdown": {
+      "vendor-pe-cad-2.1": 8
+    },
+    "exposure_class_breakdown": {
+      "CATEGORICAL": 7,
+      "DIRECTIVE": 1
+    },
+    "index_period_breakdown": {
+      "2026-03": 10
+    }
+  },
+  "case_mix_disclosure": {
+    "method_ref": "pe-case-mix-v1",
+    "adjusted": true,
+    "covariates": [
+      "pretest_probability",
+      "study_quality",
+      "shift_load"
+    ]
+  },
+  "disclosures": {
+    "completeness_accounting": {
+      "membership_committed_population": 12,
+      "tracked": 12,
+      "linked": 11,
+      "linkage_failed": 1,
+      "linkage_ambiguous": 0,
+      "pending_maturation": 1,
+      "mature": 10,
+      "concluded_determinate": 9,
+      "conclusion_status_breakdown": {
+        "determinate": 9,
+        "indeterminate": 1
+      },
+      "followup_state_breakdown": {
+        "active": 11
+      }
+    },
+    "verification_rule": "OL-ADJUDICATED",
+    "blinding_breakdown": {
+      "blinded_committed": 10,
+      "blinded": 0,
+      "unblinded_or_breached": 0
+    },
+    "primary_evaluation_criterion": true,
+    "criterion_validation_present": false,
+    "commensurability_exclusions": 1,
+    "binary_projection_exclusions": {
+      "indeterminate": 1,
+      "partially_correct": 1,
+      "not_classifiable": 0
+    },
+    "plan_reference": {
+      "analysis_plan_ref": {
+        "artifact_id": "https://example.org/dses/plans/pe-primary",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "95d002e322259c67cac5c6263f726b7acaec788186bed7a37cf8602945091e81"
+        }
+      }
+    }
+  },
+  "recomputability": {
+    "analysis_snapshot_ref": "bf87cbb2d097e84c50719d5c6393aa15b03d58a7dea2e1cb744e6e1664e7b1dd",
+    "definition_hashes": [
+      {
+        "artifact_id": "https://example.org/dses/metrics/rair-primary",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "7fef6c024c5fd7a0ed02ee9d35c4e289f31a262d9a5e09cf0cad38a5d827eae9"
+        }
+      },
+      {
+        "artifact_id": "https://example.org/dses/criteria/pe-90day-composite",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+        }
+      },
+      {
+        "artifact_id": "https://example.org/dses/projections/pe-primary",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "a0a1ac8482dbad8700d43270fcdba9f8637ff41339cab439c2672393c969de5d"
+        }
+      }
+    ],
+    "derivation_software_digest": {
+      "media_type": "text/x-python",
+      "locator": "scripts/dses_derivation.py",
+      "digest": {
+        "alg": "sha-256",
+        "digest": "ba244874fbd17fb96e02cedc71717f1ed0f62b35bac7c26423b6b13783083912"
+      }
+    },
+    "canonicalization": "RFC8785",
+    "input_artifact_availability": {
+      "available": 3,
+      "archived": 0,
+      "unavailable": 0
+    }
+  },
+  "inclusion_filters": [
+    "membership_committed",
+    "linked",
+    "mature",
+    "primary_criterion",
+    "commensurable",
+    "binary_projectable",
+    "subject_scoped",
+    "window_bounded"
+  ],
+  "interval": {
+    "lower": 0.06149194472039615,
+    "upper": 0.7923403991979523,
+    "level": 0.95,
+    "method": "Wilson"
+  },
+  "artifact_hash": "ecb72b40b959596d72b0b4719e8ed06a209f45f7cf5cf7d4f0077a6995893fa6"
+}

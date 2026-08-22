@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc8/package.schema.json",
+  "title": "DSES v0.2 package envelope",
+  "type": "object",
+  "required": [
+    "package",
+    "description",
+    "cohort_chain",
+    "case_chains"
+  ],
+  "properties": {
+    "package": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "cohort_chain": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "case_chains": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "export_head_signature": {
+      "$ref": "#/$defs/export_signature"
+    }
+  },
+  "$defs": {
+    "sha256hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "export_signature": {
+      "type": "object",
+      "required": [
+        "profile",
+        "alg",
+        "key_ref",
+        "context_label",
+        "target_hash",
+        "value"
+      ],
+      "properties": {
+        "profile": {
+          "const": "DSES-SIG-v1"
+        },
+        "alg": {
+          "const": "ed25519"
+        },
+        "key_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_label": {
+          "const": "export-head"
+        },
+        "target_hash": {
+          "$ref": "#/$defs/sha256hex"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{128}$"
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  },
+  "unevaluatedProperties": false
+}

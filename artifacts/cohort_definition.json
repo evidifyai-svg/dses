@@ -1,0 +1,98 @@
+{
+  "artifact_kind": "cohort_definition",
+  "artifact_id": "https://example.org/dses/cohorts/pe-ed-2026",
+  "version": "1.0.0",
+  "created_at": "2026-02-15T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "eligibility_rule": {
+    "inclusion": [
+      {
+        "description": "ED encounter with CTPA ordered or considered",
+        "code_sets": [
+          {
+            "system": "SNOMED CT",
+            "system_version": "2026-03-01",
+            "codes": [
+              "241541005"
+            ]
+          }
+        ]
+      }
+    ],
+    "exclusion": [
+      {
+        "description": "Age under 18",
+        "code_sets": [
+          {
+            "system": "local",
+            "system_version": "1",
+            "codes": [
+              "age-lt-18"
+            ]
+          }
+        ]
+      }
+    ],
+    "executable": {
+      "rule_id": "pe-eligibility-v1",
+      "code_artifact": {
+        "media_type": "text/x-python",
+        "locator": "rules/pe_eligibility_v1.py",
+        "digest": {
+          "alg": "sha-256",
+          "digest": "e7ddf09f1b318b0f33f5db70847a872853f3e9bc52aeba6fe105389a5d29b0cf"
+        }
+      },
+      "fixtures_ref": "fixtures/pe-eligibility-v1.fixtures.json"
+    }
+  },
+  "workflow_refs": [
+    "ed-cta-workflow-v3"
+  ],
+  "enrollment_window": {
+    "start": "2026-03-01T00:00:00Z",
+    "end": "2026-04-30T23:59:59Z"
+  },
+  "expected_source_systems": [
+    "ed-information-system",
+    "radiology-information-system"
+  ],
+  "sampling_scheme": {
+    "scheme": "census"
+  },
+  "manifest_membership": true,
+  "manifest_cadence": {
+    "max_interval": "P31D",
+    "max_latency_after_period_end": "P2D"
+  },
+  "membership_multiplicity": "unique_decision_instance",
+  "checkpoint_policy": {
+    "observation_scope": "all_tracks",
+    "max_interval": "P100D"
+  },
+  "unit_of_analysis": "individual_clinician",
+  "evaluation_criteria": {
+    "primary": {
+      "artifact_id": "https://example.org/dses/criteria/pe-90day-composite",
+      "version": "1.0.0",
+      "content_hash": {
+        "alg": "sha-256",
+        "digest": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+      }
+    },
+    "additional": []
+  },
+  "analysis_plan_ref": {
+    "artifact_id": "https://example.org/dses/plans/pe-primary",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "95d002e322259c67cac5c6263f726b7acaec788186bed7a37cf8602945091e81"
+    }
+  },
+  "content_hash": "8ce40befca89ffe8b8cd37aa130989ca711b793d0952b0d0cdf46f5cf73d6509"
+}

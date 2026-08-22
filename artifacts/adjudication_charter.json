@@ -1,0 +1,78 @@
+{
+  "artifact_kind": "adjudication_charter",
+  "artifact_id": "https://example.org/dses/charters/pe-panel-2026",
+  "version": "1.0.0",
+  "created_at": "2026-02-15T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "roster": [
+    {
+      "adjudicator_ref": "adj-A",
+      "role": "member",
+      "qualification_ref": "cv-adj-A"
+    },
+    {
+      "adjudicator_ref": "adj-B",
+      "role": "member",
+      "qualification_ref": "cv-adj-B"
+    },
+    {
+      "adjudicator_ref": "adj-C",
+      "role": "chair",
+      "qualification_ref": "cv-adj-C"
+    }
+  ],
+  "independence_attestations": [
+    "No adjudicator participated in index care.",
+    "No adjudicator has a financial interest in the AI system."
+  ],
+  "blinding_plan": {
+    "included_evidence_categories": [
+      "index_imaging_deidentified",
+      "clinical_course_abstract"
+    ],
+    "excluded_evidence_categories": [
+      "ai_output",
+      "post_ai_documentation",
+      "co_adjudicator_conclusions"
+    ]
+  },
+  "assessment_protocol": {
+    "committed_before_consensus": true,
+    "min_independent_assessments": 2
+  },
+  "agreement_statistic": {
+    "rule_id": "agreement-percent-v1",
+    "code_artifact": {
+      "media_type": "text/x-python",
+      "locator": "rules/agreement_percent_v1.py",
+      "digest": {
+        "alg": "sha-256",
+        "digest": "e2384dab5f432dde4b8ebd4b9724c11b4f84f6b1d95be0f7095bcea9031103b3"
+      }
+    },
+    "fixtures_ref": "fixtures/agreement-percent-v1.fixtures.json"
+  },
+  "disagreement_pathway": {
+    "method": "third_reader",
+    "procedure": "Chair adjudicates after independent commitment."
+  },
+  "revision_protocol": {
+    "authorized_methods": [
+      "consensus",
+      "third_reader",
+      "chair_ruling"
+    ],
+    "assessment_free_methods": [
+      "chair_ruling"
+    ],
+    "deciding_role": "chair"
+  },
+  "minimum_data_rule": "Index imaging plus 90-day course required.",
+  "status_tracking_cadence": "P30D",
+  "deviation_handling": "Deviations recorded as process_flags.",
+  "content_hash": "14843deef7e58ab7271b332d9247eb22ae275cefe9f00904280a24a355a10925"
+}

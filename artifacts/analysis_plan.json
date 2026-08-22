@@ -1,0 +1,38 @@
+{
+  "artifact_kind": "analysis_plan",
+  "artifact_id": "https://example.org/dses/plans/pe-primary",
+  "version": "1.0.0",
+  "created_at": "2026-02-15T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "primary_metric_ref": {
+    "artifact_id": "https://example.org/dses/metrics/rair-primary",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "7fef6c024c5fd7a0ed02ee9d35c4e289f31a262d9a5e09cf0cad38a5d827eae9"
+    }
+  },
+  "primary_evaluation_criterion_ref": {
+    "artifact_id": "https://example.org/dses/criteria/pe-90day-composite",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+    }
+  },
+  "primary_population": "Membership-committed eligible cases with a commensurable primary projection and a determinate adjudication.",
+  "primary_projection_rule_ref": {
+    "artifact_id": "https://example.org/dses/projections/pe-primary",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "a0a1ac8482dbad8700d43270fcdba9f8637ff41339cab439c2672393c969de5d"
+    }
+  },
+  "disclosure_commitments": true,
+  "content_hash": "95d002e322259c67cac5c6263f726b7acaec788186bed7a37cf8602945091e81"
+}

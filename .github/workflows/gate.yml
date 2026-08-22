@@ -1,0 +1,31 @@
+name: DSES release gate
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: pip install -r requirements.txt
+      - name: Full five-stage gate
+        run: bash run_all.sh
+      - name: Manifest integrity
+        run: |
+          python3 - << 'PY'
+          import hashlib
+          bad = n = 0
+          for line in open('RELEASE-MANIFEST.sha256'):
+              p = line.split(None, 1)
+              if len(p) != 2: continue
+              n += 1
+              if hashlib.sha256(open(p[1].strip(),'rb').read()).hexdigest() != p[0]:
+                  bad += 1; print("MISMATCH", p[1].strip())
+          print(f"manifest: {n} entries, {bad} mismatched")
+          raise SystemExit(1 if bad else 0)
+          PY
