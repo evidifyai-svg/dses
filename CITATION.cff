@@ -11,7 +11,8 @@ identifiers:
     value: 10.5281/zenodo.21960297
     description: "Zenodo concept DOI (all versions)"
 repository-code: "https://github.com/evidifyai-svg/dses"
-license: MIT
+license: CC-BY-4.0
+# Specification text CC BY 4.0; reference code MIT. See LICENSE-SPEC.md and LICENSE-CODE.md.
 keywords:
   - decision-sequence evidence
   - commit-then-reveal
