@@ -90,6 +90,16 @@ def row_support(row):
     return "unknown"
 
 
+
+def check_changelog_counts(problems):
+    import re, subprocess
+    spec = open(os.path.join(ROOT, "DSES-v0.2.md")).read()
+    m = re.search(r"suite stands at (\d+)", spec)
+    t = open(os.path.join(ROOT, "tests", "run_regression.py")).read()
+    actual = len(re.findall(r"^@case\(", t, re.M))
+    if m and int(m.group(1)) != actual:
+        problems.append(f"L11 Annex C claims a suite of {m.group(1)} but tests/run_regression.py defines {actual} cases")
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--emit-counts", action="store_true")
@@ -282,6 +292,7 @@ def main():
               f"{len(asserted)} rule-asserting fixtures")
         print(f"  {line_cls}")
         print(f"  {line_sup}")
+    check_changelog_counts(problems)
     for p in problems:
         print(f"  LINT FAIL {p}")
     print(f"release lint: {len(problems)} problems")
