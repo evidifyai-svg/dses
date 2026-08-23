@@ -67,7 +67,7 @@ What it costs:
 
 ## (b) Recommended path: wrangler
 
-    npx wrangler pages deploy site --project-name=<confirm with Josh>
+    npx wrangler pages deploy site --project-name=dses-site
 
 Why this is the correct path:
 
@@ -79,11 +79,15 @@ Why this is the correct path:
 - The deployed unit becomes a directory under version control rather than a
   hand-picked file, so what is live is a commit.
 
-The project name is the one field that has to be confirmed rather than
-assumed. It is the Cloudflare Pages project that owns the dses.ai custom
-domain, and it is visible in the Pages section of the Cloudflare dashboard.
-Passing the wrong project name deploys this site over a different project.
-Confirm it, then fill it in above so this file records it.
+The project name is confirmed. `dses-site` is the Cloudflare Pages project
+that owns the dses.ai custom domain, checked in the dashboard on 2026-08-23.
+
+That check also settled how the project is fed: it is **Direct Upload, not
+git-connected**. The repository dropdown on the project is empty, and the only
+repository authorized to the Cloudflare GitHub App is an unrelated one. So
+nothing deploys on push. A deploy happens when, and only when, someone runs
+the command above. That is a fact about the project, not a preference, and it
+is the reason the pre-deploy guard run is discipline rather than automation.
 
 ## Who runs the first one
 
