@@ -4,6 +4,9 @@
 trademarks of Joshua M. Henderson / Evidify LLC. The specification is CC BY
 4.0 and the code is MIT; this policy governs the names, not the technology.
 
+**DSES-compatible** and **DSES Conformant** are conformance designations
+governed by CONFORMANCE-POLICY.md.
+
 ## Permitted without permission
 
 - Truthful reference: "implements DSES", "based on DSES", "exports DSES

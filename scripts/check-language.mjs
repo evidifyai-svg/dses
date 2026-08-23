@@ -138,6 +138,24 @@ const GATE_MECHANICS_INDICATORS = [
 const DSES_SUBJECT_RE =
   /\bDSES\b(?!\u2122?[-\s]?(?:compatible|Conformant))\u2122?\s+(is|are|was|were|makes|make|proves?|provides?|ensures?|guarantees?|establishes?|refuses?|shows?|demonstrates?|delivers?|creates?|enables?|records?|captures?|verifies?|does|can|will|must)\b/g;
 
+/* ------------------------------------------------------ patent marking (k) */
+
+// False patent marking is a legal exposure, not a style question. Three
+// instances of "Patent pending" shipped on evidify.ai; a case-sensitive grep
+// found the lowercase ones and missed the capitalized one, and a commit
+// message that claimed to remove the second one edited a different file. So
+// this rule is case-insensitive and runs against raw text, comments and
+// attributes included, exactly like the mechanism-term rule.
+const PATENT_PENDING_RE = /\bpatents?[-\s]+pending\b|\bpat\.\s*pend\.?/gi;
+
+// "U.S. Patent No.", "Patent Number", "Pat. Nos." and the like.
+const PATENT_NUMBER_RE = /\b(?:U\.?\s?S\.?\s*)?pat(?:\.|ent)s?\s*(?:no|nos|number|numbers)\b\.?/gi;
+
+// A bare US patent number: "US 11,123,456", "US11123456", "US 11123456 B2".
+// Deliberately NOT case-insensitive: patent numbers are always written "US",
+// and /i would match the pronoun "us" in front of any long figure.
+const US_PATENT_NUM_RE = /\bU\.?S\.?[-\s]?(?:\d{1,3}(?:,\d{3}){2,}|\d{7,11})(?:\s?[AB]\d?)?\b/g;
+
 /* ------------------------------------------------------------- text utils */
 
 function normalizeWithMap(raw) {
@@ -386,6 +404,14 @@ function scanText(raw, opts) {
     if (hit) add("error", "gate-mechanics", s.start, `sentence describes gate enforcement mechanics ("${hit}"): "${snippet(s.text)}"`);
   }
 
+  /* k: patent marking */
+  for (const [re, label] of [[PATENT_PENDING_RE, "patent-pending claim"], [PATENT_NUMBER_RE, "patent number reference"], [US_PATENT_NUM_RE, "US patent number"]]) {
+    re.lastIndex = 0;
+    while ((m = re.exec(raw)) !== null) {
+      add("error", "patent-marking", m.index, `${label}: "${snippet(m[0])}" (marking is permitted only while an application is genuinely on file)`);
+    }
+  }
+
   /* i: DSES bare-noun heuristic (warn only) */
   DSES_SUBJECT_RE.lastIndex = 0;
   while ((m = DSES_SUBJECT_RE.exec(prose)) !== null) {
@@ -468,6 +494,12 @@ function selfTest(cfg) {
     { rule: "gated-pin", name: "h1.html", body: `<p>A gated model reveal follows.</p>` },
     { rule: "gate-mechanics", name: "h2.html", body: `<p>The reveal is gated server-side so nothing leaks.</p>` },
     { rule: "dses-bare-noun", name: "i1.html", body: `<p>DSES makes one claim verifiable.</p>`, level: "warn" },
+    { rule: "patent-marking", name: "k1.html", body: `<p>Patent pending.</p>` },
+    { rule: "patent-marking", name: "k2.html", body: `<p>PATENTS PENDING</p>` },
+    { rule: "patent-marking", name: "k3.html", body: `<!-- patent-pending -->` },
+    { rule: "patent-marking", name: "k4.html", body: `<p>U.S. Patent No. 11,123,456.</p>` },
+    { rule: "patent-marking", name: "k5.html", body: `<p>Covered by US 11123456.</p>` },
+    { rule: "patent-marking", name: "k6.html", body: `<div class="cred"><span class="cd"></span>Patent pending</div>` },
     { rule: "prove-context", name: "v1.html", body: `<p>It proves independence of the clinician.</p>` },
     // Scoped allowlist: the quoted title is still judged as body copy when it is
     // not inside a citation element. If this stops firing, the citation scope has
@@ -489,6 +521,9 @@ function selfTest(cfg) {
       body: `<p><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6643919">Proving the First Read (SSRN)</a></p>` },
     { name: "n11.html governance disclaimer", rules: ["insurance-disclaimer"],
       body: `<p class="guardrail-note">It does not constitute certification or legal advice, and makes no claim about litigation outcomes or insurance coverage.</p>` },
+    { name: "n13.html trademark pending is not patent marking", body: `<div class="cred">Trademark pending</div>` },
+    { name: "n14.html the word patent alone", body: `<p>The patent strategy is documented elsewhere.</p>` },
+    { name: "n15.html US without a patent number", body: `<p>2236 checks, 0 failures, filed in the US in 2026.</p>` },
     { name: "n12.html rewritten step 04", body: `<p>The AI output, an expert reference, or a peer distribution is disclosed only after the lock. The comparator stays sealed until the prior judgment is locked. The record shows that order, and anyone can recompute it.</p>` },
   ];
 
