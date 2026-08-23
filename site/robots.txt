@@ -1,0 +1,57 @@
+# robots.txt for dses.ai
+#
+# The crawler policy mirrors evidify.ai (repo copy at evidify-site/public/
+# robots.txt). The Content-Signal group is the block Cloudflare Managed
+# robots.txt currently prepends at the edge, copied in here so this file
+# states the whole policy on its own rather than depending on a dashboard
+# toggle.
+#
+# While the Cloudflare Managed robots.txt toggle is still on for this zone,
+# what ships is the managed block followed by this file, so the Content-Signal
+# group appears twice. That is harmless and it resolves the moment the toggle
+# is off. Flipping that toggle is Josh's step, not an automated one.
+#
+# The managed block also names three agents this file does not:
+# Applebot-Extended, CloudflareBrowserRenderingCrawler, meta-externalagent.
+# If the managed block is turned off, those three have to be added here and to
+# evidify.ai in the same change or that coverage is silently lost.
+
+# ANY RESTRICTIONS EXPRESSED VIA CONTENT SIGNALS ARE EXPRESS RESERVATIONS OF
+# RIGHTS UNDER ARTICLE 4 OF THE EUROPEAN UNION DIRECTIVE 2019/790 ON COPYRIGHT
+# AND RELATED RIGHTS IN THE DIGITAL SINGLE MARKET.
+
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+Sitemap: https://dses.ai/sitemap.xml

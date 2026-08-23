@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  dses.ai sitemap. One page today, the single-document specification site.
+  At the 60-day split, add one <url> element per new path in the same
+  one-per-line shape used by evidify.ai/sitemap.xml, in reading order, and
+  update <lastmod> on any page whose copy changed in that release.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://dses.ai/</loc><lastmod>2026-08-23</lastmod></url>
+</urlset>
