@@ -4,7 +4,8 @@
 # TAKES EFFECT ONLY UNDER A WRANGLER-BASED DEPLOY OF THIS DIRECTORY.
 # Cloudflare Pages reads _headers from the root of the uploaded output
 # directory. A dashboard Direct Upload of a lone index.html does not carry
-# this file, and none of the headers below will be present. See DEPLOY.md.
+# this file, and none of the headers below will be present. See
+# docs/DEPLOY-dses-site.md at the repository root.
 #
 # The CSP is sized to what the page actually loads, verified against the
 # v0.2.0-rc8 source:

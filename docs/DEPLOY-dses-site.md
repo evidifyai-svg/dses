@@ -5,6 +5,12 @@ of truth for that site. Nothing else in this repository is published to the
 web: the specification markdown at the repository root is normative spec text,
 not site copy.
 
+This file lives at `docs/DEPLOY-dses-site.md`, outside the deploy root, on the
+rule that a deploy root holds only what ships. It was briefly at
+`site/DEPLOY.md` when the directory was created on 2026-08-23 and was moved out
+in the same day on the branch `site/emdash-sweep-dses`. If you find a reference
+to `site/DEPLOY.md` anywhere, it predates that move.
+
 ## Source custody
 
 `site/index.html` was copied byte for byte from `~/Downloads/index.html` on
@@ -87,18 +93,16 @@ run is the one that would reveal a wrong project name or an unexpected build
 setting on the project. After it has succeeded once and production has been
 diffed against `site/index.html`, later deploys are routine.
 
-## Open item for Josh
+## Why this file is not in `site/`
 
-This file lives inside the deploy directory, so a wrangler deploy of `site/`
-publishes it at https://dses.ai/DEPLOY.md. It holds nothing sensitive, so the
-worst case is untidy rather than harmful, but it is a public URL. Three ways
-to close it, in order of preference:
+A wrangler deploy uploads the whole directory it is given. Anything sitting in
+`site/` gets a public URL, so an operations note left there would have been
+served at https://dses.ai/DEPLOY.md. Nothing in this file is sensitive, so that
+would have been untidy rather than harmful, but the rule is cleaner than the
+judgment call: `site/` holds only what ships, and everything about how it ships
+lives here.
 
-1. Move this file to the repository root or to `docs/` and leave `site/` as
-   pure deploy output.
-2. Exclude it with an `.assetsignore` file in `site/`. Confirm that the
-   installed wrangler version honors that for Pages before relying on it.
-3. Accept it as published.
-
-Nothing here depends on the choice. It is flagged rather than decided because
-the instruction for this session put the file at `site/DEPLOY.md`.
+One consequence worth knowing: the language guard is scoped to `site/`, so this
+file is no longer scanned by it. That is correct, since it is operations copy
+rather than site copy, but it does mean the constraints are on you here rather
+than on the guard.
