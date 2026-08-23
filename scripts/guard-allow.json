@@ -90,6 +90,23 @@
       "ruling": "2026-08-23",
       "rules": ["dses-bare-noun", "gated-pin"],
       "note": "Protected normative conformance vocabulary. Never carries a trademark symbol, never rewritten. Exempt from the bare-noun heuristic."
+    },
+    {
+      "id": "CITE-1",
+      "source": "quoted-title exception, accepted 2026-08-23",
+      "phrase": "Proving the First Read",
+      "ruling": "2026-08-23",
+      "rules": ["prove-unpaired", "prove-context"],
+      "scope": { "within": ["a", "cite"], "matching": "ssrn\\.com[^\"'>]*abstract(?:_id)?=6643919" },
+      "note": "The SSRN preprint title, allowed ONLY inside a link or cite element whose markup references the SSRN abstract. Outside a citation element the prove rule stays armed and the title warns like any other body copy, which the self-test asserts (case j1). Widening or removing `scope` disarms the rule for all prose containing the title."
+    },
+    {
+      "id": "INS-2",
+      "source": "accepted 2026-08-23, for-governance.html guardrail note",
+      "phrase": "makes no claim about litigation outcomes or insurance coverage",
+      "ruling": "2026-08-23",
+      "rules": ["insurance-disclaimer"],
+      "note": "This line disclaims an insurance channel, it does not market one, so the verbatim sentence from constraint 2 is not required here. The insurance-disclaimer rule stays armed for every other file and for any future insurance copy. It is scoped to this exact disclaimer sentence, so a page that markets an insurance channel still warns. Carried in both repos so the allow set stays one shared ruleset; only scanRoot, shipRoot and ignorePaths differ per repo."
     }
   ]
 }

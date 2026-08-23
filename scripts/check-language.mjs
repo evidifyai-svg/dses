@@ -168,14 +168,40 @@ function rawToNorm(map, rawIdx) {
   return ans;
 }
 
-function phraseRanges(normText, phrases) {
+// Raw ranges of <tag>...</tag> elements whose markup matches `matching`.
+// Used to scope an allowlist entry to a context, e.g. a citation link.
+function elementRanges(raw, tags, matching) {
+  const out = [];
+  const re = new RegExp("<(" + tags.join("|") + ")\\b[^>]*>[\\s\\S]*?<\\/\\1>", "gi");
+  const test = matching ? new RegExp(matching, "i") : null;
+  let m;
+  while ((m = re.exec(raw)) !== null) {
+    if (test && !test.test(m[0])) continue;
+    out.push({ start: m.index, end: m.index + m[0].length });
+  }
+  return out;
+}
+
+function phraseRanges(normText, phrases, ctx) {
   const out = [];
   for (const p of phrases) {
     const needle = normalizePhrase(p.phrase !== undefined ? p.phrase : p);
     if (!needle) continue;
+
+    // Scoped entries are allowed only where they sit inside a qualifying
+    // element. Without a scope an entry allows the phrase everywhere.
+    let scopeNorm = null;
+    if (ctx && p.scope && Array.isArray(p.scope.within) && p.scope.within.length) {
+      scopeNorm = elementRanges(ctx.raw, p.scope.within, p.scope.matching).map((r) => ({
+        start: rawToNorm(ctx.map, r.start),
+        end: rawToNorm(ctx.map, r.end),
+      }));
+    }
+
     let i = normText.indexOf(needle);
     while (i !== -1) {
-      out.push({ start: i, end: i + needle.length, entry: p });
+      const inScope = scopeNorm === null || scopeNorm.some((r) => i >= r.start && i < r.end);
+      if (inScope) out.push({ start: i, end: i + needle.length, entry: p });
       i = normText.indexOf(needle, i + 1);
     }
   }
@@ -228,8 +254,9 @@ function scanText(raw, opts) {
   const lower = raw.toLowerCase();
   const prose = toProse(raw, isHtml);
   const { text: norm, map } = normalizeWithMap(raw);
-  const allowRanges = phraseRanges(norm, cfg.allow || []);
-  const familyRanges = phraseRanges(norm, (cfg.gatedPhraseFamily || []).map((f) => (typeof f === "string" ? { phrase: f } : f)));
+  const ctx = { raw, map };
+  const allowRanges = phraseRanges(norm, cfg.allow || [], ctx);
+  const familyRanges = phraseRanges(norm, (cfg.gatedPhraseFamily || []).map((f) => (typeof f === "string" ? { phrase: f } : f)), ctx);
 
   const add = (level, rule, rawIdx, msg) => {
     const n = rawToNorm(map, rawIdx);
@@ -442,6 +469,10 @@ function selfTest(cfg) {
     { rule: "gate-mechanics", name: "h2.html", body: `<p>The reveal is gated server-side so nothing leaks.</p>` },
     { rule: "dses-bare-noun", name: "i1.html", body: `<p>DSES makes one claim verifiable.</p>`, level: "warn" },
     { rule: "prove-context", name: "v1.html", body: `<p>It proves independence of the clinician.</p>` },
+    // Scoped allowlist: the quoted title is still judged as body copy when it is
+    // not inside a citation element. If this stops firing, the citation scope has
+    // leaked into prose and the prove rule is no longer armed.
+    { rule: "prove-unpaired", name: "j1.html", body: `<p>Proving the First Read is what the platform does.</p>`, level: "warn" },
   ];
   const negatives = [
     { name: "n1.html", body: `<p>Sequential disclosure, enforced by architecture.</p>` },
@@ -452,6 +483,13 @@ function selfTest(cfg) {
     { name: "n6.html", body: `<p>Joshua M. Henderson, Ph.D., founder.</p>` },
     { name: "n7.md", body: `A title \u2014 with an em dash outside the ship root.`, ship: false },
     { name: "n8.html", body: `<p>a balanced reliance context that cannot be stripped from the rate it conditions</p>` },
+    { name: "n9.html  citation link, evidify markup", rules: ["prove-unpaired", "prove-context"],
+      body: `<div class="cred"><strong><a href="https://ssrn.com/abstract=6643919" target="_blank" rel="noopener">Proving the First Read.</a></strong>&nbsp; Preprint, SSRN, 2026.</div>` },
+    { name: "n10.html citation link, dses markup", rules: ["prove-unpaired", "prove-context"],
+      body: `<p><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6643919">Proving the First Read (SSRN)</a></p>` },
+    { name: "n11.html governance disclaimer", rules: ["insurance-disclaimer"],
+      body: `<p class="guardrail-note">It does not constitute certification or legal advice, and makes no claim about litigation outcomes or insurance coverage.</p>` },
+    { name: "n12.html rewritten step 04", body: `<p>The AI output, an expert reference, or a peer distribution is disclosed only after the lock. The comparator stays sealed until the prior judgment is locked. The record shows that order, and anyone can recompute it.</p>` },
   ];
 
   let pass = 0, fail = 0;
@@ -472,8 +510,10 @@ function selfTest(cfg) {
 
   console.log("self-test: negative cases (ruled-acceptable copy must stay silent)");
   for (const n of negatives) {
-    const f = scanText(n.body, { isHtml: true, shipScope: n.ship !== false, cfg }).filter((x) => x.level === "error");
-    say(f.length === 0, `clean ${n.name}`, f.map((x) => `${x.rule}: ${x.msg}`).join(" | "));
+    const all = scanText(n.body, { isHtml: true, shipScope: n.ship !== false, cfg });
+    const f = n.rules ? all.filter((x) => n.rules.includes(x.rule)) : all.filter((x) => x.level === "error");
+    const label = n.rules ? `silent [${n.rules.join(",")}] ${n.name}` : `clean ${n.name}`;
+    say(f.length === 0, label, f.map((x) => `${x.rule}: ${x.msg}`).join(" | "));
   }
 
   rmSync(dir, { recursive: true, force: true });
