@@ -27,24 +27,39 @@ It was deliberately left untouched so that a rollback needs no archaeology.
 Delete it after the first successful repository-based deploy, once production
 has been confirmed to match `site/index.html`.
 
-## Mandatory pre-deploy step
+## Mandatory pre-deploy steps
 
-Run the language guard from the repository root and read the output before any
-deploy, whichever path is used:
+**Two** guards run before any deploy, whichever path is used. Both are
+zero-dependency Node scripts, both exit non-zero on an error, and both are byte
+identical to the copies in evidify-site.
 
     node scripts/check-language.mjs
+    node scripts/check-seo.mjs
 
-The guard is configured (`scripts/guard-allow.json`) to scan `site/` only. It
-exits non-zero on any error. A non-zero exit means the deploy does not happen
-until the finding is either fixed or ruled on and allowlisted with a dated
-entry. There is no npm predeploy hook in this repository the way there is in
-evidify-site, so this step is manual discipline here. Do not skip it.
+The language guard reads `scripts/guard-allow.json` and scans `site/` for the
+hard copy constraints. The SEO guard reads `scripts/seo-config.json` and checks
+the shipped HTML for structure that search engines depend on: exactly one title,
+one meta description, one self-referencing canonical and a closing head tag per
+page, JSON-LD that parses with no dangling `@id`, no canonical pointing off
+site, and no title tag bidding on evidify.ai keyword territory. It warns, without
+blocking, on a title over 60 characters or a meta description over 160.
 
-Known state on 2026-08-23: six errors, all em dashes in the shipped copy, plus
-bare-noun warnings. Those are the em-dash sweep and the trademark pass, both
-scheduled as their own sessions. Until they land, a clean guard run on this
-site is not expected, and the first wrangler deploy is a custody move rather
-than a copy change.
+A non-zero exit from either one means the deploy does not happen until the
+finding is fixed, or ruled on and recorded in the relevant config with a dated
+entry. **There is no npm predeploy hook in this repository** the way there is in
+evidify-site, which has no package.json to hang one on, so running both is
+manual discipline here. Do not skip either.
+
+Self-tests, if you want to confirm a guard is working before you trust it:
+
+    node scripts/check-language.mjs --self-test
+    node scripts/check-seo.mjs --self-test
+
+Known state on 2026-08-23: both guards are clean on this site. The language
+guard reports 0 errors and 0 warnings. The SEO guard reports 0 errors and one
+warning, the meta description being 205 characters against a 160 character
+target, which is a copy decision rather than a defect and is deliberately not
+blocking.
 
 ## (a) Current path: dashboard Direct Upload
 

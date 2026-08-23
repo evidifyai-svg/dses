@@ -23,7 +23,18 @@ other domain does not bid for them in the surface that ranks.
 | DSES conformance | reader study infrastructure |
 
 **The hard rule: zero overlap in title tags.** No `<title>` on either domain may
-contain a phrase from the other column. This is checkable and it is checked.
+contain a phrase from the other column. This is checkable, and as of 2026-08-23
+it is enforced: `scripts/check-seo.mjs` fails the build on a title that carries a
+reserved phrase.
+
+**This table is a ruling. `scripts/seo-config.json` is the enforced copy of it,
+and there is one in each repository. Editing the table means editing both config
+files in the same session, or the rule and the enforcement drift apart.** The
+`reserved` list in each config is deliberately a little wider than its column
+here: it also carries the bare forms that real drift actually uses,
+`decision-sequence` on the evidify side and `reader study` on the dses side,
+because those shorter phrases are what the title tags were bidding on before the
+split. Each config records why in a `_reservedNote`.
 
 Meta descriptions and og text follow the same boundary. Body copy does not:
 evidify.ai still says "decision sequence" in prose where that is the accurate
@@ -83,14 +94,46 @@ page exists that earns it, that page takes it.
 - No email address goes in JSON-LD on evidify.ai. Cloudflare email obfuscation
   rewrites addresses in the HTML at the edge, which would corrupt the JSON.
 
+## Enforcement
+
+`scripts/check-seo.mjs` is the guard. It is byte identical in both repositories,
+the way `scripts/check-language.mjs` is, and everything site-specific lives in
+`scripts/seo-config.json` beside it. Zero dependencies, no network, runs on plain
+`node`.
+
+    node scripts/check-seo.mjs              check this site
+    node scripts/check-seo.mjs --self-test  check the guard
+
+What it fails a build on:
+
+- a page missing its title, its meta description, its canonical, or its closing
+  head tag, or carrying two of any of them;
+- a canonical that does not point at the page's own URL, or that points off site
+  without being listed in `approvedSharedPages`;
+- an ld+json block that does not parse, or an `@id` reference that resolves
+  nowhere, either in the same document or in the `knownIds` list that carries the
+  two cross-site identifiers;
+- a title tag containing a phrase reserved to the other property.
+
+What it warns about without blocking: a title over 60 characters, a meta
+description over 160. Those are copy decisions, not defects.
+
+A page marked `noindex` is exempt from the description and canonical rules, since
+it is not competing for anything. It still has to have a title and a closing head
+tag.
+
+In evidify-site, `npm run predeploy` runs the language guard and then this one,
+so a deploy is blocked by either. The dses repository has no package.json, so
+`docs/DEPLOY-dses-site.md` names both as mandatory manual steps.
+
 ## Verifying
 
-- Title separation: compare the two-word and three-word phrases of every
-  `<title>` on both domains after dropping stop words and the brand tokens. The
-  intersection must be empty. Single common words such as "ai" or "evidence" are
-  expected and are not a violation.
-- JSON-LD: every block must parse, every `@id` must be an absolute https URL,
-  and every `@id` reference must resolve to a node defined somewhere in the pair
-  of sites.
-- Both checks were run against every page of both sites on 2026-08-23 and
-  passed.
+- Title separation: the guard folds every title tag to lower case, treats a
+  hyphen as a space, and looks for any reserved phrase as a substring. That
+  catches "decision sequence" and "Decision-Sequence" as the same thing.
+- JSON-LD: every block must parse, and every object whose only key is `@id` is
+  treated as a reference that has to resolve, either to a node defined in the
+  same document or to one of the known cross-site identifiers.
+- Both checks run against every shipped HTML file on both sites. As of
+  2026-08-23 both sites pass with zero errors: ten files on evidify.ai with
+  eleven length warnings, two files on dses.ai with one.
