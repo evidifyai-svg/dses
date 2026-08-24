@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc10/definitions.schema.json",
-  "title": "DSES v0.2.0-rc10 Definition Artifacts",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc11/definitions.schema.json",
+  "title": "DSES v0.2.0-rc11 Definition Artifacts",
   "description": "Six immutable, content-addressed definition artifacts. content_hash preimage: RFC 8785 canonical form with content_hash removed. Anchor evidence is PROHIBITED inside an artifact (it lives in anchor_evidence_recorded events), so timing evidence can improve without changing artifact identity. Prespecification is declared against an external cutoff, never against DSES ingestion order.",
   "oneOf": [
     {

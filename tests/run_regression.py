@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DSES v0.2.0-rc10 adversarial regression suite.
+"""DSES v0.2.0-rc11 adversarial regression suite.
 
 Two hard rules for this harness, both from the fifth review round:
 

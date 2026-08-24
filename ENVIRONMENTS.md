@@ -31,7 +31,7 @@ records reproducibility must not itself be irreproducible.
 - adversarial suite: 158 cases, 158 rejected at the asserted rule, 0 not
 - quickstart: 2 valid examples passed, 6 targeted mutations rejected
 - vocabulary check: 833 schema terms, 0 findings
-- release manifest: 105 entries
+- release manifest: 106 entries
 <!-- gate-counts:end -->
 
 ## Environment A: Linux container
@@ -43,14 +43,16 @@ records reproducibility must not itself be irreproducible.
 
 ## Environment B: macOS, independent hardware, PyPI install
 
-- macOS arm64 (Apple silicon), Python 3.14, pip 26.1.2
+- macOS arm64 (Apple silicon), Python 3.14.6 in a virtual environment
+  (`~/.venvs/dses`), pip 26.1.2
 - Direct: jcs 0.2.1, jsonschema 4.23.0, cryptography 43.0.1
 - Transitive as resolved: attrs 26.1.0, cffi 2.1.1, jsonschema-specifications
   2025.9.1, pycparser 3.0, referencing 0.37.0, rpds-py 2026.6.3
 - Last observed green: 0.2.0-rc10 (2026-08-23). Not yet re-run at this
-  candidate. On 2026-08-24 the interpreter on that host no longer imported
-  `jcs`, so `run_all.sh` failed at step 0 as designed; the record above is
-  the last green run, not a current one.
+  candidate. On 2026-08-24 `run_all.sh` on that host failed at step 0
+  because it was invoked with the system interpreter rather than the
+  virtual environment that holds `jcs`; the gate refused as designed. The
+  record above is the last green run, not a current one.
 
 Environment B is the environment that closes the pinned-dependency question:
 a real PyPI install on hardware outside the authoring container, on a newer

@@ -31,13 +31,13 @@ before publishing compatibility or conformance language.
 - **v0.1.2** is the latest tagged and archived release. Its normative sequence
   vocabulary remains in [`DSES-v0.1.md`](DSES-v0.1.md) and
   [`dses-v0.1.schema.json`](dses-v0.1.schema.json).
-- **v0.2.0-rc10** is the current release candidate for the outcome-evidence
+- **v0.2.0-rc11** is the current release candidate for the outcome-evidence
   layer. Its permanent `0.2.0` schema identifiers are intentionally unminted
   pending public comment and named human expert review.
 - A release candidate is not a permanent release. Implementation reports may
-  target it, but must name `0.2.0-rc10` exactly and expect change before 0.2.0.
+  target it, but must name `0.2.0-rc11` exactly and expect change before 0.2.0.
 
-This repository and `dses.ai` use `0.2.0-rc10` for the current candidate. The
+This repository and `dses.ai` use `0.2.0-rc11` for the current candidate. The
 older v0.1 tags remain immutable rather than being relabeled.
 
 ## Implement with the boundaries intact
