@@ -1,7 +1,7 @@
 # Decision-Sequence Evidence Schema (DSES)
 ## Part II: The Outcome-Evidence Layer
 
-**Version:** 0.2.0-rc8 (Release candidate for public comment)
+**Version:** 0.2.0-rc9 (Release candidate for public comment)
 **Date:** August 20, 2026
 **Author:** Joshua M. Henderson, Ph.D. (Evidify LLC, East Orange, NJ)
 **Status:** Open specification. Comments and implementation reports welcome.
@@ -114,7 +114,7 @@ For an available hiding payload, the encoded nonce MUST match the declared `nonc
 
 The security claim is stated exactly: *a hiding commitment prevents practical dictionary enumeration from the commitment alone, assuming the nonce is unavailable to the attacker.* DSES can record that nonce destruction was asserted; it cannot prove no copy survived (Section 2.4, A1).
 
-`initial_payload_disposition` records disposition at creation and is never rewritten. The protocol represents later disposition changes through `outcome_integrity_event` records. A conformance-grade replay of current disposition is specified but **not implemented in this reference build** and therefore supports no v0.2.0-rc8 conformance claim. <!-- req:9.2 -->
+`initial_payload_disposition` records disposition at creation and is never rewritten. The protocol represents later disposition changes through `outcome_integrity_event` records. A conformance-grade replay of current disposition is specified but **not implemented in this reference build** and therefore supports no v0.2.0-rc9 conformance claim. <!-- req:9.2 -->
 
 ### 3.3 Three tiers, and one append-only checkpoint log
 
@@ -221,7 +221,7 @@ Events: `cohort_chain_created`, `anchor_evidence_recorded`, `anchor_distrusted`,
 
 ### 5.0 Membership multiplicity
 
-Membership leaves MUST be unique across the cohort's committed manifests. <!-- req:5.1b --> v0.2.0-rc8 supports only `unique_decision_instance`: each eligible decision instance receives its own pseudonymous membership token. Repeated encounters are represented as distinct eligible decision instances, never by repeating one token. A tree containing a repeated token can yield valid inclusion proofs while silently overstating the number of distinct committed instances, so `declared_multiplicity` is intentionally not a v0.2 option.
+Membership leaves MUST be unique across the cohort's committed manifests. <!-- req:5.1b --> v0.2.0-rc9 supports only `unique_decision_instance`: each eligible decision instance receives its own pseudonymous membership token. Repeated encounters are represented as distinct eligible decision instances, never by repeating one token. A tree containing a repeated token can yield valid inclusion proofs while silently overstating the number of distinct committed instances, so `declared_multiplicity` is intentionally not a v0.2 option.
 
 ### 5.1 Manifests
 
@@ -351,7 +351,7 @@ The identity SRF = 1 − RSR holds only when validity partitions into correct an
 
 `evaluation_state` is `proximal_post_exposure`, `final`, or a declared alternative; proximal response and final decision are different estimands and the formulas reference the declared one. Self-reliance requires `baseline_actor == evaluation_actor`; multi-actor trajectories are team-reliance constructs.
 
-### 8.4 WOA (informative in v0.2.0-rc8)
+### 8.4 WOA (informative in v0.2.0-rc9)
 
 WOA remains a supported descriptive construct but is not part of OL conformance in this release candidate and is not recomputed by the reference verifier. Deployments that report it should preserve the raw distribution, label bounded variants, and count equal-advice exclusions. WOA near zero against correct advice and negative WOA represent different behaviors and should be reported separately.
 
@@ -373,6 +373,37 @@ DSES can establish that an estimate was computed as declared from committed evid
 
 
 ---
+
+### 8.12 Statistical assumptions, stated so they can be attacked
+
+The declared estimator computes a Wilson score interval under an assumption of
+independent Bernoulli trials. Real reliance data routinely violates it: a
+cohort metric pools decision instances across readers who interpret the same
+cases, so observations are cross-classified by reader and case and are not
+independent, and an individual-level metric pools repeated instances within
+one professional. Under such designs the reported interval is a descriptive
+summary computed under a stated, violated assumption, not a calibrated
+uncertainty statement; it will generally understate uncertainty. This is
+disclosed rather than repaired in v0.2: hierarchical estimators that model
+reader and case effects belong to the reference-distribution layer planned
+for v0.3, and any conformance package whose interpretation depends on
+calibrated coverage must say so and is outside what recomputation
+establishes (8.8).
+
+Inter-adjudicator agreement in v0.2 is percent agreement (agreement-percent-v1),
+which is inflated by chance agreement and by prevalence. This is a deliberate
+floor, chosen because it is exactly executable with no distributional choices,
+not a claim that it is the right statistic. Chance-corrected statistics
+(Cohen's kappa, Gwet's AC1) are expected as declared executable extensions
+under Section 11, and a charter may declare one as its agreement statistic
+today provided the rule ships with fixtures.
+
+Exclusions are potentially informative. Cases excluded as indeterminate,
+partially correct, or noncommensurable are disclosed as counts (8.5), and
+every metric is conditional on the analyzable subset; nothing in DSES
+establishes that exclusion is ignorable, and a reliance rate MUST NOT be <!-- req:8.12 -->
+interpreted as if the excluded cases resembled the included ones.
+
 
 ## 9. Privacy, retention, governance
 
@@ -425,7 +456,7 @@ This package ships both. `scripts/dses_verify.py` performs the C and X checks en
 
 ## 11. Schema discipline
 
-**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc8/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
+**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc9/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
 
 ---
 
@@ -457,6 +488,8 @@ Every cryptographic artifact is real: RFC 8785 preimages, RFC 9162 inclusion and
 
 ## Annex C: Changelog
 
+**0.2.0-rc9.** Statistical assumptions stated ahead of external statistical review, in Section 8.12: the Wilson interval's independence assumption and its violation under crossed reader-case and within-professional designs (hierarchical estimators deferred to v0.3), percent agreement named as a chance-inflated deliberate floor with chance-corrected statistics as declared extensions, and exclusions identified as potentially informative so no rate may be read as if excluded cases resembled included ones. Prose and claims only; no schema, verifier, or fixture change. The suite stands at 147; checks at 2,236.
+
 **0.2.0-rc8.** Governance proof-boundary release, scoped to the four gaps an independent deep review found between what Section 9.3 claims and what the verifier establishes, and deliberately nothing else. The context population is repaired: an individual metric now binds a prospective responsibility-assignments artifact independent of linkage, its reliance context covers every assigned instance in the window with linkage, maturation, and adjudication breakdowns that reconcile exactly to the instance count, and the metric-eligible subset is derivable from that population. Before this, the context was computed over metric-eligible cases and then filtered to the subject, so a subject's failed linkages vanished from their own record and the adjudication breakdown could not show non-adjudication, defeating its anti-cherry-picking purpose; the shipped example was numerically correct only because its subject happened to own no failed linkages, and it now owns two non-eligible instances precisely so the repair is visible. Governance must declare prospective or retrospective timing, checked against its own anchor. Window arithmetic is exact seconds, not truncated days. Case mix is narrowed to what is established: disclosure is mechanical, adequacy and risk-adjusted claims are not. Privacy basis and professional identity mode are declared, with validity of the legal basis external, and pseudonymous binding is stated not to establish civil identity. Six fixtures, seven claim rows. The suite stands at 147; checks at 2,236.
 
 **0.2.0-rc7.** Ships the individual derivation the governance layer describes. rc6 added subject scoping, bounded windows, balanced context, and high-stakes safeguards, but the worked example remained cohort-level, so those rules executed only against adversarial fixtures and the check count did not move. Building the example exposed a defect in the feature the pass was named for: the balanced context builder tested the binary validity projection against `True` and `False`, while the projection returns the validity string, so every case fell through to `excluded` and the AI-error and baseline-correctness breakdowns were uniformly zero. Both sides of the check computed the same degenerate answer, so the adversarial fixture agreed with it. The builder is fixed, two fixtures now reject a context reporting every case excluded and one understating AI error, one reader owns a slice of the cohort so an individual derivation has a denominator, and the shipped package carries a governance artifact and a subject-scoped metric. Verifier checks move from 2,140 to 2,210, which is the signal that the governance layer is now exercised by the package rather than only by attacks. The suite stands at 141.
@@ -483,7 +516,7 @@ Also closed: the interval tolerance, stated four times in three documents and co
 
 ## Annex D (normative): Claim classification
 
-Every normative requirement using an uppercase conformance keyword carries a stable requirement tag and two independent labels in `CLAIMS-CLASSIFICATION.md`, which is release-blocking and ships with this release candidate. **Verification class** (S, C, X, T, A) answers what kind of establishment is possible in principle. **Reference verifier support** (implemented, partial, not_implemented) answers whether this build performs it. Conflating the two would let an unimplemented check hide inside an optimistic classification. Current counts: 31 S, 30 C, 85 X, 2 T, 20 A; 120 implemented, 2 partial, 3 not implemented.
+Every normative requirement using an uppercase conformance keyword carries a stable requirement tag and two independent labels in `CLAIMS-CLASSIFICATION.md`, which is release-blocking and ships with this release candidate. **Verification class** (S, C, X, T, A) answers what kind of establishment is possible in principle. **Reference verifier support** (implemented, partial, not_implemented) answers whether this build performs it. Conflating the two would let an unimplemented check hide inside an optimistic classification. Current counts: 31 S, 30 C, 85 X, 3 T, 21 A; 120 implemented, 2 partial, 3 not implemented.
 
 ---
 

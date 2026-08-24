@@ -1,6 +1,6 @@
 # CLAIMS-CLASSIFICATION
 
-**Applies to:** DSES v0.2.0-rc8 (Release candidate for public comment)
+**Applies to:** DSES v0.2.0-rc9 (Release candidate for public comment)
 **Status:** Normative companion to Annex D. Release-blocking: no requirement ships unclassified.
 
 Two independent dimensions, kept separate because conflating them is itself a form of overclaiming.
@@ -142,6 +142,7 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 | 8.5 | Every required disclosure field is recomputed from snapshot-frozen evidence or pinned definition artifacts | MET-DISCLOSE, MET-BLIND, MET-EXCL | X | implemented |
 | 8.9 | EAR declares an executable alignment relation, that relation is what recomputation uses, and it suits the criterion's declared answer-space semantics | MET-ALIGN | S + X | implemented |
 | 8.10 | A metric's declared interval_method equals its declared estimator's method | MET-ESTIMATOR | X | implemented |
+| 8.12 | Interval independence assumptions, agreement-statistic limits, and exclusion informativeness are stated; their adequacy for any design is not mechanically established | none | T + **A** | not applicable: disclosure of assumptions; adequacy is attested, never verified |
 | 8.8 | How well an estimate characterizes reality | none | **T** / **A** | out of scope for any verifier: DSES establishes that the statistic was computed as declared, not that the estimand is well characterized |
 
 ## Sections 2, 9, 11, 12
@@ -215,8 +216,8 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 
 ## Counts
 
-Verification class: **S** 31, **C** 30, **X** 85, **T** 2, **A** 20.
-Reference verifier support: **implemented** 120, **partial** 2, **not_implemented** 3, **not applicable** 13, **out of scope** 3.
+Verification class: **S** 31, **C** 30, **X** 85, **T** 3, **A** 21.
+Reference verifier support: **implemented** 120, **partial** 2, **not_implemented** 3, **not applicable** 14, **out of scope** 3.
 
 The requirements marked **not_implemented** are named explicitly in the specification and do not support any shipped conformance claim.
 
