@@ -1,0 +1,136 @@
+{
+  "artifact_type": "reliance_metric_derived",
+  "artifact_id": "urn:dses:derived:rair-v1",
+  "derived_at": "2026-07-04T00:00:00Z",
+  "metric_definition_ref": {
+    "artifact_id": "https://example.org/dses/metrics/rair-primary",
+    "version": "1.0.0",
+    "content_hash": {
+      "alg": "sha-256",
+      "digest": "7fef6c024c5fd7a0ed02ee9d35c4e289f31a262d9a5e09cf0cad38a5d827eae9"
+    }
+  },
+  "projection_set": {
+    "mode": "inline",
+    "input_event_hashes": [
+      "18f4cb6c2277de2468899ada3005be7bf08af65a658e446807d0b583e99f0b55",
+      "a7b610f7c546c484acaa18e73b2378f1dc5f52f85dbdf26bb1859ba5a5053ac5"
+    ]
+  },
+  "numerator": 1,
+  "denominator": 2,
+  "value": 0.5,
+  "disclosures": {
+    "completeness_accounting": {
+      "membership_committed_population": 12,
+      "tracked": 12,
+      "linked": 11,
+      "linkage_failed": 1,
+      "linkage_ambiguous": 0,
+      "pending_maturation": 1,
+      "mature": 10,
+      "concluded_determinate": 9,
+      "conclusion_status_breakdown": {
+        "determinate": 9,
+        "indeterminate": 1
+      },
+      "followup_state_breakdown": {
+        "active": 11
+      }
+    },
+    "verification_rule": "OL-ADJUDICATED",
+    "blinding_breakdown": {
+      "blinded_committed": 10,
+      "blinded": 0,
+      "unblinded_or_breached": 0
+    },
+    "primary_evaluation_criterion": true,
+    "criterion_validation_present": false,
+    "design_structure": {
+      "contributing_instances": 2,
+      "distinct_readers": 1,
+      "distinct_cases": 2
+    },
+    "panel_agreement": {
+      "rule_id": "kappa-fleiss-v1",
+      "items": 10,
+      "assessments_per_item": 2,
+      "value": 1.0
+    },
+    "commensurability_exclusions": 1,
+    "binary_projection_exclusions": {
+      "indeterminate": 1,
+      "partially_correct": 2,
+      "not_classifiable": 0
+    },
+    "plan_reference": {
+      "analysis_plan_ref": {
+        "artifact_id": "https://example.org/dses/plans/pe-primary",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "936ab0cddf693acb5ebc0d92c5aa8f1c43c8e5c2f2a6af0307b803c8e4497d8b"
+        }
+      }
+    }
+  },
+  "recomputability": {
+    "analysis_snapshot_ref": "70767b33ba665f70d529fc7868be7f4315f6c9a34d0a16c610fc9c677d6cddf9",
+    "definition_hashes": [
+      {
+        "artifact_id": "https://example.org/dses/metrics/rair-primary",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "7fef6c024c5fd7a0ed02ee9d35c4e289f31a262d9a5e09cf0cad38a5d827eae9"
+        }
+      },
+      {
+        "artifact_id": "https://example.org/dses/criteria/pe-90day-composite",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "b61447aa00c6ea71413448ffefc663761af5fcc8591473e7134c713ef58d1fe8"
+        }
+      },
+      {
+        "artifact_id": "https://example.org/dses/projections/pe-primary",
+        "version": "1.0.0",
+        "content_hash": {
+          "alg": "sha-256",
+          "digest": "a0a1ac8482dbad8700d43270fcdba9f8637ff41339cab439c2672393c969de5d"
+        }
+      }
+    ],
+    "derivation_software_digest": {
+      "media_type": "text/x-python",
+      "locator": "scripts/dses_derivation.py",
+      "digest": {
+        "alg": "sha-256",
+        "digest": "ba244874fbd17fb96e02cedc71717f1ed0f62b35bac7c26423b6b13783083912"
+      }
+    },
+    "canonicalization": "RFC8785",
+    "input_artifact_availability": {
+      "available": 2,
+      "archived": 0,
+      "unavailable": 0
+    }
+  },
+  "unit_of_analysis": "cohort",
+  "inclusion_filters": [
+    "membership_committed",
+    "linked",
+    "mature",
+    "primary_criterion",
+    "commensurable",
+    "binary_projectable"
+  ],
+  "interval": {
+    "lower": 0.09453120573423074,
+    "upper": 0.9054687942657693,
+    "level": 0.95,
+    "method": "Wilson"
+  },
+  "artifact_hash": "c68e493696896509c61e101c0813f3e9229558db9b74996611938faf513cf95e"
+}

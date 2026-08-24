@@ -1,0 +1,33 @@
+{
+  "_repo": "dses. Site-specific input for scripts/check-seo.mjs, which is byte identical across both repositories. Only this file differs.",
+  "_source": "docs/SEO-TERRITORIES.md is the human-readable ruling. This file is the enforced copy of it. Change one and change the other, in both repositories, in the same session.",
+  "_updated": "2026-08-23",
+  "site": "dses.ai",
+  "root": "site",
+  "baseUrl": "https://dses.ai",
+  "cleanUrls": true,
+  "knownIds": [
+    "https://evidify.ai/#org",
+    "https://dses.ai/#specification"
+  ],
+  "territory": {
+    "own": [
+      "decision-sequence evidence",
+      "provable order of judgment",
+      "DSES conformance"
+    ],
+    "reserved": [
+      "clinical AI documentation integrity",
+      "expert witness",
+      "reader study infrastructure",
+      "reader study"
+    ]
+  },
+  "_reservedNote": "reserved lists what evidify.ai owns and this site must not put in a title tag. It is deliberately wider than the three-phrase table in docs/SEO-TERRITORIES.md: the bare form \"reader study\" is included so the drift is caught early, the same way the bare form of the decision-sequence phrase is reserved on the other side. \"expert witness\" is reserved to evidify.ai even though no evidify page carries it yet; that is the point of reserving it.",
+  "approvedSharedPages": [],
+  "_approvedSharedPagesNote": "Pages allowed to canonicalize off site. Per docs/SEO-TERRITORIES.md a shared page canonicalizes to dses.ai, so on this site an approved shared page would be the canonical target rather than the source. None exists yet, so this is empty and every off-site canonical is an error.",
+  "limits": {
+    "titleMax": 60,
+    "descriptionMax": 160
+  }
+}

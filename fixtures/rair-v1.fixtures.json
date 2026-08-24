@@ -1,0 +1,34 @@
+{
+ "vectors": [
+  {
+   "vb": "incorrect",
+   "va": "correct",
+   "ve": "correct",
+   "aligned_same": true,
+   "expect": [
+    1,
+    1
+   ]
+  },
+  {
+   "vb": "incorrect",
+   "va": "correct",
+   "ve": "incorrect",
+   "aligned_same": false,
+   "expect": [
+    1,
+    0
+   ]
+  },
+  {
+   "vb": "correct",
+   "va": "incorrect",
+   "ve": "correct",
+   "aligned_same": false,
+   "expect": [
+    0,
+    0
+   ]
+  }
+ ]
+}

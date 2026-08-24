@@ -1,0 +1,30 @@
+# site/_headers
+# Response headers for dses.ai, served by Cloudflare Pages.
+#
+# TAKES EFFECT ONLY UNDER A WRANGLER-BASED DEPLOY OF THIS DIRECTORY.
+# Cloudflare Pages reads _headers from the root of the uploaded output
+# directory. A dashboard Direct Upload of a lone index.html does not carry
+# this file, and none of the headers below will be present. See
+# docs/DEPLOY-dses-site.md at the repository root.
+#
+# The CSP is sized to what the page actually loads, verified against the
+# v0.2.0-rc10 source:
+#   one inline <style> block and five style attributes -> style-src 'unsafe-inline'
+#   fonts.googleapis.com stylesheet                    -> style-src host
+#   fonts.gstatic.com font files                       -> font-src host
+#   zero scripts, zero images, zero frames, zero forms
+# script-src stays 'none' because the site loads no script at all. If
+# analytics or any other script is ever added to this zone, script-src has to
+# be widened here in the same change or the script will be blocked.
+#
+# HSTS carries includeSubDomains, so it will also bind verify.dses.ai once
+# that subdomain exists. That is intended. No preload directive: preloading is
+# hard to reverse and is a separate decision.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()

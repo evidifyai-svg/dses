@@ -1,0 +1,42 @@
+{
+  "artifact_kind": "secondary_use_governance",
+  "artifact_id": "https://example.org/dses/governance/pe-reader-review-2026",
+  "version": "1.0.0",
+  "created_at": "2026-02-15T00:00:00Z",
+  "author_ref": "study-methods-group",
+  "prespecification_cutoff": {
+    "cutoff_type": "before_first_enrollment",
+    "cutoff_time": "2026-03-01T00:00:00Z"
+  },
+  "purpose": "Departmental quality improvement review of AI reliance behaviour, reported to the reader and the quality committee. Not a credentialing or employment process.",
+  "purpose_code": "quality_improvement",
+  "governance_timing": "prospective",
+  "privacy_basis": {
+    "patient_data_basis": "hipaa_operations",
+    "professional_identity_mode": "pseudonymous",
+    "identity_binding_holder": "departmental-quality-committee"
+  },
+  "decision_consequence": "advisory",
+  "authorized_recipients": [
+    "subject-reader",
+    "departmental-quality-committee"
+  ],
+  "review_body": "departmental-quality-committee",
+  "max_observation_window_days": 180,
+  "min_cell_size": 2,
+  "case_mix_adjustment": {
+    "required": true,
+    "method_ref": "pe-case-mix-v1"
+  },
+  "subject_notification": "The reader is notified before derivation and receives the artifact and its balanced context at the same time as the committee.",
+  "appeal_pathway": "Written appeal to the quality committee within 30 days, with case-level review.",
+  "retention": "Destroyed 24 months after derivation.",
+  "high_stakes_safeguards": {
+    "aggregate_metric_sole_basis_prohibited": true,
+    "case_level_review_required": true,
+    "subject_access_to_evidence": true,
+    "appeal_available": true,
+    "subject_notification_required": true
+  },
+  "content_hash": "645144ab14d8990725ea1951d6f803eb037070b4ce64f3cdd2804145ed2e707c"
+}

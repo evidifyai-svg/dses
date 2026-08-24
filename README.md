@@ -1,52 +1,156 @@
-# Decision-Sequence Evidence Schema (DSES)
+# DSES: Decision-Sequence Evidence Schema
 
-**An open, vendor-neutral vocabulary for evidence of how humans and AI actually make decisions together.**
+An open, vendor-neutral evidence vocabulary for reconstructing how human and
+AI decision states were ordered.
 
-Version 0.1.0 (draft for public comment) · Spec: CC BY 4.0 · Schema and examples: MIT
+## Start here
 
----
+If you are adding DSES to an existing study, product, or validation workflow,
+start with [`IMPLEMENT.md`](IMPLEMENT.md). It routes you to the smallest honest
+capture pattern, two copy-paste synthetic flows, tiny Python and TypeScript
+helpers, and the verification commands.
 
-## The problem
+| Need | First implementation | Example |
+|---|---|---|
+| Record whether and how AI reached a person | Passive exposure logging at L1/I1 | [`quickstart/passive-exposure.json`](quickstart/passive-exposure.json) |
+| Preserve pre-AI, reveal, and post-AI states with internally consistent ordering | Decision trajectory at L2/I2 | [`quickstart/sealed-sequence.json`](quickstart/sealed-sequence.json) |
+| Bind outcomes and adjudication to a sequence | Outcome layer release candidate | [`DSES-v0.2.md`](DSES-v0.2.md) |
 
-Organizations deploying AI in consequential decisions increasingly know which model ran, what it output, and what the final human decision was. They usually cannot establish three things that matter more:
+After installing the pinned dependencies, verify both quickstart flows with:
 
-1. **What the human concluded before AI exposure.** A pre-AI judgment and an AI-influenced judgment collapse into one blended record.
-2. **Whether, when, and in what form AI output actually reached the human.** "Result generated" and "result shown to this person" are different events. Almost nothing logs the second one.
-3. **What changed afterward.** A human miss corrected by AI, a correct human read reversed by wrong AI, and independent agreement all produce identical final-report concordance statistics.
+```sh
+bash quickstart/verify.sh
+```
 
-Model monitoring watches the model. Governance platforms watch the paperwork. Nothing watches the interaction. DSES defines the missing evidence primitive.
+Passing that command verifies the quickstart profile. It does **not** create a
+`DSES Conformant` claim. See [`CONFORMANCE-POLICY.md`](CONFORMANCE-POLICY.md)
+before publishing compatibility or conformance language.
 
-## What's here
+## Version status
 
-| File | What it is |
-|---|---|
-| [`DSES-v0.1.md`](DSES-v0.1.md) | The specification: event vocabulary, exposure ontology, information-state model, integrity classes, conformance levels, standards mappings, privacy architecture. |
-| [`dses-v0.1.schema.json`](dses-v0.1.schema.json) | Normative JSON Schema (draft 2020-12) for the event envelope. |
-| [`example-sequence.json`](example-sequence.json) | A complete worked case sequence: a liver MRI read at conformance L3, integrity I3, including an indirect triage exposure that correctly downgrades the independence claim. |
+- **v0.1.2** is the latest tagged and archived release. Its normative sequence
+  vocabulary remains in [`DSES-v0.1.md`](DSES-v0.1.md) and
+  [`dses-v0.1.schema.json`](dses-v0.1.schema.json).
+- **v0.2.0-rc10** is the current release candidate for the outcome-evidence
+  layer. Its permanent `0.2.0` schema identifiers are intentionally unminted
+  pending public comment and named human expert review.
+- A release candidate is not a permanent release. Implementation reports may
+  target it, but must name `0.2.0-rc10` exactly and expect change before 0.2.0.
 
-## Core ideas, in four sentences
+This repository and `dses.ai` use `0.2.0-rc10` for the current candidate. The
+older v0.1 tags remain immutable rather than being relabeled.
 
-**Ten events** describe any human-AI decision sequence, from `case_context_created` through `human_state_committed`, `ai_result_presented`, and `human_state_revised` to `final_decision_committed`. **Eight exposure classes** (PRIORITY, PRESENCE, CATEGORICAL, LOCALIZATION, QUANTITATIVE, NARRATIVE, DIRECTIVE, AGENTIC) replace the false binary of "AI seen: yes/no," because a worklist reordered by triage AI and an AI-drafted report contaminate judgment in categorically different ways. **Four integrity classes** (I0 application log through I3 enforced sequence) tie the strength of any evidentiary claim to the strength of the mechanism that produced the record, so an ordinary audit table can no longer borrow the vocabulary of a proof. **Three conformance levels** separate passive exposure provenance (deployable today, near-zero workflow burden) from decision-trajectory capture and from active sequential disclosure (the research frontier, with explicit regulatory cautions).
+## Implement with the boundaries intact
 
-## What DSES is not
+- Use pseudonymous case and actor references. Keep raw, actor-resolved sequences
+  local by default and export derived or aggregate evidence when possible.
+- Sequence records do not determine causation, negligence, competence,
+  liability, or a standard of care.
+- Do not repurpose actor-resolved data for performance management absent prior
+  documented governance, notice, access, case review, and appeal safeguards.
+- Do not claim enforced ordering or external anchoring unless the deployed
+  mechanism and external trust evidence establish those properties.
 
-- Not a model-monitoring product, a governance platform, or an orchestration layer. It maps onto FHIR AuditEvent/Provenance, IHE Radiology AI profiles, DICOM, and OpenTelemetry rather than replacing them.
-- Not a claim that any workflow ordering improves outcomes, reduces automation bias, or reduces liability. Those are open empirical questions under prospective study. DSES claims only that unrecorded sequence cannot be studied, governed, or established afterward.
-- Not a surveillance tool. The specification requires aggregate-only human-behavior reporting by default and prohibits repurposing actor-resolved data for performance management absent prior documented agreement.
+Use the [`IMPLEMENTATION-CHECKLIST.md`](IMPLEMENTATION-CHECKLIST.md) before a
+pilot. Organizations willing to publish an implementation report can join the
+[`Founding Implementer program`](FOUNDING-IMPLEMENTERS.md); its counts remain at
+zero until the stated evidence is public.
 
-## Status and how to engage
+## Reproduce every claim in the v0.2 candidate
 
-This is a v0.1 draft published for public comment. Implementation reports, mapping corrections, and proposed changes are welcome as issues. Breaking changes may occur before 1.0. A multi-stakeholder governance process is intended from 1.0 if independent implementations exist.
+```sh
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+bash run_all.sh
+```
 
-The schema generalizes and supersedes [`@evidifyresearch/event-schema`](https://www.npmjs.com/package/@evidifyresearch/event-schema) v0.1.0 (March 2026).
+Build the clean publication archive with `python3 scripts/make_release.py`. The
+builder uses an explicit allowlist, excludes caches, review notes, and nested
+archives, fixes member ordering and timestamps, and adds
+`RELEASE-MANIFEST.sha256` for the exact published bytes.
 
-## Citing
+That runs seven stages, in this order for a reason:
 
-> Henderson JM. Decision-Sequence Evidence Schema, version 0.1. Evidify LLC; 2026.
+0. `scripts/check_jcs.py` fails fast on canonicalization vectors chosen to catch
+   common non-RFC-8785 JSON number spellings.
+1. `scripts/release_lint.py` checks the publication contract: implemented
+   verifier rules exist and have rule-asserting fixtures, verifier rule/class
+   labels agree with the claims table, every uppercase conformance keyword in
+   the specification carries an explicit requirement tag, section numbering is
+   coherent, and generated claim counts are current.
+2. `scripts/validate_package.py` validates the shipped v0.2 package envelope,
+   cohort/case events, definition artifacts, and derived artifacts against four
+   Draft 2020-12 schemas. The bundled decision sequences receive structural
+   checks here and full hash-chain/payload-commitment replay in the verifier;
+   they are not misdescribed as v0.2-schema-validated objects.
+3. `scripts/dses_verify.py` is the outcome-layer reference verifier, run against
+   the shipped artifacts with the worked example's trust store supplied
+   explicitly. It recomputes hashes, replays chains, verifies payload
+   commitments, verifies RFC 9162 proofs and signatures, runs declared rule
+   modules against their fixtures, and recomputes metrics and disclosures from
+   snapshot-frozen evidence.
+4. `tests/run_regression.py` runs the adversarial suite. Every verifier fixture
+   asserts the specific rule that must fire; cascading failures are allowed, so
+   the suite does not claim that each mutation has only one rejection path.
+5. `tests/run_quickstart.py` verifies the two external-implementation examples
+   and rejects targeted mutations without representing that result as
+   conformance.
+6. Only then is the example regenerated into an isolated temporary copy,
+   excluding local environments, VCS state, caches, and archives. This is a
+   semantic regeneration check, not a claim of bit-for-bit archive reproduction.
 
-## Author
+## Trust anchors and witnesses
 
-Joshua M. Henderson, Ph.D. · Evidify LLC, East Orange, NJ · josh@evidify.ai
+External anchor trust is never implicit. For the worked outcome-layer example,
+run `scripts/dses_verify.py --anchor-trust examples/anchor-trust-store.json`; a
+deployment verifier should supply its own trust policy and store.
+`--witness witness.json` can additionally compare a separately held checkpoint
+with the export. Without a separate witness, rewrite detection is limited to the
+coverage established by verified external anchors; an unwitnessed, unanchored
+suffix has internal-consistency evidence only. This is the substance of
+`ERRATA-v0.1.md`.
 
-Permanently archived in the [Software Heritage archive](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/evidifyai-svg/dses):
-`swh:1:snp:026907bace07d6d0a6c08c0670be66680e93037f`
+## Layout
+
+- `DSES-v0.1.md` and `dses-v0.1.schema.json`: sequence specification and event
+  schema
+- `DSES-v0.2.md`: outcome-evidence layer release candidate
+- `IMPLEMENT.md`: external implementer route and version guidance
+- `quickstart/`: passive and sealed sequence examples plus tiny helpers
+- `IMPLEMENTATION-CHECKLIST.md`: pre-pilot evidence and governance checklist
+- `FOUNDING-IMPLEMENTERS.md`: program criteria and evidence thresholds
+- `ERRATA-v0.1.md`: correction to the v0.1 I2 claim
+- `CLAIMS-CLASSIFICATION.md`: every v0.2 MUST classified as S, C, X, T, or A
+- `schemas/`: four v0.2 JSON Schema 2020-12 schemas
+- `artifacts/` and `examples/`: shipped outcome-layer definitions and worked
+  evidence package
+- `scripts/`, `rules/`, and `tests/`: reference implementation and gates
+
+## Verified environments
+
+`requirements.txt` pins direct dependencies only; the transitive closure is not
+hash-pinned, for reasons and with the exact resolved sets recorded in
+`ENVIRONMENTS.md`. The outcome-layer gate has been observed green on a Linux
+container and on independent macOS hardware with a newer interpreter and a
+differently resolved transitive set.
+
+## Licensing
+
+Two licenses apply, with directory-level scope stated explicitly.
+
+- **Specification and documentation** (`DSES-v0.1.md`, `DSES-v0.2.md`,
+  `ERRATA-v0.1.md`, `CLAIMS-CLASSIFICATION.md`, `README.md`, and implementation
+  guides): CC BY 4.0. See `LICENSE-SPEC.md`.
+- **Reference implementation** (`scripts/`, `rules/`, `tests/`, `schemas/`,
+  `fixtures/`, `artifacts/`, `examples/`, `quickstart/`, and `run_all.sh`): MIT.
+  See `LICENSE-CODE.md`.
+
+## Publication boundary
+
+This candidate is not the permanent `0.2.0`. RFC 3161 token parsing, independent
+recomputation, and conformance-grade current-payload-disposition replay are
+explicitly not implemented and do not support shipped conformance claims.
+Before minting permanent schema identifiers, remaining external release steps
+include contributor attribution, named protocol/cryptography and statistical
+review, and clean-machine reproduction from the archive. These are not
+represented as verifier-established properties.

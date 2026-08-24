@@ -1,0 +1,19 @@
+{
+ "vectors": [
+  {
+   "evaluation": "positive",
+   "ai_output": "positive",
+   "expect": true
+  },
+  {
+   "evaluation": "negative",
+   "ai_output": "positive",
+   "expect": false
+  },
+  {
+   "evaluation": null,
+   "ai_output": "positive",
+   "expect": false
+  }
+ ]
+}

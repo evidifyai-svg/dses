@@ -1,0 +1,112 @@
+{
+  "_repo": "dses. Scope is site/ only. The specification markdown at the repository root (DSES-v0.2.md, CLAIMS-CLASSIFICATION.md and the rest) is normative spec text, not site copy, and is deliberately out of scope. Point the guard at it explicitly with --root . if that ever changes.",
+  "_comment": "Language guard v2 allowlist. Every entry records the ruling that made the string acceptable. Adding an entry without a ruling date is a process violation. Scoped suppression: set \"rules\" to an array of rule ids, or omit for all rules.",
+  "_schemaVersion": 2,
+  "_updated": "2026-08-23",
+
+  "scanRoot": "site",
+  "shipRoot": "site",
+
+  "scanExt": [".html", ".htm", ".md", ".txt"],
+  "shipExt": [".html", ".htm", ".js", ".mjs", ".xml", ".svg"],
+  "ignoreDirs": ["node_modules", ".git", ".wrangler", ".claude", "dist", "build", ".venv"],
+  "ignoreFiles": [
+    "check-language.mjs",
+    "guard-allow.json",
+    "GUARD-REPORT.md",
+    "AGENTS.md",
+    "package.json",
+    "package-lock.json",
+    "index-backup.html"
+  ],
+
+  "ignorePaths": [],
+
+  "gatedPhraseFamily": [
+    { "phrase": "server-gated comparator reveal", "ruling": "2026-08-23", "source": "R-2", "note": "Pinned family. The word 'gated' is permitted only inside these four phrases." },
+    { "phrase": "gated comparator reveal", "ruling": "2026-08-23", "source": "R-2" },
+    { "phrase": "server-gated", "ruling": "2026-08-23", "source": "R-2" },
+    { "phrase": "gated reveal", "ruling": "2026-08-23", "source": "R-2" }
+  ],
+
+  "allow": [
+    {
+      "id": "R-1",
+      "source": "SITE-RECON.md R-1, ruling 4 of 2026-08-23",
+      "phrase": "enforced by architecture",
+      "ruling": "2026-08-23",
+      "rules": ["gate-mechanics", "prove-unpaired", "blocklist"],
+      "note": "Ruled acceptable as written and frozen at this level of description. Sits adjacent to a prohibited mechanism in meaning but names no mechanism. Never expand it. Current live instances are on evidify.ai (index.html, platform.html, for-research.html). Kept here so both repos carry one ruleset."
+    },
+    {
+      "id": "R-3",
+      "source": "SITE-RECON.md R-3, ruling 4 of 2026-08-23",
+      "phrase": "a balanced reliance context that cannot be stripped from the rate it conditions",
+      "ruling": "2026-08-23",
+      "note": "dses.ai section 4. Describes a non-strippable binding and is semantically adjacent to a prohibited mechanism, but states a governance requirement, not an enforcement mechanism. Ruled acceptable as written."
+    },
+    {
+      "id": "R-4a",
+      "source": "SITE-RECON.md R-4, ruling 4 of 2026-08-23, hard copy constraint 5",
+      "phrase": "Don't trust this page. Rerun it.",
+      "ruling": "2026-08-23",
+      "note": "dses.ai hero. Constraint 5 permits an imperative when the imperative is 'verify it yourself'. This is that imperative. Ruled correct and kept."
+    },
+    {
+      "id": "R-4b",
+      "source": "SITE-RECON.md R-4, ruling 4 of 2026-08-23",
+      "phrase": "Proof that the human decided first.",
+      "ruling": "2026-08-23",
+      "note": "dses.ai hero assertion. Ruled acceptable alongside R-4a as a deliberate voice choice. 'Proof' is a noun about sequence, not a claim about fault."
+    },
+    {
+      "id": "INS-1",
+      "phrase": "We make no claim that it reduces losses or predicts claims.",
+      "ruling": "2026-08-23",
+      "source": "standing hard copy constraint 2, verbatim required sentence",
+      "rules": ["claim-overreach", "insurance-disclaimer"],
+      "note": "The required verbatim disclaimer for any insurance copy. It necessarily contains the two prohibited claim phrases, so it is allowlisted for the claim-overreach rule only. Nothing else may contain them."
+    },
+    {
+      "id": "TM-1",
+      "phrase": "the DSES\u2122 specification",
+      "ruling": "2026-08-23",
+      "source": "trademark ruling 2 of 2026-08-23",
+      "rules": ["dses-bare-noun"],
+      "note": "The required first standalone body use: adjective plus noun. Not a bare-noun subject."
+    },
+    {
+      "id": "TM-2",
+      "source": "trademark ruling 2 of 2026-08-23, protected normative conformance vocabulary",
+      "phrase": "DSES-compatible",
+      "ruling": "2026-08-23",
+      "rules": ["dses-bare-noun", "gated-pin"],
+      "note": "Protected normative conformance vocabulary. Never carries a trademark symbol, never rewritten. Exempt from the bare-noun heuristic."
+    },
+    {
+      "id": "TM-3",
+      "source": "trademark ruling 2 of 2026-08-23, protected normative conformance vocabulary",
+      "phrase": "DSES Conformant",
+      "ruling": "2026-08-23",
+      "rules": ["dses-bare-noun", "gated-pin"],
+      "note": "Protected normative conformance vocabulary. Never carries a trademark symbol, never rewritten. Exempt from the bare-noun heuristic."
+    },
+    {
+      "id": "CITE-1",
+      "source": "quoted-title exception, accepted 2026-08-23",
+      "phrase": "Proving the First Read",
+      "ruling": "2026-08-23",
+      "rules": ["prove-unpaired", "prove-context"],
+      "scope": { "within": ["a", "cite"], "matching": "ssrn\\.com[^\"'>]*abstract(?:_id)?=6643919" },
+      "note": "The SSRN preprint title, allowed ONLY inside a link or cite element whose markup references the SSRN abstract. Outside a citation element the prove rule stays armed and the title warns like any other body copy, which the self-test asserts (case j1). Widening or removing `scope` disarms the rule for all prose containing the title."
+    },
+    {
+      "id": "INS-2",
+      "source": "accepted 2026-08-23, for-governance.html guardrail note",
+      "phrase": "makes no claim about litigation outcomes or insurance coverage",
+      "ruling": "2026-08-23",
+      "rules": ["insurance-disclaimer"],
+      "note": "This line disclaims an insurance channel, it does not market one, so the verbatim sentence from constraint 2 is not required here. The insurance-disclaimer rule stays armed for every other file and for any future insurance copy. It is scoped to this exact disclaimer sentence, so a page that markets an insurance channel still warns. Carried in both repos so the allow set stays one shared ruleset; only scanRoot, shipRoot and ignorePaths differ per repo."
+    }
+  ]
+}

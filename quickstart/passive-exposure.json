@@ -1,0 +1,122 @@
+{
+  "description": "Synthetic L1/I1 passive exposure flow. It records presentation and final disposition without claiming a pre-AI state or tamper evidence.",
+  "dses_version": "0.1.0",
+  "example_scope": {
+    "capture_level": "L1",
+    "integrity_class": "I1"
+  },
+  "events": [
+    {
+      "event_id": "passive-001-0000",
+      "event_type": "case_context_created",
+      "sequence": 0,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T14:00:00Z",
+      "recorded_at": "2026-08-23T14:00:00Z",
+      "case_ref": "case-passive-001",
+      "workflow_ref": "synthetic-review-v1",
+      "integrity": {
+        "class": "I1"
+      },
+      "source_system": {
+        "system_type": "study_platform",
+        "system_ref": "example-review-app",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "passive-001-0001",
+      "event_type": "ai_result_available",
+      "sequence": 1,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T14:00:05Z",
+      "recorded_at": "2026-08-23T14:00:05Z",
+      "case_ref": "case-passive-001",
+      "workflow_ref": "synthetic-review-v1",
+      "ai_system": {
+        "name": "Synthetic Classifier",
+        "vendor": "Example Vendor",
+        "model_id": "synthetic-classifier",
+        "model_version": "1.2.0",
+        "deployment_id": "example-east"
+      },
+      "integrity": {
+        "class": "I1"
+      },
+      "source_system": {
+        "system_type": "ai_platform",
+        "system_ref": "example-inference-service",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "passive-001-0002",
+      "event_type": "ai_result_presented",
+      "sequence": 2,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T14:00:08Z",
+      "recorded_at": "2026-08-23T14:00:08Z",
+      "case_ref": "case-passive-001",
+      "workflow_ref": "synthetic-review-v1",
+      "actor": {
+        "actor_ref": "actor-synthetic-017",
+        "actor_type": "human",
+        "role": "reviewer"
+      },
+      "ai_system": {
+        "name": "Synthetic Classifier",
+        "vendor": "Example Vendor",
+        "model_id": "synthetic-classifier",
+        "model_version": "1.2.0",
+        "deployment_id": "example-east"
+      },
+      "exposure": {
+        "classes": [
+          "CATEGORICAL",
+          "QUANTITATIVE"
+        ],
+        "modality": "inline_text",
+        "payload_ref": "local:synthetic-output/passive-001"
+      },
+      "integrity": {
+        "class": "I1"
+      },
+      "source_system": {
+        "system_type": "viewer",
+        "system_ref": "example-review-app",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "passive-001-0003",
+      "event_type": "final_decision_committed",
+      "sequence": 3,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T14:02:10Z",
+      "recorded_at": "2026-08-23T14:02:10Z",
+      "case_ref": "case-passive-001",
+      "workflow_ref": "synthetic-review-v1",
+      "actor": {
+        "actor_ref": "actor-synthetic-017",
+        "actor_type": "human",
+        "role": "reviewer"
+      },
+      "decision_state_ref": "local:synthetic-final/passive-001",
+      "information_state": {
+        "exposure_classes": [
+          "CATEGORICAL",
+          "QUANTITATIVE"
+        ],
+        "independence_class": "DIRECTLY_EXPOSED"
+      },
+      "integrity": {
+        "class": "I1"
+      },
+      "source_system": {
+        "system_type": "reporting",
+        "system_ref": "example-review-app",
+        "system_version": "1.0.0"
+      }
+    }
+  ]
+}

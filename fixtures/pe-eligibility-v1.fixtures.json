@@ -1,0 +1,22 @@
+{
+ "vectors": [
+  {
+   "encounter": {
+    "codes": [
+     "241541005"
+    ],
+    "age": 40
+   },
+   "expect": true
+  },
+  {
+   "encounter": {
+    "codes": [
+     "241541005"
+    ],
+    "age": 17
+   },
+   "expect": false
+  }
+ ]
+}

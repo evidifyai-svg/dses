@@ -1,0 +1,22 @@
+{
+ "vectors": [
+  {
+   "imaging": "negative",
+   "course": "negative",
+   "treated_without_confirmation": true,
+   "expect": [
+    "indeterminate",
+    null
+   ]
+  },
+  {
+   "imaging": "positive",
+   "course": "negative",
+   "treated_without_confirmation": false,
+   "expect": [
+    "determinate",
+    "positive"
+   ]
+  }
+ ]
+}

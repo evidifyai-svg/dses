@@ -1,0 +1,149 @@
+{
+  "dses_version": "0.1.0",
+  "chain_ref": "decision-chain-c03",
+  "events": [
+    {
+      "event_id": "decision-chain-c03-0000",
+      "event_type": "case_opened",
+      "chain_scope": "decision",
+      "chain_ref": "decision-chain-c03",
+      "sequence": 0,
+      "occurred_at": "2026-03-10T02:00:00Z",
+      "recorded_at": "2026-03-10T02:00:00Z",
+      "payload_commitment": {
+        "alg": "sha-256",
+        "digest": "93713e7f5f2e0dcc8b9eba831b316bc228eb0a63f02d769f5eebe42351158e53",
+        "commitment_type": "content_digest"
+      },
+      "initial_payload_disposition": "available",
+      "integrity": {
+        "integrity_class": "I2",
+        "canonicalization": "RFC8785",
+        "event_hash": "e93cafd3af5f453dc9d2225f27e87cdadef84eb5840710c3f458bec467c023b9"
+      },
+      "source_system": "outcome-registry-01",
+      "payload": {
+        "workflow_ref": "ed-cta-workflow-v3",
+        "actor_ref": "clinician-0417"
+      }
+    },
+    {
+      "event_id": "decision-chain-c03-0001",
+      "event_type": "preliminary_read_committed",
+      "chain_scope": "decision",
+      "chain_ref": "decision-chain-c03",
+      "sequence": 1,
+      "occurred_at": "2026-03-10T02:10:00Z",
+      "recorded_at": "2026-03-10T02:10:00Z",
+      "payload_commitment": {
+        "alg": "sha-256",
+        "digest": "c8f70554ed88d67ffa556d5c9a332d00d6fed7abc249efb7a625c6fbac8483a5",
+        "commitment_type": "content_digest"
+      },
+      "initial_payload_disposition": "available",
+      "integrity": {
+        "integrity_class": "I2",
+        "canonicalization": "RFC8785",
+        "prev_event_hash": "e93cafd3af5f453dc9d2225f27e87cdadef84eb5840710c3f458bec467c023b9",
+        "event_hash": "52a259179a08b7349f88bb51ae48ff7b0e672a2140e856b9fae662d242a8806d"
+      },
+      "source_system": "outcome-registry-01",
+      "payload": {
+        "actor_ref": "clinician-0417",
+        "judgment": "positive",
+        "answer_space": [
+          "positive",
+          "negative",
+          "equivocal"
+        ],
+        "independence_class": "UNEXPOSED"
+      }
+    },
+    {
+      "event_id": "decision-chain-c03-0002",
+      "event_type": "ai_output_released",
+      "chain_scope": "decision",
+      "chain_ref": "decision-chain-c03",
+      "sequence": 2,
+      "occurred_at": "2026-03-10T02:11:00Z",
+      "recorded_at": "2026-03-10T02:11:00Z",
+      "payload_commitment": {
+        "alg": "sha-256",
+        "digest": "dcd326feafbc564cba09041b791cdc8781faeaf1e322c4d0d4d1246b3c0ff768",
+        "commitment_type": "content_digest"
+      },
+      "initial_payload_disposition": "available",
+      "integrity": {
+        "integrity_class": "I2",
+        "canonicalization": "RFC8785",
+        "prev_event_hash": "52a259179a08b7349f88bb51ae48ff7b0e672a2140e856b9fae662d242a8806d",
+        "event_hash": "54d92c57f059b585f197fda239c6fdb20ee6e30e2aa9fa731186baf2528d36fd"
+      },
+      "source_system": "outcome-registry-01",
+      "payload": {
+        "ai_system_ref": "vendor-pe-cad-2.1",
+        "exposure_class": "CATEGORICAL",
+        "output": "negative",
+        "answer_space": [
+          "positive",
+          "negative",
+          "equivocal"
+        ]
+      }
+    },
+    {
+      "event_id": "decision-chain-c03-0003",
+      "event_type": "post_exposure_read_committed",
+      "chain_scope": "decision",
+      "chain_ref": "decision-chain-c03",
+      "sequence": 3,
+      "occurred_at": "2026-03-10T02:20:00Z",
+      "recorded_at": "2026-03-10T02:20:00Z",
+      "payload_commitment": {
+        "alg": "sha-256",
+        "digest": "c257967bbf0c1779d47e68a837164ad8667fa34032e5fc7878257037b4332b26",
+        "commitment_type": "content_digest"
+      },
+      "initial_payload_disposition": "available",
+      "integrity": {
+        "integrity_class": "I2",
+        "canonicalization": "RFC8785",
+        "prev_event_hash": "54d92c57f059b585f197fda239c6fdb20ee6e30e2aa9fa731186baf2528d36fd",
+        "event_hash": "5332dd90f3d4c5e60778488ac67fdaf4453f59da05bf7756b9362a561ec2df9c"
+      },
+      "source_system": "outcome-registry-01",
+      "payload": {
+        "actor_ref": "clinician-0417",
+        "judgment": "negative",
+        "independence_class": "DIRECTLY_EXPOSED"
+      }
+    },
+    {
+      "event_id": "decision-chain-c03-0004",
+      "event_type": "final_decision_committed",
+      "chain_scope": "decision",
+      "chain_ref": "decision-chain-c03",
+      "sequence": 4,
+      "occurred_at": "2026-03-10T02:25:00Z",
+      "recorded_at": "2026-03-10T02:25:00Z",
+      "payload_commitment": {
+        "alg": "sha-256",
+        "digest": "aff5d0c212409d4d6e5fddd7a7f60995f86a3e484da3d1d2f9fc7e3f76f7a027",
+        "commitment_type": "content_digest"
+      },
+      "initial_payload_disposition": "available",
+      "integrity": {
+        "integrity_class": "I2",
+        "canonicalization": "RFC8785",
+        "prev_event_hash": "5332dd90f3d4c5e60778488ac67fdaf4453f59da05bf7756b9362a561ec2df9c",
+        "event_hash": "25e17a977f60a71d5d4982d3c444e8c672d616ed72b0f2eb2d5e3e56fcebcc0a"
+      },
+      "source_system": "outcome-registry-01",
+      "payload": {
+        "actor_ref": "clinician-0417",
+        "decision": "negative",
+        "terminal": true
+      }
+    }
+  ]
+}

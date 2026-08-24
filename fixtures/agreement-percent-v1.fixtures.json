@@ -1,0 +1,53 @@
+{
+ "vectors": [
+  {
+   "assessments": [
+    {
+     "assessable": true,
+     "conclusion": "positive"
+    },
+    {
+     "assessable": true,
+     "conclusion": "positive"
+    }
+   ],
+   "expect": 1.0
+  },
+  {
+   "assessments": [
+    {
+     "assessable": true,
+     "conclusion": "positive"
+    },
+    {
+     "assessable": true,
+     "conclusion": "negative"
+    }
+   ],
+   "expect": 0.5
+  },
+  {
+   "assessments": [
+    {
+     "assessable": false
+    },
+    {
+     "assessable": false
+    }
+   ],
+   "expect": 1.0
+  },
+  {
+   "assessments": [
+    {
+     "assessable": false
+    },
+    {
+     "assessable": true,
+     "conclusion": "positive"
+    }
+   ],
+   "expect": 0.5
+  }
+ ]
+}
