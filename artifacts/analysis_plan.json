@@ -21,7 +21,7 @@
     "version": "1.0.0",
     "content_hash": {
       "alg": "sha-256",
-      "digest": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+      "digest": "b61447aa00c6ea71413448ffefc663761af5fcc8591473e7134c713ef58d1fe8"
     }
   },
   "primary_population": "Membership-committed eligible cases with a commensurable primary projection and a determinate adjudication.",
@@ -34,5 +34,5 @@
     }
   },
   "disclosure_commitments": true,
-  "content_hash": "95d002e322259c67cac5c6263f726b7acaec788186bed7a37cf8602945091e81"
+  "content_hash": "936ab0cddf693acb5ebc0d92c5aa8f1c43c8e5c2f2a6af0307b803c8e4497d8b"
 }

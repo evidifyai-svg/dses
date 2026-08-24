@@ -56,6 +56,18 @@
     },
     "fixtures_ref": "fixtures/agreement-percent-v1.fixtures.json"
   },
+  "panel_agreement_statistic": {
+    "rule_id": "kappa-fleiss-v1",
+    "code_artifact": {
+      "media_type": "text/x-python",
+      "locator": "rules/kappa_fleiss_v1.py",
+      "digest": {
+        "alg": "sha-256",
+        "digest": "264547981a9cef6fea7b23336b0d35b6e3dac4a3c73c0fc14dbe71b4845fae6c"
+      }
+    },
+    "fixtures_ref": "fixtures/kappa-fleiss-v1.fixtures.json"
+  },
   "disagreement_pathway": {
     "method": "third_reader",
     "procedure": "Chair adjudicates after independent commitment."
@@ -74,5 +86,5 @@
   "minimum_data_rule": "Index imaging plus 90-day course required.",
   "status_tracking_cadence": "P30D",
   "deviation_handling": "Deviations recorded as process_flags.",
-  "content_hash": "14843deef7e58ab7271b332d9247eb22ae275cefe9f00904280a24a355a10925"
+  "content_hash": "05da671017aecaf19c355ce9bae9f210a2c52521ea880512a3c41b23e869c1a6"
 }

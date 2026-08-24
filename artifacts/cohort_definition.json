@@ -81,7 +81,7 @@
       "version": "1.0.0",
       "content_hash": {
         "alg": "sha-256",
-        "digest": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+        "digest": "b61447aa00c6ea71413448ffefc663761af5fcc8591473e7134c713ef58d1fe8"
       }
     },
     "additional": []
@@ -91,8 +91,8 @@
     "version": "1.0.0",
     "content_hash": {
       "alg": "sha-256",
-      "digest": "95d002e322259c67cac5c6263f726b7acaec788186bed7a37cf8602945091e81"
+      "digest": "936ab0cddf693acb5ebc0d92c5aa8f1c43c8e5c2f2a6af0307b803c8e4497d8b"
     }
   },
-  "content_hash": "8ce40befca89ffe8b8cd37aa130989ca711b793d0952b0d0cdf46f5cf73d6509"
+  "content_hash": "45da496b83bdf07dddaaa042c302cf295e521a2636d71ded2ff6f73f805a5cb3"
 }

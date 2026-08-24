@@ -60,7 +60,7 @@
         "version": "1.0.0",
         "content_hash": {
           "alg": "sha-256",
-          "digest": "14843deef7e58ab7271b332d9247eb22ae275cefe9f00904280a24a355a10925"
+          "digest": "05da671017aecaf19c355ce9bae9f210a2c52521ea880512a3c41b23e869c1a6"
         }
       }
     },
@@ -110,5 +110,5 @@
     },
     "fixtures_ref": "fixtures/pe-decision-v1.fixtures.json"
   },
-  "content_hash": "ea935829d70497159ea275f6da6226fa9816bdfb82eb0df47487649671fca8ee"
+  "content_hash": "b61447aa00c6ea71413448ffefc663761af5fcc8591473e7134c713ef58d1fe8"
 }

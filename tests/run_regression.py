@@ -2059,6 +2059,148 @@ def j06():
     return verifier_rejects(m, "UOA-CONTEXT-METRIC")
 
 
+# ---- round sixteen: sequence is not fault ----
+
+@case("derived artifact assigning liability to the professional", "S", "round 16, sequence is not fault")
+def k01():
+    def m(pkg, d):
+        ddir = os.path.join(d, "derived")
+        shutil.copytree(DERIVED_DIR, ddir)
+        f = os.path.join(ddir, "derived-rsr-v2.json")
+        art = json.load(open(f))
+        art["liability_assignment"] = "reader bears responsibility for the reversed call"
+        json.dump(art, open(f, "w"))
+        return ("--derived", ddir)
+    return verifier_rejects(m, "UOA-NONORM")
+
+
+@case("derived artifact asserting that AI exposure caused the outcome", "S", "round 16, sequence is not fault")
+def k02():
+    def m(pkg, d):
+        ddir = os.path.join(d, "derived")
+        shutil.copytree(DERIVED_DIR, ddir)
+        f = os.path.join(ddir, "derived-ear-v2.json")
+        art = json.load(open(f))
+        art["causation_determination"] = "exposure caused the missed finding"
+        json.dump(art, open(f, "w"))
+        return ("--derived", ddir)
+    return verifier_rejects(m, "UOA-NONORM")
+
+
+@case("schema admits no liability-assignment field on a derived metric", "S", "round 16, sequence is not fault")
+def k03():
+    art = json.load(open(os.path.join(DERIVED_DIR, "derived-rsr-v2.json")))
+    art["liability_assignment"] = "reader"
+    return schema_rejects(DRV_SCHEMA, art)
+
+
+@case("schema admits no negligence-determination field on a derived metric", "S", "round 16, sequence is not fault")
+def k04():
+    art = json.load(open(os.path.join(DERIVED_DIR, "derived-rsr-v2.json")))
+    art["negligence_determination"] = "below standard"
+    return schema_rejects(DRV_SCHEMA, art)
+
+
+
+# ---- round seventeen: design structure of the denominator ----
+
+@case("design structure overstating distinct readers, so clustered trials look independent",
+      "X", "round 17, design effect")
+def k05():
+    def m(pkg, d):
+        ddir = os.path.join(d, "derived")
+        shutil.copytree(DERIVED_DIR, ddir)
+        f = os.path.join(ddir, "derived-rair-v2.json")
+        art = json.load(open(f))
+        ds = art["disclosures"]["design_structure"]
+        ds["distinct_readers"] = ds["contributing_instances"]
+        json.dump(art, open(f, "w"))
+        return ("--derived", ddir)
+    return verifier_rejects(m, "MET-DESIGN")
+
+
+@case("design structure understating distinct cases, hiding repeated measures on one case",
+      "X", "round 17, design effect")
+def k06():
+    def m(pkg, d):
+        ddir = os.path.join(d, "derived")
+        shutil.copytree(DERIVED_DIR, ddir)
+        f = os.path.join(ddir, "derived-rair-subject-0417-v1.json")
+        art = json.load(open(f))
+        art["disclosures"]["design_structure"]["distinct_cases"] = 1
+        json.dump(art, open(f, "w"))
+        return ("--derived", ddir)
+    return verifier_rejects(m, "MET-DESIGN")
+
+
+@case("derived metric shipping no design structure at all", "S", "round 17, design effect")
+def k07():
+    art = json.load(open(os.path.join(DERIVED_DIR, "derived-rair-v2.json")))
+    del art["disclosures"]["design_structure"]
+    return schema_rejects(DRV_SCHEMA, art)
+
+
+
+# ---- round eighteen: agreement statistics carry a scope ----
+
+@case("panel agreement reported with no charter-declared panel-scope statistic",
+      "X", "round 18, agreement scope")
+def k08():
+    def m(pkg, d):
+        adir = os.path.join(d, "artifacts")
+        shutil.copytree(os.path.join(ROOT, "artifacts"), adir)
+        ch = json.load(open(os.path.join(adir, "adjudication_charter.json")))
+        del ch["panel_agreement_statistic"]
+        ch["content_hash"] = core.artifact_content_hash({k: v for k, v in ch.items() if k != "content_hash"})
+        json.dump(ch, open(os.path.join(adir, "adjudication_charter.json"), "w"))
+        return ("--artifacts", adir)
+    return verifier_rejects(m, "MET-PANEL")
+
+
+@case("panel agreement value that does not recompute under the declared statistic",
+      "X", "round 18, agreement scope")
+def k09():
+    def m(pkg, d):
+        ddir = os.path.join(d, "derived")
+        shutil.copytree(DERIVED_DIR, ddir)
+        f = os.path.join(ddir, "derived-rair-v2.json")
+        art = json.load(open(f))
+        art["disclosures"]["panel_agreement"]["value"] = 0.42
+        json.dump(art, open(f, "w"))
+        return ("--derived", ddir)
+    return verifier_rejects(m, "MET-PANEL")
+
+
+@case("reported panel statistic naming a rule the charter did not declare",
+      "X", "round 18, agreement scope")
+def k10():
+    def m(pkg, d):
+        ddir = os.path.join(d, "derived")
+        shutil.copytree(DERIVED_DIR, ddir)
+        f = os.path.join(ddir, "derived-rsr-v2.json")
+        art = json.load(open(f))
+        art["disclosures"]["panel_agreement"]["rule_id"] = "agreement-percent-v1"
+        json.dump(art, open(f, "w"))
+        return ("--derived", ddir)
+    return verifier_rejects(m, "MET-PANEL")
+
+
+@case("chance-corrected statistic declared in the item-scope slot, where it is 0/0",
+      "X", "round 18, agreement scope")
+def k11():
+    def m(pkg, d):
+        adir = os.path.join(d, "artifacts")
+        shutil.copytree(os.path.join(ROOT, "artifacts"), adir)
+        f = os.path.join(adir, "adjudication_charter.json")
+        ch = json.load(open(f))
+        ch["agreement_statistic"] = json.loads(json.dumps(ch["panel_agreement_statistic"]))
+        ch["content_hash"] = core.artifact_content_hash({k: v for k, v in ch.items() if k != "content_hash"})
+        json.dump(ch, open(f, "w"))
+        return ("--artifacts", adir)
+    return verifier_rejects(m, "ADJ-AGREE")
+
+
+
 def main():
     passed = failed = 0
     for name, cls, origin, fn in CASES:

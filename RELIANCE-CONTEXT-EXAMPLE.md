@@ -56,6 +56,20 @@ sequences were disproportionately lost would look statistically pristine.
 | AI system | vendor-pe-cad-2.1 (all 8) |
 | Exposure class | 7 categorical, 1 directive |
 
+**Design structure of the denominator, and panel agreement:**
+
+| | |
+|---|---|
+| Contributing decision instances | 3 |
+| Distinct readers | 1 |
+| Distinct cases | 3 |
+| Panel agreement (kappa-fleiss-v1, 10 items, 2 assessors) | 1.00 |
+
+One reader and three cases behind three instances is a repeated-measures
+structure, not three independent trials, and the artifact says so rather than
+leaving a committee to assume otherwise. The interval below is computed under an
+independence assumption these counts show to be violated.
+
 ---
 
 ## What the context changes
@@ -65,6 +79,12 @@ from 6% to 79%. Three opportunities cannot distinguish a reader who ignores
 useful AI from one who does not. The minimum cell size in the governance artifact
 exists to stop numbers this thin from being reported at all, and the interval is
 mandatory precisely so a point estimate cannot travel alone.
+
+**And the interval is optimistic.** The three instances come from one reader, so
+they are clustered rather than independent, and the Wilson interval assumes
+independence. Six to seventy-nine per cent is the narrow reading. The design
+counts are disclosed so that a statistician receiving this artifact can inflate
+the interval accordingly instead of having to ask for the raw data first.
 
 **The denominator is not "cases where AI advice was available."** It is the three
 cases where this reader was wrong and the AI was right. Twenty-five of the
@@ -85,7 +105,11 @@ to use an entire career.
 ## What DSES refuses to say
 
 The artifact carries no determination of competence, standard of care, reasonable
-AI use, or negligence, and the schema forbids such a field. This one is advisory,
+AI use, negligence, causation, liability, admissibility, or employment and
+credentialing action, and the schema forbids every one of those fields rather
+than discouraging them. It records the sequence in which this reader's judgment
+formed relative to the AI output. Whether any of it was reasonable is a
+judgement for people, made on this evidence rather than instead of it. This one is advisory,
 for quality improvement, and its governance artifact would have to say otherwise
 before the analysis ran. Where the declared consequence is credentialing,
 employment, litigation support, or regulatory oversight, governance must state

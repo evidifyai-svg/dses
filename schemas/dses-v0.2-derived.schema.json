@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc9/derived.schema.json",
-  "title": "DSES v0.2.0-rc9 Derived Analytic Artifacts",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc10/derived.schema.json",
+  "title": "DSES v0.2.0-rc10 Derived Analytic Artifacts",
   "description": "Immutable derived artifacts. They carry NO lifecycle field: effective status is replayed from derived_artifact_registered, derived_artifact_superseded, and derived_artifact_invalidated events on the cohort chain (Section 7.1). Singletons carry an assurance vector; aggregates carry inclusion filters and do not collapse heterogeneous assurance into a single vector.",
   "oneOf": [
     {
@@ -654,7 +654,8 @@
             "criterion_validation_present",
             "commensurability_exclusions",
             "binary_projection_exclusions",
-            "plan_reference"
+            "plan_reference",
+            "design_structure"
           ],
           "properties": {
             "completeness_accounting": {
@@ -741,6 +742,64 @@
             },
             "criterion_validation_present": {
               "type": "boolean"
+            },
+            "design_structure": {
+              "type": "object",
+              "required": [
+                "contributing_instances",
+                "distinct_readers",
+                "distinct_cases"
+              ],
+              "description": "Cluster structure of the metric's denominator: the number of decision instances contributing, and the number of distinct readers and distinct cases they arose from. The declared Wilson estimator assumes independent Bernoulli trials; whenever contributing instances exceed either cluster count the trials are crossed or repeated and the interval is anticonservative. Disclosing both counts makes a design effect computable from the artifact alone rather than only from the raw package (8.12).",
+              "properties": {
+                "contributing_instances": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "distinct_readers": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "distinct_cases": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "unevaluatedProperties": false
+            },
+            "panel_agreement": {
+              "type": "object",
+              "required": [
+                "rule_id",
+                "items",
+                "assessments_per_item",
+                "value"
+              ],
+              "description": "Optional panel-scope agreement over the adjudicated items in the snapshot, computed by the charter's declared panel_agreement_statistic. Reporting one without that declaration is a conformance failure. A null value is a real result: chance-corrected agreement is undefined where a single category was observed or the panel is unbalanced, and reporting null is how the rule says so.",
+              "properties": {
+                "rule_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "assessments_per_item": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "unevaluatedProperties": false
             },
             "commensurability_exclusions": {
               "$ref": "#/$defs/safe_int"
@@ -837,6 +896,14 @@
         "standard_of_care_determination": false,
         "reasonable_use_determination": false,
         "competence_determination": false,
+        "negligence_determination": false,
+        "causation_determination": false,
+        "liability_assignment": false,
+        "admissibility_determination": false,
+        "legal_authority_determination": false,
+        "employment_action_recommendation": false,
+        "credentialing_action_recommendation": false,
+        "adverse_action_recommendation": false,
         "observation_window": {
           "type": "object",
           "required": [
@@ -1022,13 +1089,7 @@
           },
           "unevaluatedProperties": false,
           "description": "Balanced context that travels with every individual metric so a single conditioned rate cannot be detached from the subject's AI-error exposure, human baseline performance, model mix, and adjudication mix."
-        },
-        "legal_authority_determination": false,
-        "admissibility_determination": false,
-        "adverse_action_recommendation": false,
-        "credentialing_action_recommendation": false,
-        "employment_action_recommendation": false,
-        "negligence_determination": false
+        }
       },
       "unevaluatedProperties": false
     }

@@ -1,6 +1,6 @@
 # CLAIMS-CLASSIFICATION
 
-**Applies to:** DSES v0.2.0-rc9 (Release candidate for public comment)
+**Applies to:** DSES v0.2.0-rc10 (Release candidate for public comment)
 **Status:** Normative companion to Annex D. Release-blocking: no requirement ships unclassified.
 
 Two independent dimensions, kept separate because conflating them is itself a form of overclaiming.
@@ -143,6 +143,10 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 | 8.9 | EAR declares an executable alignment relation, that relation is what recomputation uses, and it suits the criterion's declared answer-space semantics | MET-ALIGN | S + X | implemented |
 | 8.10 | A metric's declared interval_method equals its declared estimator's method | MET-ESTIMATOR | X | implemented |
 | 8.12 | Interval independence assumptions, agreement-statistic limits, and exclusion informativeness are stated; their adequacy for any design is not mechanically established | none | T + **A** | not applicable: disclosure of assumptions; adequacy is attested, never verified |
+| 8.12c | A panel-scope agreement statistic is declared in its own charter field, and a chance-corrected rule declared in the item-scope slot is rejected rather than evaluated | ADJ-AGREE | X | implemented |
+| 8.12d | Where a derived metric reports panel agreement, it recomputes across the snapshot-frozen adjudicated items under the charter's declared panel-scope rule, and is rejected where the charter declares none | MET-PANEL | X | implemented |
+| 8.12a | Every derived metric discloses the cluster structure of its denominator (contributing instances, distinct readers, distinct cases), recomputed by the verifier, so a design effect is computable from the artifact alone | MET-DESIGN | S + X | implemented |
+| 8.12b | Point estimates are design-based and descriptive; only the uncertainty quantification is provisional pending hierarchical estimators | none | **T** | not applicable: a statement of what the estimator is, not a checkable property of a package |
 | 8.8 | How well an estimate characterizes reality | none | **T** / **A** | out of scope for any verifier: DSES establishes that the statistic was computed as declared, not that the estimand is well characterized |
 
 ## Sections 2, 9, 11, 12
@@ -172,11 +176,13 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 | 9.3k | Discoverability, privilege, legal usability, legal authority, and sufficiency under external law are not established by DSES | none | **A** | out of scope |
 | 9.4 | That a metric is used only for its declared purpose by its authorised recipients | none | **A** | not applicable: DSES records the declared purpose and recipients; it cannot enforce what a review body does with a number once disclosed |
 | 9.4b | That a high-stakes review body actually performs the declared case review, notice/access, and appeal safeguards | none | **A** | not applicable |
+| 9.6 | DSES records the factual sequence of judgment relative to AI exposure and assigns no fault: negligence, causation, liability assignment, admissibility, and employment or credentialing action are schema-invalid fields, not discouraged ones | UOA-NONORM | S | implemented |
 | 9.5 | Adequacy of case-mix adjustment or any empirical/Bayesian reference distribution as a characterization of professional practice | none | **T** / **A** | out of scope for conformance verification |
 | 9.1 | No privilege determination field | schema | S | implemented |
 | 9.2 | Current payload disposition is replay-derived from integrity events | none | X | **not_implemented** in this build; initial disposition is recorded but no conformance-grade current-disposition replay is claimed |
 | 11 | No conformant calculation depends on an unincorporated extension | schema + prose | S + **A** | partial: schema isolates extensions; dependence is attested |
 | 12 | Profile conformance evaluated explicitly and reported | PROFILE block | X | implemented |
+| 14 | A conformant package makes the ten Annex E reconstruction questions answerable from the package plus an external trust root | OL-ADJUDICATED, MET-ALIGN, ADJ-AGREE, UOA-NONORM | X + **A** | partial: every question maps to rules this build enforces over the package; that an outsider in fact recovers the answers is a reconstruction study, not a verifier check |
 
 ## Envelope and structural rules
 
@@ -216,8 +222,8 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 
 ## Counts
 
-Verification class: **S** 31, **C** 30, **X** 85, **T** 3, **A** 21.
-Reference verifier support: **implemented** 120, **partial** 2, **not_implemented** 3, **not applicable** 14, **out of scope** 3.
+Verification class: **S** 33, **C** 30, **X** 89, **T** 4, **A** 22.
+Reference verifier support: **implemented** 124, **partial** 3, **not_implemented** 3, **not applicable** 15, **out of scope** 3.
 
 The requirements marked **not_implemented** are named explicitly in the specification and do not support any shipped conformance claim.
 

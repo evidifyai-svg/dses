@@ -1,0 +1,290 @@
+{
+ "vectors": [
+  {
+   "comment": "perfect agreement across two categories",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ]
+   ],
+   "expect": 1.0
+  },
+  {
+   "comment": "systematic disagreement on every item, below chance",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ]
+   ],
+   "expect": -1.0
+  },
+  {
+   "comment": "three assessors, partial agreement",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ]
+   ],
+   "expect": 0.33333333333333326
+  },
+  {
+   "comment": "non-assessable is a category that agrees with itself, matching agreement-percent-v1",
+   "items": [
+    [
+     {
+      "assessable": false
+     },
+     {
+      "assessable": false
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": false
+     },
+     {
+      "assessable": false
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ]
+   ],
+   "expect": 1.0
+  },
+  {
+   "comment": "one observed category everywhere: expected agreement is 1 and kappa is undefined",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ]
+   ],
+   "expect": null
+  },
+  {
+   "comment": "a single item supplies no marginal distribution, so kappa is undefined; this is the case percent agreement handles and this rule cannot",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ]
+   ],
+   "expect": null
+  },
+  {
+   "comment": "unbalanced panel: the rule declines rather than picking a weighting convention silently",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     },
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ]
+   ],
+   "expect": null
+  },
+  {
+   "comment": "an item assessed by one adjudicator carries no agreement",
+   "items": [
+    [
+     {
+      "assessable": true,
+      "conclusion": "positive"
+     }
+    ],
+    [
+     {
+      "assessable": true,
+      "conclusion": "negative"
+     }
+    ]
+   ],
+   "expect": null
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 # Decision-Sequence Evidence Schema (DSES)
 ## Part II: The Outcome-Evidence Layer
 
-**Version:** 0.2.0-rc9 (Release candidate for public comment)
+**Version:** 0.2.0-rc10 (Release candidate for public comment)
 **Date:** August 20, 2026
 **Author:** Joshua M. Henderson, Ph.D. (Evidify LLC, East Orange, NJ)
 **Status:** Open specification. Comments and implementation reports welcome.
@@ -114,7 +114,7 @@ For an available hiding payload, the encoded nonce MUST match the declared `nonc
 
 The security claim is stated exactly: *a hiding commitment prevents practical dictionary enumeration from the commitment alone, assuming the nonce is unavailable to the attacker.* DSES can record that nonce destruction was asserted; it cannot prove no copy survived (Section 2.4, A1).
 
-`initial_payload_disposition` records disposition at creation and is never rewritten. The protocol represents later disposition changes through `outcome_integrity_event` records. A conformance-grade replay of current disposition is specified but **not implemented in this reference build** and therefore supports no v0.2.0-rc9 conformance claim. <!-- req:9.2 -->
+`initial_payload_disposition` records disposition at creation and is never rewritten. The protocol represents later disposition changes through `outcome_integrity_event` records. A conformance-grade replay of current disposition is specified but **not implemented in this reference build** and therefore supports no v0.2.0-rc10 conformance claim. <!-- req:9.2 -->
 
 ### 3.3 Three tiers, and one append-only checkpoint log
 
@@ -221,7 +221,7 @@ Events: `cohort_chain_created`, `anchor_evidence_recorded`, `anchor_distrusted`,
 
 ### 5.0 Membership multiplicity
 
-Membership leaves MUST be unique across the cohort's committed manifests. <!-- req:5.1b --> v0.2.0-rc9 supports only `unique_decision_instance`: each eligible decision instance receives its own pseudonymous membership token. Repeated encounters are represented as distinct eligible decision instances, never by repeating one token. A tree containing a repeated token can yield valid inclusion proofs while silently overstating the number of distinct committed instances, so `declared_multiplicity` is intentionally not a v0.2 option.
+Membership leaves MUST be unique across the cohort's committed manifests. <!-- req:5.1b --> v0.2.0-rc10 supports only `unique_decision_instance`: each eligible decision instance receives its own pseudonymous membership token. Repeated encounters are represented as distinct eligible decision instances, never by repeating one token. A tree containing a repeated token can yield valid inclusion proofs while silently overstating the number of distinct committed instances, so `declared_multiplicity` is intentionally not a v0.2 option.
 
 ### 5.1 Manifests
 
@@ -351,7 +351,7 @@ The identity SRF = 1 − RSR holds only when validity partitions into correct an
 
 `evaluation_state` is `proximal_post_exposure`, `final`, or a declared alternative; proximal response and final decision are different estimands and the formulas reference the declared one. Self-reliance requires `baseline_actor == evaluation_actor`; multi-actor trajectories are team-reliance constructs.
 
-### 8.4 WOA (informative in v0.2.0-rc9)
+### 8.4 WOA (informative in v0.2.0-rc10)
 
 WOA remains a supported descriptive construct but is not part of OL conformance in this release candidate and is not recomputed by the reference verifier. Deployments that report it should preserve the raw distribution, label bounded variants, and count equal-advice exclusions. WOA near zero against correct advice and negative WOA represent different behaviors and should be reported separately.
 
@@ -390,13 +390,61 @@ for v0.3, and any conformance package whose interpretation depends on
 calibrated coverage must say so and is outside what recomputation
 establishes (8.8).
 
+Disclosure alone leaves the violation unquantified, so v0.2 also makes the
+design computable. Every derived metric MUST carry a `design_structure` disclosure over the instances contributing to its denominator, reporting the number of contributing decision instances, the number of distinct readers they arose from, and the number of distinct cases. <!-- req:8.12a -->
+The reference
+verifier recomputes all three from snapshot-frozen evidence, so an artifact
+cannot present clustered observations as independent ones. Whenever
+contributing instances exceed either cluster count the trials are crossed or
+repeated, and a reader holding those counts can compute a design effect and
+inflate the reported interval accordingly without access to the raw package.
+DSES supplies the counts; it does not choose the inflation factor, because that
+choice depends on an intraclass correlation DSES does not estimate.
+
+The division of labour between the point estimate and the interval should be
+stated plainly, because they are not provisional in the same way. **The point
+estimates are design-based and descriptive.** RAIR, RSR, SRF, and EAR are
+proportions of exactly enumerated, individually verifiable events over exactly
+enumerated denominators, computed by a declared rule over committed evidence.
+They are what they are: no model stands behind them, no population is being
+inferred to, and a change of estimator in v0.3 will not change them.
+**Only the uncertainty quantification is provisional.** The Wilson interval is
+the declared v0.2 procedure for a design its assumption does not fit, and it is
+expected to be superseded by hierarchical estimators in v0.3. A reader who
+distrusts the interval should distrust the interval, not the counts.
+
 Inter-adjudicator agreement in v0.2 is percent agreement (agreement-percent-v1),
 which is inflated by chance agreement and by prevalence. This is a deliberate
 floor, chosen because it is exactly executable with no distributional choices,
-not a claim that it is the right statistic. Chance-corrected statistics
-(Cohen's kappa, Gwet's AC1) are expected as declared executable extensions
-under Section 11, and a charter may declare one as its agreement statistic
-today provided the rule ships with fixtures.
+not a claim that it is the right statistic.
+
+Chance correction is available, and the shape it takes is itself a finding.
+Percent agreement is **item-scope**: it is the share of one determination's
+pre-consensus assessments falling in that determination's modal category, and
+it needs nothing outside the item. Chance-corrected agreement is **panel-scope**,
+because the chance term is estimated from the marginal category distribution
+across items. Computed over a single determination that marginal distribution
+is the observed distribution, expected agreement equals observed agreement, and
+kappa is 0/0. On the two-assessor unanimous determination that dominates real
+adjudication records, that is the common case rather than an edge case. The two
+statistics therefore occupy separate charter fields, `agreement_statistic` and
+`panel_agreement_statistic`, and a chance-corrected rule declared in the
+item-scope slot is rejected as a category error rather than silently returning
+nothing. Declaring a panel statistic that is undefined on most of its own record
+is the failure Section 3.8 exists to prevent, and putting the scope in the rule
+identifier is how that is prevented here.
+
+`kappa-fleiss-v1` ships as the first panel-scope rule, digested and fixtured
+like every other executable, and the shipped charter declares it. It is defined
+for balanced panels, returns null where kappa carries no information (a single
+observed category, or fewer than two items), and declines unbalanced panels
+rather than choosing between two defensible weighting conventions without
+saying so. Where a derived metric reports a panel agreement, the verifier
+recomputes it across the snapshot-frozen adjudicated items under the charter's
+declared rule, and a metric reporting one without that declaration is rejected.
+Percent agreement remains the item-scope floor. What changes in rc10 is that
+the choice of statistic is declared data a verifier recomputes rather than a
+promise made in prose.
 
 Exclusions are potentially informative. Cases excluded as indeterminate,
 partially correct, or noncommensurable are disclosed as counts (8.5), and
@@ -444,6 +492,45 @@ The reliance metrics are conditioned, not raw adoption rates. RSR concerns cases
 
 How well a case-mix model, empirical reference distribution, or Bayesian/hierarchical model characterizes real professional practice remains statistically assessable and judgment-dependent rather than mechanically decidable by DSES. <!-- req:9.5 -->
 
+### 9.6 Sequence is not fault
+
+DSES records the factual sequence in which a judgment formed relative to an AI
+exposure. It does not evaluate that sequence. Whether a decision was negligent,
+whether an exposure caused an outcome, and who bears responsibility for either
+are normative determinations reserved to the people and institutions holding
+that authority. A record establishing that a clinician committed a baseline
+before seeing an AI output establishes exactly that, and nothing about the
+adequacy of the judgment. A record establishing that a clinician abandoned a
+correct baseline after exposure establishes exactly that, and nothing about
+whether abandoning it was unreasonable given what was knowable at the time.
+
+The direction of inference is unconstrained by construction. The same primitive
+that documents an abandoned correct judgment documents an accepted correct
+rescue, and the conditioned denominators of Section 8.2 are shared: RSR and
+RAIR are carved from opposite opportunity sets by the same rule, so the record
+that appears to expose a professional who resisted useful AI is the same record
+that documents every occasion on which resisting it was right. A specification
+recording only one direction would be an instrument of one party rather than an
+evidentiary layer.
+
+This is enforced rather than asserted. Core derived objects are closed, and the
+following fields are schema-invalid rather than discouraged:
+`standard_of_care_determination`, `reasonable_use_determination`,
+`competence_determination`, `negligence_determination`,
+`causation_determination`, `liability_assignment`,
+`admissibility_determination`, `legal_authority_determination`,
+`employment_action_recommendation`, `credentialing_action_recommendation`, and
+`adverse_action_recommendation`. A DSES artifact MUST NOT carry any of them and the reference verifier rejects a package that does. <!-- req:9.6 -->
+An
+implementation that adds one has not extended DSES; it has produced a different
+document under a borrowed name, and the conformance claim does not travel with
+it.
+
+The corollary runs the other way as well. A conformant package is not a defence.
+It establishes what happened and when, which is the input a negligence,
+causation, or credentialing analysis needs and has generally lacked; it does not
+supply the analysis, and it does not predict its outcome (Section 9.3, 9.5).
+
 ---
 
 ## 10. Conformance verification
@@ -456,7 +543,7 @@ This package ships both. `scripts/dses_verify.py` performs the C and X checks en
 
 ## 11. Schema discipline
 
-**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc9/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
+**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc10/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
 
 ---
 
@@ -488,6 +575,14 @@ Every cryptographic artifact is real: RFC 8785 preimages, RFC 9162 inclusion and
 
 ## Annex C: Changelog
 
+**0.2.0-rc10.** Statistical-review pass, cut ahead of named external methodological review and scoped to four items. The independence violation rc9 disclosed is now quantified rather than only named: every derived metric ships a `design_structure` disclosure over the instances contributing to its denominator, giving contributing instances, distinct readers, and distinct cases, all three recomputed by the verifier from snapshot-frozen evidence, so a design effect is computable from the artifact alone by a reader without the raw package. DSES supplies the cluster counts and declines to choose an inflation factor, which would require an intraclass correlation it does not estimate. Section 8.12 also separates what is provisional from what is not: the point estimates are design-based and descriptive, exactly enumerated events over exactly enumerated denominators with no model behind them, and a v0.3 estimator will not move them, while only the uncertainty quantification is provisional.
+
+Chance-corrected agreement ships, and its shape is the finding. Percent agreement is item-scope; chance correction is panel-scope, because the chance term is estimated from the marginal category distribution across items, and over a single determination that distribution is the observed one, so kappa is 0/0. On the two-assessor unanimous determination that dominates real adjudication records, that is the common case and not an edge case. `kappa-fleiss-v1` is therefore declared in its own charter field, `panel_agreement_statistic`, digested and fixtured like every other executable, defined for balanced panels, returning null where kappa carries no information, and declining unbalanced panels rather than silently choosing between two defensible weighting conventions. Where a derived metric reports a panel agreement the verifier recomputes it across the snapshot-frozen adjudicated items, and reporting one the charter never declared is rejected. Building it exposed a robustness defect: a panel-scope rule declared in the item-scope slot raised an AttributeError rather than returning a verdict, which the round-six robustness property forbids. That is now a rejected category error. Percent agreement remains the item-scope floor; what changed is that the choice is declared data a verifier recomputes rather than a promise in prose.
+
+Section 9.6 states the normative non-claim: DSES records the factual sequence of judgment relative to AI exposure and assigns no fault. The direction of inference is unconstrained by construction, because RSR and RAIR are carved from opposite opportunity sets by one rule, so the record that appears to expose a professional who resisted useful AI is the same record documenting every occasion on which resisting it was right; and the corollary runs the other way, since a conformant package is not a defence either. The schema escape hatches went from three named prohibitions to eleven, adding negligence, causation, liability assignment, admissibility, legal authority, employment action, credentialing action, and adverse action, with causation and liability assignment added to the verifier's rejection set.
+
+Annex E publishes the ten reconstruction questions a conformant package must make answerable, stated as a test in terms of what a reader must recover rather than in DSES vocabulary, so an implementation satisfying them by other means satisfies them. Publishing them makes a comparator possible against ordinary records, and it is classified partial rather than implemented on purpose: every question maps to rules this build enforces, but whether an outsider in fact recovers the answers is a reconstruction study and not a verifier check. Eleven fixtures, six claim rows, one robustness repair. The suite stands at 158; checks at 2,286.
+
 **0.2.0-rc9.** Statistical assumptions stated ahead of external statistical review, in Section 8.12: the Wilson interval's independence assumption and its violation under crossed reader-case and within-professional designs (hierarchical estimators deferred to v0.3), percent agreement named as a chance-inflated deliberate floor with chance-corrected statistics as declared extensions, and exclusions identified as potentially informative so no rate may be read as if excluded cases resembled included ones. Prose and claims only; no schema, verifier, or fixture change. The suite stands at 147; checks at 2,236.
 
 **0.2.0-rc8.** Governance proof-boundary release, scoped to the four gaps an independent deep review found between what Section 9.3 claims and what the verifier establishes, and deliberately nothing else. The context population is repaired: an individual metric now binds a prospective responsibility-assignments artifact independent of linkage, its reliance context covers every assigned instance in the window with linkage, maturation, and adjudication breakdowns that reconcile exactly to the instance count, and the metric-eligible subset is derivable from that population. Before this, the context was computed over metric-eligible cases and then filtered to the subject, so a subject's failed linkages vanished from their own record and the adjudication breakdown could not show non-adjudication, defeating its anti-cherry-picking purpose; the shipped example was numerically correct only because its subject happened to own no failed linkages, and it now owns two non-eligible instances precisely so the repair is visible. Governance must declare prospective or retrospective timing, checked against its own anchor. Window arithmetic is exact seconds, not truncated days. Case mix is narrowed to what is established: disclosure is mechanical, adequacy and risk-adjusted claims are not. Privacy basis and professional identity mode are declared, with validity of the legal basis external, and pseudonymous binding is stated not to establish civil identity. Six fixtures, seven claim rows. The suite stands at 147; checks at 2,236.
@@ -516,7 +611,58 @@ Also closed: the interval tolerance, stated four times in three documents and co
 
 ## Annex D (normative): Claim classification
 
-Every normative requirement using an uppercase conformance keyword carries a stable requirement tag and two independent labels in `CLAIMS-CLASSIFICATION.md`, which is release-blocking and ships with this release candidate. **Verification class** (S, C, X, T, A) answers what kind of establishment is possible in principle. **Reference verifier support** (implemented, partial, not_implemented) answers whether this build performs it. Conflating the two would let an unimplemented check hide inside an optimistic classification. Current counts: 31 S, 30 C, 85 X, 3 T, 21 A; 120 implemented, 2 partial, 3 not implemented.
+Every normative requirement using an uppercase conformance keyword carries a stable requirement tag and two independent labels in `CLAIMS-CLASSIFICATION.md`, which is release-blocking and ships with this release candidate. **Verification class** (S, C, X, T, A) answers what kind of establishment is possible in principle. **Reference verifier support** (implemented, partial, not_implemented) answers whether this build performs it. Conflating the two would let an unimplemented check hide inside an optimistic classification. Current counts: 33 S, 30 C, 89 X, 4 T, 22 A; 124 implemented, 3 partial, 3 not implemented.
+
+## Annex E (normative): Reconstruction questions
+
+These are the questions a conformant package exists to make answerable. They
+are stated here as a test rather than described as a capability, so that any
+implementation, including this one, can be run against them by someone who did
+not build it.
+A conformant OL package MUST make each question below answerable from the package plus an external trust root, with the tenth question answered by `CLAIMS-CLASSIFICATION.md`. <!-- req:14 -->
+
+1. **Committed baseline.** What did the professional judge before any AI output
+   was available for this decision instance, and what exactly was committed?
+2. **Precedence.** Did that commitment precede the AI exposure, and by what
+   evidence is the ordering established rather than asserted by the party who
+   benefits from it?
+3. **The AI output.** What did the AI output for this case, from which system,
+   model version, and declared operating point, and in what exposure class?
+4. **Change.** Did the professional's judgment change after exposure?
+5. **Proximal judgment.** What was the judgment recorded immediately after
+   exposure, before any further work?
+6. **Final judgment.** What was the final judgment, and which actor made it?
+   Where baseline and evaluation actor differ, that is a team-reliance
+   trajectory and not self-reliance.
+7. **Alignment.** Did the final judgment align with the AI output under the
+   metric definition's declared alignment relation, and which relation was
+   declared? "Aligned" is meaningless without naming the relation, and two
+   metrics may legitimately declare different ones against the same criterion.
+8. **Reference determination.** What reference determination applies to this
+   case, produced under which charter, by which adjudicators, on which
+   evidence, at what agreement, and was it revised? A revision is a new event
+   with a lineage, never a rewritten one.
+9. **Established.** Which of the answers above are mechanically established from
+   the package plus the external trust root, and under which rule identifiers?
+10. **Attested.** Which are attested rather than established, and by whom?
+
+Two properties of this list are the point of publishing it. It is stated in
+terms of what a reader must be able to recover, not in terms of DSES
+vocabulary, so an implementation that satisfies it by other means satisfies it.
+And it makes a comparator possible: hand a reviewer an ordinary platform log
+and a conformant package for the same decisions, ask these questions of both,
+and the difference is measurable rather than argued. The specification invites
+that experiment against any implementation, its own included, and treats a
+question that cannot be answered from a package this build calls conformant as
+a defect in the specification rather than in the question.
+
+Answerability is not the same as having been answered. Nothing in this annex
+establishes that a given reader, given a given package, in fact recovers these
+answers. That is an empirical question about people and evidence, it is what a
+reconstruction study measures, and the reference verifier does not stand in for
+it.
+
+---
 
 ---
 

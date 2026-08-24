@@ -197,6 +197,7 @@ def build():
                           "excluded_evidence_categories": ["ai_output", "post_ai_documentation", "co_adjudicator_conclusions"]},
         "assessment_protocol": {"committed_before_consensus": True, "min_independent_assessments": 2},
         "agreement_statistic": executable("agreement-percent-v1"),
+        "panel_agreement_statistic": executable("kappa-fleiss-v1"),
         "disagreement_pathway": {"method": "third_reader", "procedure": "Chair adjudicates after independent commitment."},
         "revision_protocol": {"authorized_methods": ["consensus", "third_reader", "chair_ruling"],
                               "assessment_free_methods": ["chair_ruling"],
@@ -430,6 +431,7 @@ def build():
                                          "data_availability_cutoff": "2026-05-01T00:00:00Z"}, "2026-05-02T00:12:00Z")
         tracks.append(t)
 
+    panel_assessments = {}
     log = [canon(t.head_obs(1)) for t in tracks]
     ck1_root = mth(log).hex()
     ck1 = coh.add("checkpoint_committed", {"construction": "rfc9162_sha256", "checkpoint_epoch": 1,
@@ -465,6 +467,7 @@ def build():
                                              "data_availability_cutoff": "2026-06-01T00:00:00Z"}, "2026-06-20T01:00:00Z")
             continue
         refs = []
+        panel_assessments.setdefault(case, [])
         for adj, when in (("adj-A", "2026-07-01T14:00:00Z"), ("adj-B", "2026-07-01T16:00:00Z")):
             assessment = ({"assessable": True, "conclusion": conclusion} if status == "determinate"
                           else {"assessable": False, "inability_reason": "Treated course without confirmatory imaging."})
@@ -478,6 +481,7 @@ def build():
                 "pre_consensus": True, "charter_ref": aref(charter),
             }, when, hiding=True, nonces=nonces, actor={"actor_ref": adj, "actor_type": "human", "role": "adjudicator"})
             refs.append(e["integrity"]["event_hash"])
+            panel_assessments[case].append(assessment)
         p = {"evaluation_criterion_ref": aref(criterion), "charter_ref": aref(charter), "assessment_refs": refs,
              "resolution_process": {"method": "consensus", "procedure_ref": "charter-sec-6"},
              "conclusion_status": status, "process_flags": [],
@@ -519,10 +523,21 @@ def build():
     import rair_v1  # noqa: E402
     import rsr_v1  # noqa: E402
     import ear_v1  # noqa: E402
+    import kappa_fleiss_v1  # noqa: E402
     RULEMODS = {"rair-v1": rair_v1, "rsr-v1": rsr_v1, "ear-v1": ear_v1}
 
     concl_at = {c: (concl, st) for c, _, _, _, concl, st, _, link, _ in CASES if link == "linked"}
     derived_files = []
+
+    def design_of(records, used_hashes):
+        """Cluster structure of the DENOMINATOR, so a design effect is computable
+        from the artifact alone. See Section 8.12."""
+        contributing = [r for r in records if r["adjudication_hash"] in set(used_hashes)]
+        return {
+            "contributing_instances": len(contributing),
+            "distinct_readers": len({r["trajectory"].get("baseline_actor") for r in contributing}),
+            "distinct_cases": len({r["case_ref"] for r in contributing}),
+        }
 
     def compute(rule_id, active_concl, current_adj):
         """Compute metrics through the shipped derivation engine and rule modules."""
@@ -540,7 +555,7 @@ def build():
             })
         n, d, used_hashes, excl = recompute_metric(records, pe_binary_v1, RULEMODS[rule_id], alignment_same_v1)
         used = [case for case in sorted(seqs) if case in current_adj and current_adj[case] in set(used_hashes)]
-        return n, d, used, excl
+        return n, d, used, excl, design_of(records, used_hashes)
 
     def emit(tag, when, active_concl, current_adj):
         pop_tuples = [{"case_ref": t.ref, "chain_ref": t.ref, "case_chain_head": t.prev, "case_chain_sequence": t.seq - 1}
@@ -567,9 +582,16 @@ def build():
                                                   "indeterminate": sum(1 for c in CASES if c[7] == "linked" and c[5] == "indeterminate")},
                   "followup_state_breakdown": {"active": linked_n}}
         blinding = {"blinded_committed": mature_n, "blinded": 0, "unblinded_or_breached": 0}
+        # Panel-scope agreement is one figure for the whole adjudicated set, not a
+        # per-case one: chance correction needs a marginal distribution across items.
+        panel_items = [panel_assessments[c] for c in sorted(panel_assessments) if panel_assessments[c]]
+        _per = {len(it) for it in panel_items}
+        panel = {"rule_id": "kappa-fleiss-v1", "items": len(panel_items),
+                 "assessments_per_item": (_per.pop() if len(_per) == 1 else None),
+                 "value": kappa_fleiss_v1.panel_agreement(panel_items)}
         for name in ("RAIR", "RSR", "EAR"):
             rid = f"{name.lower()}-v1"
-            n, d, used, excl = compute(rid, active_concl, current_adj)
+            n, d, used, excl, design = compute(rid, active_concl, current_adj)
             art = {
                 "artifact_type": "reliance_metric_derived", "artifact_id": f"urn:dses:derived:{name.lower()}-{tag}",
                 "derived_at": when, "metric_definition_ref": aref(metrics[name]),
@@ -580,6 +602,8 @@ def build():
                     "verification_rule": "OL-ADJUDICATED",
                     "blinding_breakdown": blinding,
                     "primary_evaluation_criterion": True, "criterion_validation_present": False,
+                    "design_structure": design,
+                    "panel_agreement": panel,
                     "commensurability_exclusions": excl["commensurability"],
                     "binary_projection_exclusions": {"indeterminate": excl["indeterminate"],
                                                      "partially_correct": excl["partially_correct"],
@@ -605,10 +629,10 @@ def build():
                                                     "artifact_type": "reliance_metric_derived", "analysis_snapshot_ref": sref,
                                                     "depends_on_event_hashes": art["projection_set"]["input_event_hashes"]}, when)
             print(f"  {tag} {name}: {n}/{d}  exclusions {excl}")
-        return sref, counts, blinding
+        return sref, counts, blinding, panel
 
 
-    def emit_individual(when, active_concl, current_adj, sref, counts, blinding):
+    def emit_individual(when, active_concl, current_adj, sref, counts, blinding, panel):
         """One reader, one bounded window, under governance.
 
         Every count here is recomputed by the verifier from snapshot-frozen
@@ -684,6 +708,7 @@ def build():
                     "conclusion_status": r["conclusion_status"], "adjudication_hash": r["adjudication_hash"]}
                    for r in recs]
         n, d, used, excl = recompute_metric(records, pe_binary_v1, RULEMODS["rair-v1"], alignment_same_v1)
+        design = design_of(records, used)
         art = {
             "artifact_type": "reliance_metric_derived",
             "artifact_id": "urn:dses:derived:rair-subject-0417-v1",
@@ -702,6 +727,8 @@ def build():
                 "verification_rule": "OL-ADJUDICATED",
                 "blinding_breakdown": blinding,
                 "primary_evaluation_criterion": True, "criterion_validation_present": False,
+                "design_structure": design,
+                "panel_agreement": panel,
                 "commensurability_exclusions": excl["commensurability"],
                 "binary_projection_exclusions": {"indeterminate": excl["indeterminate"],
                                                  "partially_correct": excl["partially_correct"],
@@ -762,8 +789,8 @@ def build():
                   "2026-08-11T00:00:00Z")
     anchor(ck3["integrity"]["event_hash"], "urn:dses:checkpoint:3", "3", "2026-08-11T00:05:00Z", "checkpoint_event")
 
-    sref2, counts2, blinding2 = emit("v2", "2026-08-12T00:00:00Z", concl_v2, adj_v2)
-    emit_individual("2026-08-12T01:00:00Z", concl_v2, adj_v2, sref2, counts2, blinding2)
+    sref2, counts2, blinding2, panel2 = emit("v2", "2026-08-12T00:00:00Z", concl_v2, adj_v2)
+    emit_individual("2026-08-12T01:00:00Z", concl_v2, adj_v2, sref2, counts2, blinding2, panel2)
     coh.add("outcome_integrity_event", {"kind": "verification_performed",
                                         "detail": "Full package verification by the deploying operator."}, "2026-08-12T02:00:00Z")
 

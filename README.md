@@ -1,6 +1,6 @@
-# DSES v0.2 outcome-evidence layer (0.2.0-rc9)
+# DSES v0.2 outcome-evidence layer (0.2.0-rc10)
 
-Release candidate for public comment. The permanent `0.2.0` schema `$id`s are minted once, at release, and never reused, so this candidate carries `0.2.0-rc9` until public comment closes. Extends DSES v0.1.0 as corrected by `ERRATA-v0.1.md`.
+Release candidate for public comment. The permanent `0.2.0` schema `$id`s are minted once, at release, and never reused, so this candidate carries `0.2.0-rc10` until public comment closes. Extends DSES v0.1.0 as corrected by `ERRATA-v0.1.md`.
 
 ## Reproduce every claim in this package
 

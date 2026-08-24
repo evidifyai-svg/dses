@@ -347,6 +347,8 @@ def main():
                         ok &= m.aligns(v["evaluation"], v["ai_output"]) == v["expect"]
                     elif rid == "agreement-percent-v1":
                         ok &= m.agreement(v["assessments"]) == v["expect"]
+                    elif rid == "kappa-fleiss-v1":
+                        ok &= m.panel_agreement(v["items"]) == v["expect"]
                     elif rid in ("rair-v1", "rsr-v1", "ear-v1"):
                         ok &= list(m.contributes(v["vb"], v["va"], v["ve"], v["aligned_same"])) == v["expect"]
                     elif rid == "binomial-point-v1":
@@ -563,6 +565,16 @@ def main():
                 agree_mod = bind_rule(agree_exe, f"{ref} agreement statistic") if agree_exe else None
                 if agree_mod is None:
                     r.check(False, f"{ref}: charter declares no executable agreement statistic",
+                            "X", "ADJ-AGREE")
+                elif not hasattr(agree_mod, "agreement"):
+                    # Scope is part of the rule. A panel-scope statistic exposes
+                    # panel_agreement over items and has no per-determination
+                    # answer to give; declaring one here is a category error, and
+                    # it must yield a verdict rather than an AttributeError.
+                    r.check(False,
+                            f"{ref}: charter's agreement_statistic is not item-scope "
+                            f"(no agreement() over one determination's assessments); a panel-scope "
+                            f"statistic belongs in panel_agreement_statistic",
                             "X", "ADJ-AGREE")
                 else:
                     payloads = [assess.get(x, {}).get("payload", {}).get("assessment", {}) for x in refs2]
@@ -989,12 +1001,13 @@ def main():
 
         prohibited = ("standard_of_care_determination", "reasonable_use_determination",
                       "competence_determination", "negligence_determination",
+                      "causation_determination", "liability_assignment",
                       "legal_authority_determination", "admissibility_determination",
                       "adverse_action_recommendation", "credentialing_action_recommendation",
                       "employment_action_recommendation")
         r.check(not any(k in obj for k in prohibited),
                 f"derived {aid}: carries no determination of standard of care, reasonable use, competence, "
-                f"negligence, legal authority, admissibility, or adverse action",
+                f"negligence, causation, liability assignment, legal authority, admissibility, or adverse action",
                 "S", "UOA-NONORM")
 
         dis = obj["disclosures"]
@@ -1087,6 +1100,63 @@ def main():
                 and dis["criterion_validation_present"] == validation_present,
                 f"derived {aid}: rule, primary-criterion, and criterion-validation disclosures derive from definitions",
                 "X", "MET-DISCLOSE")
+        # Design structure of the DENOMINATOR, so a design effect is computable
+        # by any reader of the artifact. The Wilson interval assumes independent
+        # Bernoulli trials; whenever contributing instances exceed either the
+        # distinct-reader or the distinct-case count the trials are clustered and
+        # the interval is anticonservative (8.12). Disclosing the two cluster
+        # counts is what makes that quantifiable outside this package.
+        contributing = [rec for rec in records if rec["adjudication_hash"] in set(used_hashes)]
+        expected_design = {
+            "contributing_instances": len(contributing),
+            "distinct_readers": len({rec["trajectory"].get("baseline_actor") for rec in contributing}),
+            "distinct_cases": len({rec["case_ref"] for rec in contributing}),
+        }
+        r.check(dis.get("design_structure") == expected_design,
+                f"derived {aid}: design structure of the denominator recomputes "
+                f"({expected_design['contributing_instances']} instances, "
+                f"{expected_design['distinct_readers']} readers, "
+                f"{expected_design['distinct_cases']} cases)",
+                "X", "MET-DESIGN")
+        # Panel-scope agreement. agreement-percent-v1 is computed WITHIN one
+        # determination; a chance-corrected statistic cannot be, because the
+        # chance term needs a marginal distribution across items and degenerates
+        # to 0/0 over a single one. It therefore occupies its own charter field
+        # and is recomputed here, across the snapshot-frozen adjudicated items.
+        if "panel_agreement" in dis:
+            pa = dis["panel_agreement"]
+            panel_exe = (charter or {}).get("panel_agreement_statistic")
+            if not r.check(bool(panel_exe),
+                           f"derived {aid}: panel agreement is reported only where the charter declares "
+                           f"an executable panel-scope statistic",
+                           "X", "MET-PANEL"):
+                panel_mod = None
+            else:
+                panel_mod = bind_rule(panel_exe, f"derived {aid} panel agreement statistic")
+                r.check(pa.get("rule_id") == panel_exe["rule_id"],
+                        f"derived {aid}: reported panel statistic names the charter's declared rule",
+                        "X", "MET-PANEL")
+            if panel_mod is not None:
+                panel_items = []
+                for ref in sorted(snap_mature):
+                    upto = snap_tuples.get(ref, -1)
+                    panel_items.append([ev["payload"]["assessment"] for ev in by_ref[ref]
+                                        if ev["sequence"] <= upto
+                                        and ev["event_type"] == "adjudicator_assessment_committed"
+                                        and ev["payload"].get("pre_consensus")])
+                panel_items = [it for it in panel_items if it]
+                got = panel_mod.panel_agreement(panel_items)
+                per = {len(it) for it in panel_items}
+                expected_pa = {
+                    "rule_id": panel_exe["rule_id"],
+                    "items": len(panel_items),
+                    "assessments_per_item": (per.pop() if len(per) == 1 else None),
+                    "value": got,
+                }
+                r.check(pa == expected_pa,
+                        f"derived {aid}: panel agreement recomputes under the charter's declared "
+                        f"panel-scope statistic over {len(panel_items)} adjudicated items",
+                        "X", "MET-PANEL")
         r.check(dis["commensurability_exclusions"] == excl["commensurability"]
                 and dis["binary_projection_exclusions"] == {
                     "indeterminate": excl["indeterminate"],
