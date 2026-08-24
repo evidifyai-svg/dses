@@ -7,8 +7,8 @@ Release-build properties, each closing a finding from external review:
     reader-supplied trust store (--anchor-trust). Keys carried inside the
     package never authenticate anchors, because the package is rewritable by
     its operator (threat model A1).
-  * Executable rules are LOADED AND EXECUTED. Every code_artifact_digest is
-    recomputed from the module bytes, the module's shipped conformance
+  * Executable rules are LOADED AND EXECUTED. Every code_artifact digest is
+    recomputed from the bytes its locator names, the module's shipped conformance
     fixtures are run, and metrics are recomputed by executing those modules,
     not by consulting a parallel implementation of their semantics.
   * Recomputation is AGAINST THE SNAPSHOT. Case chains are truncated to the
@@ -314,6 +314,8 @@ def main():
     r.section("executable rules (digests recomputed, fixtures executed)")
     rule_mods = {}
 
+    bound_exes = {}
+
     def bind_rule(exe, where):
         rid = exe["rule_id"]
         # The code artifact is located by its DECLARED locator. A path convention
@@ -323,12 +325,20 @@ def main():
             path = os.path.join(ROOT, ca["locator"])
         else:
             path = os.path.join(ROOT, "rules", rid.replace("-", "_") + ".py")
-        if not r.check(os.path.exists(path), f"{where}: rule {rid} resolves to code", "X", "RULE-RESOLVE"):
-            return None
         want_digest = (ca or {}).get("digest", {}).get("digest")
+        fx = os.path.join(ROOT, exe["fixtures_ref"])
+        # One executable reference is checked once. The definition sweep binds
+        # every declared executable up front; a later use site of the same
+        # (rule, locator, digest, fixtures) triple reuses that verdict instead
+        # of re-emitting three identical checks.
+        key = (rid, path, want_digest, fx)
+        if key in bound_exes:
+            return bound_exes[key]
+        if not r.check(os.path.exists(path), f"{where}: rule {rid} resolves to code", "X", "RULE-RESOLVE"):
+            bound_exes[key] = None
+            return None
         r.check(file_digest(path) == want_digest,
                 f"{where}: rule {rid} code digest matches the module bytes", "C", "RULE-DIGEST")
-        fx = os.path.join(ROOT, exe["fixtures_ref"])
         r.check(os.path.exists(fx), f"{where}: rule {rid} fixtures resolve", "X", "RULE-FIXTURES")
         if rid not in rule_mods:
             rule_mods[rid], _ = load_rule(rid)
@@ -369,6 +379,7 @@ def main():
                 except Exception:
                     ok = False
             r.check(ok, f"rule {rid}: shipped conformance fixtures pass against the loaded module", "X", "RULE-CONFORM")
+        bound_exes[key] = rule_mods[rid]
         return rule_mods[rid]
 
     # ------------------------------------------------------ definition artifacts
@@ -1231,8 +1242,13 @@ def load_attestations():
 
 
 def _walk_executables(obj, path=""):
+    # Matches the executable_rule shape in dses-v0.2-definitions.schema.json:
+    # rule_id, fixtures_ref, and a code_artifact object carrying the locator
+    # and digest. rc10 matched a flat code_artifact_digest key that the schema
+    # had dropped in rc4, so this sweep silently yielded nothing and every
+    # binding depended on the explicit bind_rule calls below.
     if isinstance(obj, dict):
-        if "rule_id" in obj and "code_artifact_digest" in obj and "fixtures_ref" in obj:
+        if "rule_id" in obj and "code_artifact" in obj and "fixtures_ref" in obj:
             yield path, obj
             return
         for k, v in obj.items():

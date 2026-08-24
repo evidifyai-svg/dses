@@ -6,7 +6,7 @@ Release-build properties, each driven by the fifth review round:
   * The anchor trust root lives OUTSIDE the package: the generator writes
     examples/anchor-trust-store.json, which represents out-of-band key
     distribution. The genesis key directory does not contain the anchor key.
-  * Every code_artifact_digest is the SHA-256 of the actual rule module bytes
+  * Every code_artifact digest is the SHA-256 of the actual rule module bytes
     in rules/, and derivation_software_digest is the SHA-256 of the actual
     derivation orchestration engine (scripts/dses_derivation.py). Names are not code.
   * v0.1 decision events carry payload commitments like every other DSES event,
