@@ -50,6 +50,7 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 | 3.4a | External anchoring derived from a receipt verifying under the EXTERNAL trust root | ANCHOR-RECEIPT | C | implemented (DSES-ANCHOR-v1; full A1 key-substitution attack is a fixture) |
 | 3.4b | RFC 3161 token parsing | none | C | **not_implemented**; `anchor_profile: rfc3161` receipts are treated as unverified anchors |
 | 3.4c | Anchor precedes the declared prespecification cutoff | ART-PRESPEC | X | implemented |
+| 3.4f | Per-artifact anchoring grade (declared, checkpoint_relative, externally_anchored, asserted_unverified) is derived and reported as a label | ANCHOR-RECEIPT, ART-PRESPEC | X | **partial**: the verifier derives externally anchored versus not, and treats unverified receipts as unverified anchors, but reports no grade label and does not derive checkpoint_relative |
 | 3.5 | Anchor evidence never inside the object it attests | ART-NOANCHOR | S + X | implemented |
 | 3.6a | Signatures follow the declared DSES-SIG-v1 profile, algorithm, and context and cryptographically verify | SIG-PROFILE, SIG-VERIFY | S + C | implemented; owns only signatures against genesis-resolved keys, never anchor receipts (Section 3.8, rule ownership) |
 | 3.6i | The DSES-SIG-v1 statement encoding matches the shipped test vectors | SIG-VECTORS | C | implemented |
@@ -222,8 +223,8 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 
 ## Counts
 
-Verification class: **S** 33, **C** 30, **X** 89, **T** 4, **A** 22.
-Reference verifier support: **implemented** 124, **partial** 3, **not_implemented** 3, **not applicable** 15, **out of scope** 3.
+Verification class: **S** 33, **C** 30, **X** 90, **T** 4, **A** 22.
+Reference verifier support: **implemented** 124, **partial** 4, **not_implemented** 3, **not applicable** 15, **out of scope** 3.
 
 The requirements marked **not_implemented** are named explicitly in the specification and do not support any shipped conformance claim.
 

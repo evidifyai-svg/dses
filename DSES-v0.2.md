@@ -128,7 +128,7 @@ Each `checkpoint_committed` event carries the head observations appended at that
 
 ### 3.4 Prespecification assurance and cutoffs
 
-`prespecification_assurance` is graded: `declared`, `checkpoint_relative`, `externally_anchored`. Grade alone is insufficient, because ingestion timing is under operator control (A2): declaring an artifact prospective because no `outcome_observed` had yet been ingested proves nothing about whether outcomes had already occurred and been reviewed outside DSES.
+`prespecification_assurance` is graded: `declared`, `checkpoint_relative`, `externally_anchored`. The grade is derived by the verifier, never stored (Section 3.5), and this build derives the boundary that matters, externally anchored before the cutoff or not, without reporting the intermediate grade labels (claim 3.4f). <!-- req:3.4f --> Grade alone is insufficient, because ingestion timing is under operator control (A2): declaring an artifact prospective because no `outcome_observed` had yet been ingested proves nothing about whether outcomes had already occurred and been reviewed outside DSES.
 
 Prespecification is therefore judged against a **declared external cutoff**, and every definition artifact carries one: `before_first_enrollment`, `before_first_ai_exposure`, `before_enrollment_close`, `before_earliest_outcome_maturation`, `before_data_access_unlock`, or `before_analysis_dataset_release`. The verifier compares anchor time to cutoff time. `post_hoc` is not a boolean; it is a relation to a named cutoff.
 
@@ -611,7 +611,7 @@ Also closed: the interval tolerance, stated four times in three documents and co
 
 ## Annex D (normative): Claim classification
 
-Every normative requirement using an uppercase conformance keyword carries a stable requirement tag and two independent labels in `CLAIMS-CLASSIFICATION.md`, which is release-blocking and ships with this release candidate. **Verification class** (S, C, X, T, A) answers what kind of establishment is possible in principle. **Reference verifier support** (implemented, partial, not_implemented) answers whether this build performs it. Conflating the two would let an unimplemented check hide inside an optimistic classification. Current counts: 33 S, 30 C, 89 X, 4 T, 22 A; 124 implemented, 3 partial, 3 not implemented.
+Every normative requirement using an uppercase conformance keyword carries a stable requirement tag and two independent labels in `CLAIMS-CLASSIFICATION.md`, which is release-blocking and ships with this release candidate. **Verification class** (S, C, X, T, A) answers what kind of establishment is possible in principle. **Reference verifier support** (implemented, partial, not_implemented) answers whether this build performs it. Conflating the two would let an unimplemented check hide inside an optimistic classification. Current counts: 33 S, 30 C, 90 X, 4 T, 22 A; 124 implemented, 4 partial, 3 not implemented.
 
 ## Annex E (normative): Reconstruction questions
 
