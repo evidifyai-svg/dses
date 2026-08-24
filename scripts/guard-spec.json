@@ -1,0 +1,45 @@
+{
+  "_comment": "Release-tree profile for scripts/check-language.mjs. Extends guard-allow.json so both scopes share one allow list and one ruling history; only scan scope and the disabled rule set differ. Run by run_all.sh step 8 as: node scripts/check-language.mjs --config scripts/guard-spec.json --root . --ship none",
+  "_ruling": "2026-08-24. The site ruleset polices marketing voice. Normative specification text legitimately describes enforcement mechanics, uses guarantee and prove as technical terms, and names integrity-level mechanisms that DSES v0.1 published on 2026-08-15 under CC BY 4.0. Those rules are therefore disabled for the release tree. The rules that describe legal exposure or objective hygiene (false patent marking, registered-mark symbol before registration, forbidden domains and mark phrases, doctoral abbreviation, em dash, the two prohibited insurance claims) stay armed. Bare-noun DSES and insurance-disclaimer stay on as warnings.",
+  "extends": "guard-allow.json",
+  "scanRoot": ".",
+  "shipRoot": "",
+  "ignorePaths": [
+    {
+      "path": "site",
+      "reason": "scanned by the site profile"
+    },
+    {
+      "path": "docs",
+      "reason": "working notes, not shipped; make_release.py does not include docs/"
+    },
+    {
+      "path": ".github",
+      "reason": "CI configuration"
+    },
+    {
+      "path": "GUARD-REPORT.md",
+      "reason": "guard output"
+    }
+  ],
+  "disableRules": [
+    "gate-mechanics",
+    "mechanism-term",
+    "gated-pin",
+    "guarantee-verb",
+    "prove-context",
+    "prove-unpaired"
+  ],
+  "scanExt": [
+    ".html",
+    ".htm",
+    ".md",
+    ".txt",
+    ".json",
+    ".cff",
+    ".yml",
+    ".py",
+    ".sh"
+  ],
+  "_scanExt_ruling": "2026-08-24. The release tree carries prose inside schema descriptions, CITATION.cff, docstrings and shell comments; the hygiene rules apply there too."
+}
