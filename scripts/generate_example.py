@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate the DSES v0.2.0-rc10 worked example.
+"""Generate the DSES v0.2.0-rc11 worked example.
 
 Release-build properties, each driven by the fifth review round:
 
   * The anchor trust root lives OUTSIDE the package: the generator writes
     examples/anchor-trust-store.json, which represents out-of-band key
     distribution. The genesis key directory does not contain the anchor key.
-  * Every code_artifact_digest is the SHA-256 of the actual rule module bytes
+  * Every code_artifact digest is the SHA-256 of the actual rule module bytes
     in rules/, and derivation_software_digest is the SHA-256 of the actual
     derivation orchestration engine (scripts/dses_derivation.py). Names are not code.
   * v0.1 decision events carry payload commitments like every other DSES event,
@@ -796,7 +796,7 @@ def build():
 
     export_sig = sign_dses(keys["outcome-registry-01-key-2"]["private"], "outcome-registry-01-key-2", "export-head", coh.prev)
 
-    out = {"package": "DSES v0.2.0-rc10 worked example",
+    out = {"package": "DSES v0.2.0-rc11 worked example",
            "description": "Twelve membership-committed eligible cases across two periodic manifests, resolvable v0.1 decision sequences with verified payload commitments, reliance metrics recomputed by executing the declared rule artifacts against snapshot-frozen evidence, an adjudication revision with metric supersession, externally rooted anchor receipts, and key rotation. No label in this package is stored where it can be derived.",
            "cohort_chain": coh.events, "case_chains": [t2.events for t2 in tracks],
            "export_head_signature": export_sig}

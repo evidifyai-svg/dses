@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the public DSES v0.2.0-rc10 archive from an explicit allowlist.
+"""Build the public DSES v0.2.0-rc11 archive from an explicit allowlist.
 
 The ZIP is deterministic for a fixed source tree: members are sorted and carry
 one fixed timestamp. Build artifacts, review notes, local environments, VCS
@@ -12,7 +12,7 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUT = ROOT.parent / "dses-v0.2.0-rc10-publication.zip"
+DEFAULT_OUT = ROOT.parent / "dses-v0.2.0-rc11-publication.zip"
 FILES = [
     "DSES-v0.1.md", "dses-v0.1.schema.json", "DSES-v0.2.md", "ERRATA-v0.1.md",
     "CLAIMS-CLASSIFICATION.md", "README.md", "IMPLEMENT.md",

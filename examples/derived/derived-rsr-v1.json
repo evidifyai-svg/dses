@@ -13,8 +13,8 @@
   "projection_set": {
     "mode": "inline",
     "input_event_hashes": [
-      "7d7999a7a518e00d5209fbdd6f27d5b3414a132111a66298cc474db1aa215f41",
-      "8ea2d94df7eb9087744a51a278981a4945a48b6469ede435a0e60b0acf7f7432"
+      "55ca689abe1a219b9ac7808a5b94c8bffa11e745c5c193b50d56af9d12ed5793",
+      "73cdce4eb6dee201315b6228ef4f5ac8ec24d0ac9204a7862702b80e1c2306f4"
     ]
   },
   "numerator": 1,
@@ -75,7 +75,7 @@
     }
   },
   "recomputability": {
-    "analysis_snapshot_ref": "70767b33ba665f70d529fc7868be7f4315f6c9a34d0a16c610fc9c677d6cddf9",
+    "analysis_snapshot_ref": "fa24c1dc66a6c0c72cc71527bd0124a31ac4fd93e7968fa2f31a59b2f0a271c6",
     "definition_hashes": [
       {
         "artifact_id": "https://example.org/dses/metrics/rsr-primary",
@@ -132,5 +132,5 @@
     "level": 0.95,
     "method": "Wilson"
   },
-  "artifact_hash": "54069459031cea832c11bf86763f11e104bfeb9c752b8c4a12d60b52bbc2bd7f"
+  "artifact_hash": "64d238e49c5eaa4bbfe33b512f2d635b8dc8fd14605af2fc671470ce7442b304"
 }

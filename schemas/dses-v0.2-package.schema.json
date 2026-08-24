@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc10/package.schema.json",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc11/package.schema.json",
   "title": "DSES v0.2 package envelope",
   "type": "object",
   "required": [

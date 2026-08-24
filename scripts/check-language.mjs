@@ -14,6 +14,8 @@
 //   node scripts/check-language.mjs --self-test     seeded fixture test
 //   node scripts/check-language.mjs --json          machine-readable findings
 //   node scripts/check-language.mjs --commit-msg F  scan a commit message
+//   node scripts/check-language.mjs --config scripts/guard-spec.json --root . --ship none
+//                                                   release-tree profile (run_all.sh step 8)
 //
 // NOTE ON SOURCE HYGIENE: several prohibited strings are assembled at runtime
 // from token arrays rather than written out. That is deliberate. The governing
@@ -39,7 +41,28 @@ const DEFAULTS = {
   ignorePaths: [],
   allow: [],
   gatedPhraseFamily: [],
+  // Rule ids a profile switches off wholesale. Recorded in the config with a
+  // reason, never passed on the command line, so a disabled rule is a ruling
+  // on file and not a flag someone forgot.
+  disableRules: [],
 };
+
+// A config may name a base with "extends" (a path relative to itself). The
+// allow list, gated phrase family and ignore lists are concatenated; scalar
+// keys in the child win. This is how a second scan profile (the release tree)
+// shares one ruleset with site copy instead of forking it.
+function readConfig(path, depth = 0) {
+  if (depth > 4) throw new Error(`config extends chain too deep at ${path}`);
+  const parsed = JSON.parse(readFileSync(path, "utf8"));
+  if (!parsed.extends) return parsed;
+  const base = readConfig(resolve(dirname(path), parsed.extends), depth + 1);
+  const merged = { ...base, ...parsed };
+  for (const k of ["allow", "gatedPhraseFamily", "ignoreFiles", "ignorePaths", "disableRules"]) {
+    merged[k] = [...(base[k] || []), ...(parsed[k] || [])];
+  }
+  delete merged.extends;
+  return merged;
+}
 
 function loadConfig(explicit) {
   const candidates = explicit
@@ -47,7 +70,7 @@ function loadConfig(explicit) {
     : [join(HERE, "guard-allow.json"), join(process.cwd(), "guard-allow.json"), join(process.cwd(), "scripts", "guard-allow.json")];
   for (const c of candidates) {
     if (existsSync(c)) {
-      const parsed = JSON.parse(readFileSync(c, "utf8"));
+      const parsed = readConfig(c);
       return { cfg: { ...DEFAULTS, ...parsed }, cfgPath: c };
     }
   }
@@ -276,7 +299,9 @@ function scanText(raw, opts) {
   const allowRanges = phraseRanges(norm, cfg.allow || [], ctx);
   const familyRanges = phraseRanges(norm, (cfg.gatedPhraseFamily || []).map((f) => (typeof f === "string" ? { phrase: f } : f)), ctx);
 
+  const disabled = new Set(cfg.disableRules || []);
   const add = (level, rule, rawIdx, msg) => {
+    if (disabled.has(rule)) return;
     const n = rawToNorm(map, rawIdx);
     if (coveredBy(allowRanges, n, rule)) return;
     findings.push({ level, rule, line: lineOf(raw, rawIdx), index: rawIdx, msg });

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc10/nonce-sidecar.schema.json",
-  "title": "DSES v0.2.0-rc10 Nonce Sidecar",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc11/nonce-sidecar.schema.json",
+  "title": "DSES v0.2.0-rc11 Nonce Sidecar",
   "description": "Nonces for randomized hiding commitments. Keyed by EVENT HASH, not event_id: event identifiers are unique only within a chain, so an id-keyed sidecar cannot unambiguously represent two events sharing an id across chains. The event hash is already a cryptographic identity and commits to the payload commitment.",
   "type": "object",
   "required": [

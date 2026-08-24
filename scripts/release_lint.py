@@ -264,12 +264,24 @@ def main():
             if stale != current:
                 problems.append(f"L9 specification body carries stale version string {stale} "
                                 f"while declaring {current}")
-        for path in ("README.md", "run_all.sh"):
+        # The versioned file list is owned by bump_version.py so that the file
+        # the bump rewrites and the file the lint polices are the same file.
+        sys.path.insert(0, os.path.join(ROOT, "scripts"))
+        from bump_version import VERSIONED  # noqa: E402
+        for path in VERSIONED:
+            if path == "DSES-v0.2.md":
+                continue  # body checked above; Annex C is history
             fp = os.path.join(ROOT, path)
             if os.path.exists(fp):
                 for stale in set(re.findall(r"0\.2\.0-rc\d+", open(fp).read())):
                     if stale != current:
                         problems.append(f"L9 {path} carries stale version string {stale}")
+        # The shipped example embeds the label in its package name.
+        ex = os.path.join(ROOT, "examples", "example-package.json")
+        if os.path.exists(ex):
+            for stale in set(re.findall(r"0\.2\.0-rc\d+", open(ex).read())):
+                if stale != current:
+                    problems.append(f"L9 examples/example-package.json carries stale version string {stale}; regenerate")
 
     # L10: the working-tree release manifest must describe the working tree.
     # The published archive regenerates it at build time, so a stale in-repo copy

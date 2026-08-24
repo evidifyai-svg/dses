@@ -1,0 +1,13 @@
+{
+  "_comment": "Allowlist for scripts/check_vocabulary.py. Every entry records why a token that is absent from the schema vocabulary is nonetheless correct in shipped prose. Adding an entry without a ruling date and a section reference is a process violation. An entry is not a fix: if the token names something the verifier is supposed to derive, the claims table carries the classification.",
+  "_updated": "2026-08-24",
+  "allow": [
+    { "token": "artifact_anchored", "ruling": "2026-08-24", "source": "DSES-v0.2.md 3.4.1", "note": "Named once as the rejected alternative to anchor_evidence_recorded. The sentence exists to say this is NOT the event name." },
+    { "token": "declared", "ruling": "2026-08-24", "source": "DSES-v0.2.md 3.4, claim 3.4f", "note": "Anchoring grade vocabulary. Derivation classified partial in CLAIMS-CLASSIFICATION 3.4d." },
+    { "token": "checkpoint_relative", "ruling": "2026-08-24", "source": "DSES-v0.2.md 3.4, claim 3.4f", "note": "Anchoring grade vocabulary. Not derived by this build; classified partial in 3.4f." },
+    { "token": "externally_anchored", "ruling": "2026-08-24", "source": "DSES-v0.2.md 3.4, claim 3.4f", "note": "Anchoring grade vocabulary. The verifier derives this state under ANCHOR-RECEIPT and ART-PRESPEC but does not report the grade label; classified partial in 3.4f." },
+    { "token": "asserted_unverified", "ruling": "2026-08-24", "source": "DSES-v0.2.md 3.4.1, claim 3.4f", "note": "Anchoring grade vocabulary. Unverified receipts are treated as unverified anchors (3.4b); the grade label itself is not reported. Classified partial in 3.4f." },
+    { "token": "post_hoc", "ruling": "2026-08-24", "source": "DSES-v0.2.md 3.4", "note": "A concept the specification refuses to encode as a boolean. Named in order to reject it as a field." },
+    { "token": "declared_multiplicity", "ruling": "2026-08-24", "source": "DSES-v0.2.md 5.1", "note": "Named in order to state that it is intentionally not a v0.2 option." }
+  ]
+}
