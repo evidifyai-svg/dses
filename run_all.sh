@@ -30,7 +30,11 @@ echo "=== 4. adversarial suite against SHIPPED artifacts ==="
 python3 tests/run_regression.py
 
 echo
-echo "=== 5. regeneration check in a temporary tree, never over the release ==="
+echo "=== 5. external quickstart examples and targeted mutations ==="
+python3 tests/run_quickstart.py
+
+echo
+echo "=== 6. regeneration check in a temporary tree, never over the release ==="
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 python3 - "$PWD" "$TMP/pkg" <<'PY'

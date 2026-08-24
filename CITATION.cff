@@ -2,6 +2,8 @@ cff-version: 1.2.0
 message: "If you use or cite DSES, please cite it as below."
 title: "DSES: Decision-Sequence Evidence Schema"
 type: software
+version: 0.2.0-rc10
+date-released: 2026-08-23
 authors:
   - family-names: Henderson
     given-names: Joshua M.

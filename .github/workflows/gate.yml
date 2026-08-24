@@ -13,7 +13,7 @@ jobs:
           python-version: "3.12"
       - name: Install pinned dependencies
         run: pip install -r requirements.txt
-      - name: Full five-stage gate
+      - name: Full release gate
         run: bash run_all.sh
       - name: Manifest integrity
         run: |

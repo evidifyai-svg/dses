@@ -34,6 +34,15 @@ Registry listing is free. The registry exists so that a conformance claim is
 always checkable by a third party against a named transcript, which is the
 same standard the specification applies to its own claims.
 
+## Quickstart verification is not conformance
+
+`bash quickstart/verify.sh` validates the synthetic v0.1 event examples and
+checks the documented quickstart sequence profile. It is an integration aid,
+not the complete published conformance gate. Passing it, copying an emitter,
+or producing schema-valid JSON does not authorize a `DSES Conformant` claim.
+The tool prints this limitation in its own output so the result cannot be
+mistaken for a registry transcript.
+
 ## What conformance does not assert
 
 Conformance is a statement about evidence structure and verifiability. It is

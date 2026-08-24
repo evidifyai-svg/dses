@@ -1,0 +1,221 @@
+{
+  "description": "Synthetic L2/I2 pre-AI, reveal, revision, and final sequence. The disclosed payloads and event chain are internally verifiable. No external anchor or I3 enforcement is claimed.",
+  "dses_version": "0.1.0",
+  "example_scope": {
+    "capture_level": "L2",
+    "integrity_class": "I2"
+  },
+  "disclosed_payloads": {
+    "sha256:b9ba0158ade575654084a43aa8f473b78a18831be44588b9953b03b5b367f9a5": {
+      "finding": "negative",
+      "confidence": "moderate"
+    },
+    "sha256:8d6219c9dc5419e982846e05683dcfa378f5921510a014af81c7e5355a4c69b0": {
+      "finding": "positive",
+      "score": 0.82
+    },
+    "sha256:bf961912b16256d2b31a1617a7c858f50a266ec85a6eb0d2e5fb0178c7742225": {
+      "finding": "positive",
+      "confidence": "moderate"
+    }
+  },
+  "events": [
+    {
+      "event_id": "sealed-001-0000",
+      "event_type": "case_context_created",
+      "sequence": 0,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T15:00:00Z",
+      "recorded_at": "2026-08-23T15:00:00Z",
+      "case_ref": "case-sealed-001",
+      "workflow_ref": "synthetic-sequential-review-v1",
+      "integrity": {
+        "class": "I2",
+        "event_hash": "e853cf5aec43031a2b2ea3191969b37eafe773b591dea4cad182ef92a509bbaf",
+        "prev_event_hash": "GENESIS",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": {
+        "system_type": "study_platform",
+        "system_ref": "example-sequence-app",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "sealed-001-0001",
+      "event_type": "ai_result_available",
+      "sequence": 1,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T15:00:05Z",
+      "recorded_at": "2026-08-23T15:00:05Z",
+      "case_ref": "case-sealed-001",
+      "workflow_ref": "synthetic-sequential-review-v1",
+      "ai_system": {
+        "name": "Synthetic Classifier",
+        "vendor": "Example Vendor",
+        "model_id": "synthetic-classifier",
+        "model_version": "1.2.0",
+        "deployment_id": "example-east"
+      },
+      "integrity": {
+        "class": "I2",
+        "event_hash": "01e834bc48ab9ef6f5a963f8f86b88f2f2a8b33d7020944324ee8c386aff7df9",
+        "prev_event_hash": "e853cf5aec43031a2b2ea3191969b37eafe773b591dea4cad182ef92a509bbaf",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": {
+        "system_type": "ai_platform",
+        "system_ref": "example-inference-service",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "sealed-001-0002",
+      "event_type": "human_state_committed",
+      "sequence": 2,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T15:02:30Z",
+      "recorded_at": "2026-08-23T15:02:30Z",
+      "case_ref": "case-sealed-001",
+      "workflow_ref": "synthetic-sequential-review-v1",
+      "actor": {
+        "actor_ref": "actor-synthetic-023",
+        "actor_type": "human",
+        "role": "reviewer"
+      },
+      "decision_state_ref": "sha256:b9ba0158ade575654084a43aa8f473b78a18831be44588b9953b03b5b367f9a5",
+      "information_state": {
+        "exposure_classes": [],
+        "independence_class": "UNEXPOSED"
+      },
+      "integrity": {
+        "class": "I2",
+        "event_hash": "a07a2bf1bd6564af7b0fd583848802f82ea99b1087492e02d1bbd4d4f9d9f53c",
+        "prev_event_hash": "01e834bc48ab9ef6f5a963f8f86b88f2f2a8b33d7020944324ee8c386aff7df9",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": {
+        "system_type": "study_platform",
+        "system_ref": "example-sequence-app",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "sealed-001-0003",
+      "event_type": "ai_result_presented",
+      "sequence": 3,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T15:02:31Z",
+      "recorded_at": "2026-08-23T15:02:31Z",
+      "case_ref": "case-sealed-001",
+      "workflow_ref": "synthetic-sequential-review-v1",
+      "actor": {
+        "actor_ref": "actor-synthetic-023",
+        "actor_type": "human",
+        "role": "reviewer"
+      },
+      "ai_system": {
+        "name": "Synthetic Classifier",
+        "vendor": "Example Vendor",
+        "model_id": "synthetic-classifier",
+        "model_version": "1.2.0",
+        "deployment_id": "example-east"
+      },
+      "exposure": {
+        "classes": [
+          "CATEGORICAL",
+          "QUANTITATIVE"
+        ],
+        "modality": "inline_text",
+        "payload_ref": "local:synthetic-output/sealed-001",
+        "payload_commitment": "sha256:8d6219c9dc5419e982846e05683dcfa378f5921510a014af81c7e5355a4c69b0"
+      },
+      "integrity": {
+        "class": "I2",
+        "event_hash": "f75a9982f529f970f4c1c2f7167ed0962cbcc2267751e4e930304fb751a2d67d",
+        "prev_event_hash": "a07a2bf1bd6564af7b0fd583848802f82ea99b1087492e02d1bbd4d4f9d9f53c",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": {
+        "system_type": "viewer",
+        "system_ref": "example-sequence-app",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "sealed-001-0004",
+      "event_type": "human_state_revised",
+      "sequence": 4,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T15:04:20Z",
+      "recorded_at": "2026-08-23T15:04:20Z",
+      "case_ref": "case-sealed-001",
+      "workflow_ref": "synthetic-sequential-review-v1",
+      "actor": {
+        "actor_ref": "actor-synthetic-023",
+        "actor_type": "human",
+        "role": "reviewer"
+      },
+      "decision_state_ref": "sha256:bf961912b16256d2b31a1617a7c858f50a266ec85a6eb0d2e5fb0178c7742225",
+      "prior_decision_state_ref": "sha256:b9ba0158ade575654084a43aa8f473b78a18831be44588b9953b03b5b367f9a5",
+      "information_state": {
+        "exposure_classes": [
+          "CATEGORICAL",
+          "QUANTITATIVE"
+        ],
+        "independence_class": "DIRECTLY_EXPOSED"
+      },
+      "integrity": {
+        "class": "I2",
+        "event_hash": "b07d0d5cef11be35775e436bcf863508623f5140e7109cbe119d387931752cd3",
+        "prev_event_hash": "f75a9982f529f970f4c1c2f7167ed0962cbcc2267751e4e930304fb751a2d67d",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": {
+        "system_type": "study_platform",
+        "system_ref": "example-sequence-app",
+        "system_version": "1.0.0"
+      }
+    },
+    {
+      "event_id": "sealed-001-0005",
+      "event_type": "final_decision_committed",
+      "sequence": 5,
+      "ordering": "determinate",
+      "occurred_at": "2026-08-23T15:04:30Z",
+      "recorded_at": "2026-08-23T15:04:30Z",
+      "case_ref": "case-sealed-001",
+      "workflow_ref": "synthetic-sequential-review-v1",
+      "actor": {
+        "actor_ref": "actor-synthetic-023",
+        "actor_type": "human",
+        "role": "reviewer"
+      },
+      "decision_state_ref": "sha256:bf961912b16256d2b31a1617a7c858f50a266ec85a6eb0d2e5fb0178c7742225",
+      "information_state": {
+        "exposure_classes": [
+          "CATEGORICAL",
+          "QUANTITATIVE"
+        ],
+        "independence_class": "DIRECTLY_EXPOSED"
+      },
+      "integrity": {
+        "class": "I2",
+        "event_hash": "e8ce901604ffea92891b5ac092568365d6011fd4ef58f5c0e5d43c0916d3a3c3",
+        "prev_event_hash": "b07d0d5cef11be35775e436bcf863508623f5140e7109cbe119d387931752cd3",
+        "canonicalization": "RFC8785",
+        "hash_alg": "SHA-256"
+      },
+      "source_system": {
+        "system_type": "reporting",
+        "system_ref": "example-sequence-app",
+        "system_version": "1.0.0"
+      }
+    }
+  ]
+}

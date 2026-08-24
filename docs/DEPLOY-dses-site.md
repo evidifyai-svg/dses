@@ -1,127 +1,91 @@
 # Deploying dses.ai
 
-`site/` is the deploy root for dses.ai. As of 2026-08-23 it is the only source
-of truth for that site. Nothing else in this repository is published to the
-web: the specification markdown at the repository root is normative spec text,
-not site copy.
+`site/` is the deploy root and the only source of truth for `dses.ai`. The
+specification markdown at the repository root is normative text, not site copy.
 
-This file lives at `docs/DEPLOY-dses-site.md`, outside the deploy root, on the
-rule that a deploy root holds only what ships. It was briefly at
-`site/DEPLOY.md` when the directory was created on 2026-08-23 and was moved out
-in the same day on the branch `site/emdash-sweep-dses`. If you find a reference
-to `site/DEPLOY.md` anywhere, it predates that move.
+## Current observed state
 
-## Source custody
-
-`site/index.html` was copied byte for byte from `~/Downloads/index.html` on
-2026-08-23, with no content edits. It hashes to:
+The site was first imported into source control from a live rc8 page on
+2026-08-23. That original `index.html` had SHA-256:
 
     b74a2a3f28a27c3d88d9bbe908f8ff3e29df0b21208be4ee85238bf1924edabf
 
-At the time of the move that hash also matched what https://dses.ai/ was
-serving, byte for byte, 10954 bytes, with no edge injection of any kind on
-this zone.
+That hash is historical. The repository source now carries the rc10 version and
+implementation surface, so production is expected to differ until the next
+deploy.
 
-`~/Downloads/index.html` is superseded by this file and is no longer a source.
-It was deliberately left untouched so that a rollback needs no archaeology.
-Delete it after the first successful repository-based deploy, once production
-has been confirmed to match `site/index.html`.
+Live checks on 2026-08-23 establish that production is currently receiving a
+directory deployment, not only a lone HTML file:
 
-## Mandatory pre-deploy steps
+- `/sitemap.xml` returns the repository XML with status 200;
+- an unknown path returns `site/404.html` with status 404; and
+- the homepage, sitemap, and 404 response carry the security policy represented
+  by `site/_headers`.
 
-**Two** guards run before any deploy, whichever path is used. Both are
-zero-dependency Node scripts, both exit non-zero on an error, and both are byte
-identical to the copies in evidify-site.
+Those observations supersede the earlier note that production soft-returned the
+homepage for every path. They establish deployed behavior, not who invoked the
+last upload.
 
-    node scripts/check-language.mjs
-    node scripts/check-seo.mjs
+## Mandatory pre-deploy gates
 
-The language guard reads `scripts/guard-allow.json` and scans `site/` for the
-hard copy constraints. The SEO guard reads `scripts/seo-config.json` and checks
-the shipped HTML for structure that search engines depend on: exactly one title,
-one meta description, one self-referencing canonical and a closing head tag per
-page, JSON-LD that parses with no dangling `@id`, no canonical pointing off
-site, and no title tag bidding on evidify.ai keyword territory. It warns, without
-blocking, on a title over 60 characters or a meta description over 160.
+Run both zero-dependency guards from the repository root:
 
-A non-zero exit from either one means the deploy does not happen until the
-finding is fixed, or ruled on and recorded in the relevant config with a dated
-entry. **There is no npm predeploy hook in this repository** the way there is in
-evidify-site, which has no package.json to hang one on, so running both is
-manual discipline here. Do not skip either.
+```sh
+node scripts/check-language.mjs
+node scripts/check-seo.mjs
+```
 
-Self-tests, if you want to confirm a guard is working before you trust it:
+The language guard enforces public claim, liability, trademark, and copy
+boundaries. The SEO guard checks the title, description, self-canonical, JSON-LD,
+known identifiers, and site keyword territory. A non-zero exit stops the deploy.
 
-    node scripts/check-language.mjs --self-test
-    node scripts/check-seo.mjs --self-test
+Current source state after the rc10 implementation update: both guards report
+zero errors and zero warnings. Their self-tests also pass:
 
-Known state on 2026-08-23: both guards are clean on this site. The language
-guard reports 0 errors and 0 warnings. The SEO guard reports 0 errors and one
-warning, the meta description being 205 characters against a 160 character
-target, which is a copy decision rather than a defect and is deliberately not
-blocking.
+```sh
+node scripts/check-language.mjs --self-test
+node scripts/check-seo.mjs --self-test
+```
 
-## (a) Current path: dashboard Direct Upload
+## Deploy the version-controlled directory
 
-Today the site is published by uploading `index.html` through the Cloudflare
-dashboard as a Direct Upload to the Pages project. It works, and it is what is
-live now.
+The confirmed Cloudflare Pages project name is `dses-site`. Deploy the directory,
+not an individual file:
 
-What it costs:
+```sh
+npx wrangler pages deploy site --project-name=dses-site
+```
 
-- `_headers` is not applied, so the site ships with no CSP, no HSTS, no
-  X-Frame-Options, and no referrer policy.
-- `404.html` is not applied. Unknown paths return the homepage with status
-  200 instead of a 404. Verified 2026-08-23.
-- `robots.txt` and `sitemap.xml` do not exist as files, so both paths hit the
-  same soft-404 and return the homepage HTML with status 200. A crawler
-  requesting `https://dses.ai/sitemap.xml` receives a web page. Verified
-  2026-08-23.
-- There is no record of what was uploaded. The uploaded bytes and the
-  repository can drift with nothing to detect it.
+Cloudflare Pages reads `_headers` and `404.html` from the uploaded directory and
+publishes `robots.txt` and `sitemap.xml` at their actual paths. Uploading the
+directory also makes the deployed unit reviewable as one commit.
 
-## (b) Recommended path: wrangler
+The project was observed as Direct Upload rather than Git-connected on
+2026-08-23. A push does not deploy production. Reconfirm that setting in the
+Cloudflare dashboard if it changes, because this document should not imply an
+automatic deploy that does not exist.
 
-    npx wrangler pages deploy site --project-name=dses-site
+## Next deployment procedure
 
-Why this is the correct path:
+Josh performs the next production deployment after the adoption branch is
+merged. This requires the Cloudflare account session and is intentionally a
+human-dependent release step.
 
-- Cloudflare Pages reads `_headers` and `404.html` from the root of the
-  uploaded output directory. Uploading `site/` as the directory is what makes
-  those two files real. Uploading a single HTML file cannot.
-- `robots.txt` and `sitemap.xml` become actual files at their actual paths,
-  which ends the soft-404 behavior described above.
-- The deployed unit becomes a directory under version control rather than a
-  hand-picked file, so what is live is a commit.
+1. Run `bash run_all.sh` in the pinned Python environment.
+2. Run both public-copy guards above.
+3. Confirm `git status` contains only the intended commit.
+4. Run the Wrangler directory deploy.
+5. Fetch the live homepage and compare its bytes to `site/index.html`.
+6. Confirm the live version string is `0.2.0-rc10`, the Implement navigation is
+   present, and the verifier transcript displays 2,286 checks and 158 rejected
+   adversarial cases.
+7. Recheck `/sitemap.xml` and a nonexistent path for status 200 and 404,
+   respectively.
 
-The project name is confirmed. `dses-site` is the Cloudflare Pages project
-that owns the dses.ai custom domain, checked in the dashboard on 2026-08-23.
+Do not update the public scorecard or add a conformance transcript as part of a
+site deploy. Those changes require their own supporting evidence.
 
-That check also settled how the project is fed: it is **Direct Upload, not
-git-connected**. The repository dropdown on the project is empty, and the only
-repository authorized to the Cloudflare GitHub App is an unrelated one. So
-nothing deploys on push. A deploy happens when, and only when, someone runs
-the command above. That is a fact about the project, not a preference, and it
-is the reason the pre-deploy guard run is discipline rather than automation.
+## Why this file is outside `site/`
 
-## Who runs the first one
-
-Josh runs the first wrangler deploy himself, after confirming the project
-name. This is a change in deploy mechanism, not a copy change, and the first
-run is the one that would reveal a wrong project name or an unexpected build
-setting on the project. After it has succeeded once and production has been
-diffed against `site/index.html`, later deploys are routine.
-
-## Why this file is not in `site/`
-
-A wrangler deploy uploads the whole directory it is given. Anything sitting in
-`site/` gets a public URL, so an operations note left there would have been
-served at https://dses.ai/DEPLOY.md. Nothing in this file is sensitive, so that
-would have been untidy rather than harmful, but the rule is cleaner than the
-judgment call: `site/` holds only what ships, and everything about how it ships
-lives here.
-
-One consequence worth knowing: the language guard is scoped to `site/`, so this
-file is no longer scanned by it. That is correct, since it is operations copy
-rather than site copy, but it does mean the constraints are on you here rather
-than on the guard.
+A directory deploy publishes everything under `site/`. Operations notes stay in
+`docs/` so the public root contains only intended site assets.
