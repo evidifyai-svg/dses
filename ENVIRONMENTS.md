@@ -48,11 +48,8 @@ records reproducibility must not itself be irreproducible.
 - Direct: jcs 0.2.1, jsonschema 4.23.0, cryptography 43.0.1
 - Transitive as resolved: attrs 26.1.0, cffi 2.1.1, jsonschema-specifications
   2025.9.1, pycparser 3.0, referencing 0.37.0, rpds-py 2026.6.3
-- Last observed green: 0.2.0-rc10 (2026-08-23). Not yet re-run at this
-  candidate. On 2026-08-24 `run_all.sh` on that host failed at step 0
-  because it was invoked with the system interpreter rather than the
-  virtual environment that holds `jcs`; the gate refused as designed. The
-  record above is the last green run, not a current one.
+- Last observed green: 0.2.0-rc11 (2026-08-24), on the tree the release
+  archive was built from. Counts as in the block above.
 
 Environment B is the environment that closes the pinned-dependency question:
 a real PyPI install on hardware outside the authoring container, on a newer
