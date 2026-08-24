@@ -8,7 +8,7 @@
 # docs/DEPLOY-dses-site.md at the repository root.
 #
 # The CSP is sized to what the page actually loads, verified against the
-# v0.2.0-rc8 source:
+# v0.2.0-rc10 source:
 #   one inline <style> block and five style attributes -> style-src 'unsafe-inline'
 #   fonts.googleapis.com stylesheet                    -> style-src host
 #   fonts.gstatic.com font files                       -> font-src host

@@ -20,3 +20,6 @@ are for August 2027.
 The metric that matters most is independent dependency: credible outside
 parties who need DSES to remain stable and well governed. Stars are not on
 this table on purpose.
+
+`FOUNDING-IMPLEMENTERS.md` defines the public artifacts required before any of
+the implementation, deployment, report, or transcript counts move.

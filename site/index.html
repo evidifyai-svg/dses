@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DSES: Decision-Sequence Evidence Schema</title>
-<meta name="description" content="The Decision-Sequence Evidence Schema is an open standard for decision-sequence evidence: cryptographically verifiable ordering of human judgment relative to AI exposure, with a recomputable outcome layer.">
+<meta name="description" content="An open standard for verifiable ordering of human judgment and AI exposure, with a recomputable outcome-evidence layer.">
 <link rel="canonical" href="https://dses.ai/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -74,9 +74,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
   "name": "Decision-Sequence Evidence Schema",
   "alternateName": "DSES",
   "headline": "Decision-Sequence Evidence Schema",
-  "description": "An open standard for decision-sequence evidence: cryptographically verifiable ordering of human judgment relative to AI exposure, with a recomputable outcome layer.",
+  "description": "An open standard for verifiable ordering of human judgment and AI exposure, with a recomputable outcome-evidence layer.",
   "inLanguage": "en",
-  "version": "0.2.0-rc8",
+  "version": "0.2.0-rc10",
   "dateModified": "2026-08-23",
   "keywords": [
     "decision-sequence evidence",
@@ -110,6 +110,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
   <div class="mark">DSES<small>Decision-Sequence Evidence Schema</small></div>
   <nav aria-label="Primary">
     <a href="https://github.com/evidifyai-svg/dses">Specification</a>
+    <a href="#implement">Implement</a>
     <a href="#verify">Verify</a>
     <a href="#conformance">Conformance</a>
   </nav>
@@ -119,22 +120,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 <div class="wrap hero">
   <p class="eyebrow">An open standard, CC BY 4.0 / MIT</p>
   <h1>Proof that the human decided first.</h1>
-  <p class="lede">The DSES™ specification makes one claim verifiable that every
-  audit trail, provenance record, and attestation leaves to trust: the order in
-  which a human judgment formed relative to AI exposure. Committed before
-  reveal, hash-chained, externally anchored, recomputable by anyone.</p>
+  <p class="lede">For a workflow that implements sequential disclosure, the
+  DSES™ specification makes one claim verifiable that ordinary audit trails,
+  provenance records, and attestations leave to trust: the recorded order of a
+  committed human judgment relative to specified AI exposure. At the strongest
+  class, the sequence is hash-chained, externally anchored, and independently
+  recomputable.</p>
 
-  <div class="transcript" role="img" aria-label="DSES reference verifier output: OL conformant, 2,236 checks, zero failures">
+  <div class="transcript" role="img" aria-label="DSES reference verifier output: OL conformant, 2,286 checks, zero failures">
     <div class="tbar"><i></i><i></i><i></i></div>
 <pre><span class="t-dim">$ bash run_all.sh</span>
 <span>RFC 8785 canonicalization self-test: 6 vectors passed</span>
 <span>release lint: 0 problems</span>
 <span>schema validation: 206 objects, 0 errors</span>
-<span>2236 checks, 0 failures</span>
+<span>2286 checks, 0 failures</span>
 <span class="t-pass">OL CONFORMANT</span>
-<span>147 adversarial cases, 147 rejected at the asserted rule</span>
+<span>158 adversarial cases, 158 rejected at the asserted rule</span>
 <span class="t-pass">ALL GREEN (shipped artifacts verified before regeneration)</span>
-<span class="t-hash">archive sha256 aa2dfb3a7627a36a4551371e3cbf42ff…</span></pre>
+<span class="t-hash">archive sha256 3721c4777b5a5fc3212de43a56801112…</span></pre>
   </div>
   <p class="rerun">Don't trust this page. <a href="https://github.com/evidifyai-svg/dses">Rerun it.</a></p>
 </div>
@@ -165,8 +168,27 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
   </div>
 </div></section>
 
-<section id="verify"><div class="wrap sec">
+<section id="implement"><div class="wrap sec">
   <div class="secnum">§ 2</div>
+  <div>
+    <h2>Start with the smallest honest claim</h2>
+    <p>Implementation does not begin with the outcome layer. Add the event
+    boundary that answers the question already in front of you, then increase
+    integrity only when the intended claim requires it.</p>
+    <table>
+      <tr><th>Need</th><th>Start</th><th>Boundary</th></tr>
+      <tr><td>Was AI actually shown?</td><td class="mono">L1 / I1</td><td>Passive availability, presentation, exposure class, and final disposition. No pre-AI-state claim.</td></tr>
+      <tr><td>What changed after exposure?</td><td class="mono">L2 / I2</td><td>Sealed pre-AI state, reveal, revision, and hash-chain internal consistency. No historical-immutability or enforcement claim.</td></tr>
+      <tr><td>Was the result correct under a declared criterion?</td><td class="mono">0.2.0-rc10</td><td>Outcome linkage and recomputation. Release candidate; permanent identifiers remain unminted.</td></tr>
+    </table>
+    <p style="margin-top:14px"><a href="https://github.com/evidifyai-svg/dses/blob/main/IMPLEMENT.md">Implementation guide</a> ·
+    <a href="https://github.com/evidifyai-svg/dses/tree/main/quickstart">Copy-paste examples and helpers</a> ·
+    <a href="https://github.com/evidifyai-svg/dses/blob/main/IMPLEMENTATION-CHECKLIST.md">Pilot checklist</a></p>
+  </div>
+</div></section>
+
+<section id="verify"><div class="wrap sec">
+  <div class="secnum">§ 3</div>
   <div>
     <h2>Verification, not assurance language</h2>
     <p>The specification classifies every one of its requirements by how it can
@@ -184,7 +206,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 </div></section>
 
 <section id="conformance"><div class="wrap sec">
-  <div class="secnum">§ 3</div>
+  <div class="secnum">§ 4</div>
   <div>
     <h2>Conformance</h2>
     <p><b>DSES-compatible</b> is self-declared and free. <b>DSES Conformant</b>
@@ -198,7 +220,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 </div></section>
 
 <section><div class="wrap sec">
-  <div class="secnum">§ 4</div>
+  <div class="secnum">§ 5</div>
   <div>
     <h2>What the DSES specification refuses to establish</h2>
     <p>A statistic must not outrun its evidence. By construction, no DSES
@@ -214,21 +236,44 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
     anchored governance: declared purpose, minimum cell sizes, mandatory
     intervals, and a balanced reliance context that cannot be stripped from the
     rate it conditions.</p>
+    <p>Raw actor-resolved sequences remain local by default, and human-behavior
+    reporting is aggregate-only by default. Data collected to evaluate an AI
+    system must not silently become individual performance surveillance.</p>
   </div>
 </div></section>
 
 <section><div class="wrap sec">
-  <div class="secnum">§ 5</div>
+  <div class="secnum">§ 6</div>
+  <div>
+    <h2>Founding Implementers</h2>
+    <p>The first cohort is an evidence program, not an endorsement program. An
+    implementation is counted only after a named organization and accountable
+    human lead publish a reproducible synthetic or deidentified package, a
+    verification transcript with limitations, and a short implementation or
+    interoperability report.</p>
+    <p>Program success means five implementing organizations, at least two
+    independent non-reference emitters, three real deployments, five reports,
+    and three conformance transcripts only if they are earned. Private pilots,
+    copied examples, and AI-only attempts do not increment the public count.</p>
+    <p style="margin-top:14px"><a href="https://github.com/evidifyai-svg/dses/blob/main/FOUNDING-IMPLEMENTERS.md">Read the criteria and propose an implementation →</a></p>
+  </div>
+</div></section>
+
+<section><div class="wrap sec">
+  <div class="secnum">§ 7</div>
   <div>
     <h2>Status, stated plainly</h2>
-    <p>Current release candidate: <span class="mono" style="font-family:'IBM Plex Mono',monospace;font-size:14px">v0.2.0-rc8</span>.
+    <p>Latest tagged release: <span class="mono" style="font-family:'IBM Plex Mono',monospace;font-size:14px">v0.1.2</span>.
+    Current outcome-layer release candidate: <span class="mono" style="font-family:'IBM Plex Mono',monospace;font-size:14px">v0.2.0-rc10</span>.
     Identifiers are unminted pending named human expert review. This scorecard
     is published with honest zeros, because a standard about prespecified
     claims should prespecify its own success criteria.</p>
     <table>
       <tr><th>Signal</th><th>Now</th><th>Target 8/2027</th></tr>
-      <tr><td>Independent implementations</td><td class="mono zero">0</td><td class="mono">2</td></tr>
+      <tr><td>Independent implementations</td><td class="mono zero">0 <span class="zero">(1 partial; not counted)</span></td><td class="mono">2</td></tr>
       <tr><td>Real deployments</td><td class="mono zero">0 <span class="zero">(1 reader study anchoring)</span></td><td class="mono">3</td></tr>
+      <tr><td>Implementing organizations</td><td class="mono zero">0</td><td class="mono">5</td></tr>
+      <tr><td>Interoperability reports</td><td class="mono zero">0</td><td class="mono">5</td></tr>
       <tr><td>Named human expert reviewers</td><td class="mono zero">0</td><td class="mono">3</td></tr>
       <tr><td>Conformance transcripts</td><td class="mono zero">0</td><td class="mono">3</td></tr>
     </table>

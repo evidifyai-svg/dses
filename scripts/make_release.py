@@ -14,10 +14,14 @@ import zipfile
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUT = ROOT.parent / "dses-v0.2.0-rc10-publication.zip"
 FILES = [
-    "DSES-v0.2.md", "ERRATA-v0.1.md", "CLAIMS-CLASSIFICATION.md", "README.md", "ENVIRONMENTS.md", "RELIANCE-CONTEXT-EXAMPLE.md",
-    "LICENSE-SPEC.md", "LICENSE-CODE.md", "requirements.txt", "run_all.sh",
+    "DSES-v0.1.md", "dses-v0.1.schema.json", "DSES-v0.2.md", "ERRATA-v0.1.md",
+    "CLAIMS-CLASSIFICATION.md", "README.md", "IMPLEMENT.md",
+    "IMPLEMENTATION-CHECKLIST.md", "FOUNDING-IMPLEMENTERS.md",
+    "CONFORMANCE-POLICY.md", "SCORECARD.md", "ENVIRONMENTS.md",
+    "RELIANCE-CONTEXT-EXAMPLE.md", "LICENSE-SPEC.md", "LICENSE-CODE.md",
+    "requirements.txt", "run_all.sh",
 ]
-DIRS = ["schemas", "artifacts", "examples", "fixtures", "rules", "scripts", "tests"]
+DIRS = ["schemas", "artifacts", "examples", "fixtures", "quickstart", "rules", "scripts", "tests"]
 SKIP_SUFFIX = {".pyc", ".pyo", ".zip"}
 SKIP_DIRS = {"__pycache__", ".git", ".venv"}
 STAMP = (2026, 8, 20, 0, 0, 0)
