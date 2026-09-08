@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Move the candidate label everywhere it is normative, and nowhere it is history.
 
-    python3 scripts/bump_version.py 0.2.0-rc11
+    python3 scripts/bump_version.py <label>
 
 The current label is read from the **Version:** line of DSES-v0.2.md. Every
 exact occurrence of it (with or without a leading v) is rewritten in the files
@@ -10,9 +10,17 @@ that no longer names the candidate it describes is not a changelog. Prose that
 names an older candidate by bare suffix ("rc9 disclosed", "what changes in
 rc10") is history and is not touched: only the exact dotted label moves.
 
+The target label may be a candidate (an -rcN suffix) or a permanent release
+(no suffix). Dropping the suffix is the mint, and it is not a quiet change:
+release_lint.py L8 refuses a non-candidate build while the specification still
+says REVIEW-SYSTEM-UNSPECIFIED, so a mint fails the gate until named review
+provenance is resolved. That refusal is the point. Run the bump only when the
+review disclosure is ready to change with it.
+
 After bumping: regenerate the worked example (its package label embeds the
 version, so its hashes change), then run the gate. release_lint.py L9 checks
-that no file below still carries a stale label.
+that no file below still carries a stale label, and L12 checks that no shipped
+file carries a label this script does not own.
 """
 import os
 import re
@@ -25,7 +33,7 @@ SPEC = os.path.join(ROOT, "DSES-v0.2.md")
 # list, so a file added here is a file the lint will police.
 VERSIONED = [
     "DSES-v0.2.md", "CLAIMS-CLASSIFICATION.md", "README.md", "IMPLEMENT.md",
-    "CITATION.cff", ".zenodo.json", "run_all.sh",
+    "CITATION.cff", ".zenodo.json", "run_all.sh", "requirements.txt",
     "schemas/dses-v0.2-definitions.schema.json", "schemas/dses-v0.2-derived.schema.json",
     "schemas/dses-v0.2-nonce-sidecar.schema.json", "schemas/dses-v0.2-outcome-events.schema.json",
     "schemas/dses-v0.2-package.schema.json",
@@ -34,8 +42,22 @@ VERSIONED = [
 ]
 # Files that legitimately name an older candidate and are never rewritten.
 HISTORY = ["ENVIRONMENTS.md", "ERRATA-v0.1.md"]
+# Files that carry the label but are rebuilt by tooling rather than rewritten
+# here. The worked example embeds the label in its package name and is minted by
+# generate_example.py; release_lint L9 checks it directly against the spec's
+# Version line, so it is managed, just not by this script.
+REGENERATED = ["examples/example-package.json"]
+# Files whose sha256 is registered INSIDE the worked example. Their identity is
+# their digest, so a bump cannot rewrite them: changing one byte of a docstring
+# breaks the package's DRV-ENGINE binding and the shipped example stops
+# verifying. Their label is therefore frozen at the candidate in which the
+# engine itself last changed, which is a fact about content addressing and not
+# a stale string. release_lint L12 checks the digest is still the registered
+# one, so an edit here fails as a named invariant instead of as seven opaque
+# verifier failures.
+DIGEST_BOUND = ["scripts/dses_derivation.py"]
 CHANGELOG_HEADING = "## Annex C: Changelog"
-LABEL = re.compile(r"\b(\d+\.\d+\.\d+-rc\d+)\b")
+LABEL = re.compile(r"\b(\d+\.\d+\.\d+(?:-rc\d+)?)\b")
 
 
 def current_label():

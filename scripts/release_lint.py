@@ -241,10 +241,18 @@ def main():
     # The specification says attribution must be resolved before the permanent
     # release; this encodes that sentence so a candidate may circulate with the
     # slot open while a non-candidate build cannot.
-    is_candidate = bool(version_line) and "rc" in version_line.group(1).lower()
+    is_candidate = bool(version_line) and re.search(r"-rc\d+", version_line.group(1))
     if "REVIEW-SYSTEM-UNSPECIFIED" in spec_src and not is_candidate:
         problems.append("L8 review provenance names no specific system, which a permanent "
                         "release may not do; resolve the disclosure or keep the version a candidate")
+    # The label and the sentence beside it are two separate statements of the
+    # same fact, and bump_version rewrites only the label. A minted build whose
+    # Version line still calls itself a release candidate is a document
+    # contradicting itself on its own first page.
+    if version_line and not is_candidate and re.search(r"(?i)release candidate|for public comment",
+                                                       version_line.group(1)):
+        problems.append(f"L8 version line declares a permanent release but still describes itself "
+                        f"as a candidate: {version_line.group(1).strip()}")
 
     # L0: a requirement identifier must denote exactly one requirement. Two rows
     # sharing an ID makes the ID useless as a cross-reference and silently
@@ -282,6 +290,51 @@ def main():
             for stale in set(re.findall(r"0\.2\.0-rc\d+", open(ex).read())):
                 if stale != current:
                     problems.append(f"L9 examples/example-package.json carries stale version string {stale}; regenerate")
+
+    # L12: every file the archive ships must have its version label under
+    # management. bump_version.VERSIONED is the list the bump rewrites and L9
+    # polices. HISTORY is the list that legitimately names older candidates.
+    # REGENERATED is the list rebuilt by tooling and checked by its own rule.
+    # A shipped file carrying a candidate label on none of the three lists is a
+    # label nothing owns: L9 polices VERSIONED while make_release ships a
+    # different and larger set, and nothing previously asserted the two agreed.
+    # That gap is how the rc11 archive came to contain a requirements.txt
+    # declaring rc10 and a dses_derivation.py declaring rc3.
+    sys.path.insert(0, os.path.join(ROOT, "scripts"))
+    from bump_version import VERSIONED, HISTORY, REGENERATED, DIGEST_BOUND  # noqa: E402
+    from make_release import members  # noqa: E402
+    managed = set(VERSIONED) | set(HISTORY) | set(REGENERATED) | set(DIGEST_BOUND)
+    # A digest-bound file is managed only while its digest is still the one the
+    # worked example registers. Edit it and the package's DRV-ENGINE binding
+    # breaks, so say that here rather than leaving it to the verifier.
+    import hashlib
+    ex_path = os.path.join(ROOT, "examples", "example-package.json")
+    if os.path.exists(ex_path):
+        ex_src = open(ex_path, encoding="utf8").read()
+        for rel in DIGEST_BOUND:
+            fp = os.path.join(ROOT, rel)
+            if not os.path.exists(fp):
+                problems.append(f"L12 digest-bound file {rel} is absent")
+                continue
+            digest = hashlib.sha256(open(fp, "rb").read()).hexdigest()
+            if digest not in ex_src:
+                problems.append(f"L12 digest-bound file {rel} has been edited: its sha256 "
+                                f"{digest[:12]} is not registered in the worked example, so the "
+                                f"shipped package's engine binding no longer resolves; regenerate "
+                                f"the example or revert the edit")
+    for p in members():
+        rel = os.path.relpath(p, ROOT).replace(os.sep, "/")
+        if rel in managed:
+            continue
+        try:
+            text = open(p, encoding="utf8").read()
+        except (UnicodeDecodeError, OSError):
+            continue
+        for stale in sorted(set(re.findall(r"\d+\.\d+\.\d+-rc\d+", text))):
+            problems.append(f"L12 shipped file {rel} carries candidate label {stale} but appears "
+                            f"on no managed list; add it to bump_version.VERSIONED so the bump "
+                            f"rewrites it and L9 polices it, or to HISTORY if the reference is "
+                            f"deliberate")
 
     # L10: the working-tree release manifest must describe the working tree.
     # The published archive regenerates it at build time, so a stale in-repo copy
