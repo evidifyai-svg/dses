@@ -1,6 +1,6 @@
 # CLAIMS-CLASSIFICATION
 
-**Applies to:** DSES v0.2.0-rc11 (Release candidate for public comment)
+**Applies to:** DSES v0.2.0-rc12 (Release candidate for public comment)
 **Status:** Normative companion to Annex D. Release-blocking: no requirement ships unclassified.
 
 Two independent dimensions, kept separate because conflating them is itself a form of overclaiming.
