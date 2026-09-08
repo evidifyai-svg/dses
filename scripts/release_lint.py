@@ -283,6 +283,33 @@ def main():
                 if stale != current:
                     problems.append(f"L9 examples/example-package.json carries stale version string {stale}; regenerate")
 
+    # L12: every file the archive ships must have its version label under
+    # management. bump_version.VERSIONED is the list the bump rewrites and L9
+    # polices. HISTORY is the list that legitimately names older candidates.
+    # REGENERATED is the list rebuilt by tooling and checked by its own rule.
+    # A shipped file carrying a candidate label on none of the three lists is a
+    # label nothing owns: L9 polices VERSIONED while make_release ships a
+    # different and larger set, and nothing previously asserted the two agreed.
+    # That gap is how the rc11 archive came to contain a requirements.txt
+    # declaring rc10 and a dses_derivation.py declaring rc3.
+    sys.path.insert(0, os.path.join(ROOT, "scripts"))
+    from bump_version import VERSIONED, HISTORY, REGENERATED  # noqa: E402
+    from make_release import members  # noqa: E402
+    managed = set(VERSIONED) | set(HISTORY) | set(REGENERATED)
+    for p in members():
+        rel = os.path.relpath(p, ROOT).replace(os.sep, "/")
+        if rel in managed:
+            continue
+        try:
+            text = open(p, encoding="utf8").read()
+        except (UnicodeDecodeError, OSError):
+            continue
+        for stale in sorted(set(re.findall(r"\d+\.\d+\.\d+-rc\d+", text))):
+            problems.append(f"L12 shipped file {rel} carries candidate label {stale} but appears "
+                            f"on no managed list; add it to bump_version.VERSIONED so the bump "
+                            f"rewrites it and L9 polices it, or to HISTORY if the reference is "
+                            f"deliberate")
+
     # L10: the working-tree release manifest must describe the working tree.
     # The published archive regenerates it at build time, so a stale in-repo copy
     # verifies clean from the ZIP and fails for anyone verifying from the

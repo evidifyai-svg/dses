@@ -34,6 +34,11 @@ VERSIONED = [
 ]
 # Files that legitimately name an older candidate and are never rewritten.
 HISTORY = ["ENVIRONMENTS.md", "ERRATA-v0.1.md"]
+# Files that carry the label but are rebuilt by tooling rather than rewritten
+# here. The worked example embeds the label in its package name and is minted by
+# generate_example.py; release_lint L9 checks it directly against the spec's
+# Version line, so it is managed, just not by this script.
+REGENERATED = ["examples/example-package.json"]
 CHANGELOG_HEADING = "## Annex C: Changelog"
 LABEL = re.compile(r"\b(\d+\.\d+\.\d+-rc\d+)\b")
 
