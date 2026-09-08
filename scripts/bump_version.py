@@ -10,9 +10,17 @@ that no longer names the candidate it describes is not a changelog. Prose that
 names an older candidate by bare suffix ("rc9 disclosed", "what changes in
 rc10") is history and is not touched: only the exact dotted label moves.
 
+The target label may be a candidate (an -rcN suffix) or a permanent release
+(no suffix). Dropping the suffix is the mint, and it is not a quiet change:
+release_lint.py L8 refuses a non-candidate build while the specification still
+says REVIEW-SYSTEM-UNSPECIFIED, so a mint fails the gate until named review
+provenance is resolved. That refusal is the point. Run the bump only when the
+review disclosure is ready to change with it.
+
 After bumping: regenerate the worked example (its package label embeds the
 version, so its hashes change), then run the gate. release_lint.py L9 checks
-that no file below still carries a stale label.
+that no file below still carries a stale label, and L12 checks that no shipped
+file carries a label this script does not own.
 """
 import os
 import re
@@ -41,7 +49,7 @@ HISTORY = ["ENVIRONMENTS.md", "ERRATA-v0.1.md"]
 # Version line, so it is managed, just not by this script.
 REGENERATED = ["examples/example-package.json"]
 CHANGELOG_HEADING = "## Annex C: Changelog"
-LABEL = re.compile(r"\b(\d+\.\d+\.\d+-rc\d+)\b")
+LABEL = re.compile(r"\b(\d+\.\d+\.\d+(?:-rc\d+)?)\b")
 
 
 def current_label():

@@ -241,10 +241,18 @@ def main():
     # The specification says attribution must be resolved before the permanent
     # release; this encodes that sentence so a candidate may circulate with the
     # slot open while a non-candidate build cannot.
-    is_candidate = bool(version_line) and "rc" in version_line.group(1).lower()
+    is_candidate = bool(version_line) and re.search(r"-rc\d+", version_line.group(1))
     if "REVIEW-SYSTEM-UNSPECIFIED" in spec_src and not is_candidate:
         problems.append("L8 review provenance names no specific system, which a permanent "
                         "release may not do; resolve the disclosure or keep the version a candidate")
+    # The label and the sentence beside it are two separate statements of the
+    # same fact, and bump_version rewrites only the label. A minted build whose
+    # Version line still calls itself a release candidate is a document
+    # contradicting itself on its own first page.
+    if version_line and not is_candidate and re.search(r"(?i)release candidate|for public comment",
+                                                       version_line.group(1)):
+        problems.append(f"L8 version line declares a permanent release but still describes itself "
+                        f"as a candidate: {version_line.group(1).strip()}")
 
     # L0: a requirement identifier must denote exactly one requirement. Two rows
     # sharing an ID makes the ID useless as a cross-reference and silently
