@@ -7,6 +7,7 @@ state, and nested archives are never copied by discovery.
 """
 from pathlib import Path
 import hashlib
+import re
 import os
 import sys
 import zipfile
@@ -60,6 +61,21 @@ def zwrite(zf, rel, data, executable=False):
 
 def main():
     out = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUT
+    # The output filename and the specification's Version line are two
+    # statements of the same fact, and nothing used to check they agreed. This
+    # built dses-v0.2.0-rc12-publication.zip from an rc11 tree once, silently,
+    # and the resulting archive was one command away from being published under
+    # a version it did not contain. If the filename names a version, it must be
+    # the version in the tree.
+    named = re.search(r"\d+\.\d+\.\d+(?:-rc\d+)?", out.name)
+    if named:
+        spec = (ROOT / "DSES-v0.2.md").read_text(encoding="utf8")
+        line = re.search(r"^\*\*Version:\*\*\s*(\S+)", spec, re.M)
+        actual = line.group(1) if line else None
+        if actual and named.group(0) != actual:
+            sys.exit(f"refusing to build: output path names {named.group(0)} but the "
+                     f"specification Version line says {actual}; rename the output or "
+                     f"bump the tree")
     items = members()
     manifest = []
     with zipfile.ZipFile(out, "w") as zf:
