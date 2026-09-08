@@ -18,7 +18,8 @@ FILES = [
     "CLAIMS-CLASSIFICATION.md", "README.md", "IMPLEMENT.md",
     "IMPLEMENTATION-CHECKLIST.md", "FOUNDING-IMPLEMENTERS.md",
     "CONFORMANCE-POLICY.md", "SCORECARD.md", "ENVIRONMENTS.md",
-    "RELIANCE-CONTEXT-EXAMPLE.md", "LICENSE-SPEC.md", "LICENSE-CODE.md",
+    "RELIANCE-CONTEXT-EXAMPLE.md", "TERMINOLOGY.md", "CLAIM-LEDGER.md",
+    "ERRATA-v0.2.md", "LICENSE-SPEC.md", "LICENSE-CODE.md",
     "requirements.txt", "run_all.sh",
 ]
 DIRS = ["schemas", "artifacts", "examples", "fixtures", "quickstart", "rules", "scripts", "tests"]

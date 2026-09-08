@@ -29,6 +29,7 @@ PROSE = [
     "README.md", "IMPLEMENT.md", "IMPLEMENTATION-CHECKLIST.md", "FOUNDING-IMPLEMENTERS.md",
     "CONFORMANCE-POLICY.md", "SCORECARD.md", "ENVIRONMENTS.md", "RELIANCE-CONTEXT-EXAMPLE.md",
     "GOVERNANCE.md", "SECURITY.md", "CONTRIBUTING.md",
+    "TERMINOLOGY.md", "CLAIM-LEDGER.md", "ERRATA-v0.2.md",
 ]
 TOKEN = re.compile(r"(?<![A-Za-z0-9_./-])[a-z][a-z0-9]*(?:_[a-z0-9]+)+(?![A-Za-z0-9_])")
 ALLOW_PATH = os.path.join(ROOT, "scripts", "vocabulary-allow.json")
