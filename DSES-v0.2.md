@@ -1,7 +1,7 @@
 # Decision-Sequence Evidence Schema (DSES)
 ## Part II: The Outcome-Evidence Layer
 
-**Version:** 0.2.0-rc11 (Release candidate for public comment)
+**Version:** 0.2.0-rc12 (Release candidate for public comment)
 **Date:** August 20, 2026
 **Author:** Joshua M. Henderson, Ph.D. (Evidify LLC, East Orange, NJ)
 **Status:** Open specification. Comments and implementation reports welcome.
@@ -114,7 +114,7 @@ For an available hiding payload, the encoded nonce MUST match the declared `nonc
 
 The security claim is stated exactly: *a hiding commitment prevents practical dictionary enumeration from the commitment alone, assuming the nonce is unavailable to the attacker.* DSES can record that nonce destruction was asserted; it cannot prove no copy survived (Section 2.4, A1).
 
-`initial_payload_disposition` records disposition at creation and is never rewritten. The protocol represents later disposition changes through `outcome_integrity_event` records. A conformance-grade replay of current disposition is specified but **not implemented in this reference build** and therefore supports no v0.2.0-rc11 conformance claim. <!-- req:9.2 -->
+`initial_payload_disposition` records disposition at creation and is never rewritten. The protocol represents later disposition changes through `outcome_integrity_event` records. A conformance-grade replay of current disposition is specified but **not implemented in this reference build** and therefore supports no v0.2.0-rc12 conformance claim. <!-- req:9.2 -->
 
 ### 3.3 Three tiers, and one append-only checkpoint log
 
@@ -221,7 +221,7 @@ Events: `cohort_chain_created`, `anchor_evidence_recorded`, `anchor_distrusted`,
 
 ### 5.0 Membership multiplicity
 
-Membership leaves MUST be unique across the cohort's committed manifests. <!-- req:5.1b --> v0.2.0-rc11 supports only `unique_decision_instance`: each eligible decision instance receives its own pseudonymous membership token. Repeated encounters are represented as distinct eligible decision instances, never by repeating one token. A tree containing a repeated token can yield valid inclusion proofs while silently overstating the number of distinct committed instances, so `declared_multiplicity` is intentionally not a v0.2 option.
+Membership leaves MUST be unique across the cohort's committed manifests. <!-- req:5.1b --> v0.2.0-rc12 supports only `unique_decision_instance`: each eligible decision instance receives its own pseudonymous membership token. Repeated encounters are represented as distinct eligible decision instances, never by repeating one token. A tree containing a repeated token can yield valid inclusion proofs while silently overstating the number of distinct committed instances, so `declared_multiplicity` is intentionally not a v0.2 option.
 
 ### 5.1 Manifests
 
@@ -351,7 +351,7 @@ The identity SRF = 1 − RSR holds only when validity partitions into correct an
 
 `evaluation_state` is `proximal_post_exposure`, `final`, or a declared alternative; proximal response and final decision are different estimands and the formulas reference the declared one. Self-reliance requires `baseline_actor == evaluation_actor`; multi-actor trajectories are team-reliance constructs.
 
-### 8.4 WOA (informative in v0.2.0-rc11)
+### 8.4 WOA (informative in v0.2.0-rc12)
 
 WOA remains a supported descriptive construct but is not part of OL conformance in this release candidate and is not recomputed by the reference verifier. Deployments that report it should preserve the raw distribution, label bounded variants, and count equal-advice exclusions. WOA near zero against correct advice and negative WOA represent different behaviors and should be reported separately.
 
@@ -543,7 +543,7 @@ This package ships both. `scripts/dses_verify.py` performs the C and X checks en
 
 ## 11. Schema discipline
 
-**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc11/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
+**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc12/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
 
 ---
 
@@ -670,6 +670,6 @@ it.
 
 **Citing this specification:**
 
-> Henderson JM. Decision-Sequence Evidence Schema, version 0.2.0-rc11: the outcome-evidence layer. Evidify LLC; 2026. Release candidate for public comment.
+> Henderson JM. Decision-Sequence Evidence Schema, version 0.2.0-rc12: the outcome-evidence layer. Evidify LLC; 2026. Release candidate for public comment.
 
 **Review provenance and AI disclosure.** This release candidate was shaped by eleven rounds of detailed adversarial technical review conducted by an AI system <!-- REVIEW-SYSTEM-UNSPECIFIED -->, and its reference implementation was written by an AI system. No human subject-matter expert has yet reviewed this specification or its implementation. This is disclosed rather than acknowledged: attribution implies accountability for the claims made here, an AI system cannot hold that accountability, and the author retains full responsibility for every claim in this document, including those the machine review failed to catch. Readers should weight this accordingly. The compensating design choice is that this specification's claims are constructed to be machine-checked rather than vouched for: every requirement marked implemented names a verifier rule and a regression fixture that asserts that rule fires, `scripts/release_lint.py` fails the build when that correspondence breaks, and a reader may re-run the entire gate rather than trust any reviewer, human or otherwise. That substitutes verifiability for authority; it does not substitute for expert review, which remains outstanding and is named as such. One episode is worth recording for calibration: in the eighth round the reviewing system reported a canonicalization defect in two derived artifacts that did not exist, having used a non-conforming JSON canonicalizer in an environment that could not install the pinned dependency. The finding was wrong; the fail-fast canonicalization self-test it prompted was kept, because the failure mode it guards against is real. Machine review is useful and it is not self-validating.

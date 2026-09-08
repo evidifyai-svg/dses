@@ -12,7 +12,7 @@ records retroactively stronger.
 | Was an AI result actually presented to this actor, when, and in what form? | L1/I1 passive exposure logging | Operator-attributable application records of availability, presentation, exposure class, and final disposition | Tamper evidence, a pre-AI judgment, or independence |
 | What state was committed before exposure, and what changed afterward? | L2/I2 decision trajectory | Payload commitments and hash-chain internal consistency for a pre-exposure, exposure, revision, and final sequence | Historical immutability without a separately held checkpoint; enforced withholding; causation |
 | Could the specified AI output have appeared before the commitment? | L3/I3 only after workflow-specific review | The property supported by the deployed fail-closed enforcement mechanism and any separately verifiable anchor | Cognition, decision quality, negligence, or clinical benefit |
-| Was the decision correct under a prespecified criterion? | v0.2.0-rc11 outcome layer | Recomputable linkage, adjudication, denominator, and metric claims that the reference verifier implements | Truth beyond the declared criterion, statistical adequacy beyond the stated design, or legal conclusions |
+| Was the decision correct under a prespecified criterion? | v0.2.0-rc12 outcome layer | Recomputable linkage, adjudication, denominator, and metric claims that the reference verifier implements | Truth beyond the declared criterion, statistical adequacy beyond the stated design, or legal conclusions |
 
 L1 is the default production entry point. L3 is not a universal upgrade. In a
 clinical production workflow, changing when a device output appears requires

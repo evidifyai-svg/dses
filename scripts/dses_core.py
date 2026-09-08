@@ -1,4 +1,4 @@
-"""DSES v0.2.0-rc11 cryptographic core.
+"""DSES v0.2.0-rc12 cryptographic core.
 
 One implementation of every primitive, shared by the generator, the verifier,
 and the regression harness, so that no claim in the specification is verified

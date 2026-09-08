@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc11/derived.schema.json",
-  "title": "DSES v0.2.0-rc11 Derived Analytic Artifacts",
+  "$id": "https://evidify.ai/schemas/dses/0.2.0-rc12/derived.schema.json",
+  "title": "DSES v0.2.0-rc12 Derived Analytic Artifacts",
   "description": "Immutable derived artifacts. They carry NO lifecycle field: effective status is replayed from derived_artifact_registered, derived_artifact_superseded, and derived_artifact_invalidated events on the cohort chain (Section 7.1). Singletons carry an assurance vector; aggregates carry inclusion filters and do not collapse heterogeneous assurance into a single vector.",
   "oneOf": [
     {

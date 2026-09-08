@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the DSES v0.2.0-rc11 worked example.
+"""Generate the DSES v0.2.0-rc12 worked example.
 
 Release-build properties, each driven by the fifth review round:
 
@@ -796,7 +796,7 @@ def build():
 
     export_sig = sign_dses(keys["outcome-registry-01-key-2"]["private"], "outcome-registry-01-key-2", "export-head", coh.prev)
 
-    out = {"package": "DSES v0.2.0-rc11 worked example",
+    out = {"package": "DSES v0.2.0-rc12 worked example",
            "description": "Twelve membership-committed eligible cases across two periodic manifests, resolvable v0.1 decision sequences with verified payload commitments, reliance metrics recomputed by executing the declared rule artifacts against snapshot-frozen evidence, an adjudication revision with metric supersession, externally rooted anchor receipts, and key rotation. No label in this package is stored where it can be derived.",
            "cohort_chain": coh.events, "case_chains": [t2.events for t2 in tracks],
            "export_head_signature": export_sig}

@@ -1,4 +1,4 @@
-# DSES v0.2.0-rc11 reference implementation dependencies.
+# DSES v0.2.0-rc12 reference implementation dependencies.
 # Python 3.11 or later.
 jcs==0.2.1
 jsonschema==4.23.0
