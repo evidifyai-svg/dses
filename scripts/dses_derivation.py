@@ -1,4 +1,4 @@
-"""DSES v0.2.0-rc3 reference metric derivation engine.
+"""DSES v0.2.0-rc11 reference metric derivation engine.
 
 This module contains the orchestration that turns projected v0.1 trajectories
 and snapshot-frozen adjudications into RAIR/RSR/EAR numerator-denominator

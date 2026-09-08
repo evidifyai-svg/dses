@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Move the candidate label everywhere it is normative, and nowhere it is history.
 
-    python3 scripts/bump_version.py 0.2.0-rc11
+    python3 scripts/bump_version.py <label>
 
 The current label is read from the **Version:** line of DSES-v0.2.md. Every
 exact occurrence of it (with or without a leading v) is rewritten in the files
@@ -25,11 +25,12 @@ SPEC = os.path.join(ROOT, "DSES-v0.2.md")
 # list, so a file added here is a file the lint will police.
 VERSIONED = [
     "DSES-v0.2.md", "CLAIMS-CLASSIFICATION.md", "README.md", "IMPLEMENT.md",
-    "CITATION.cff", ".zenodo.json", "run_all.sh",
+    "CITATION.cff", ".zenodo.json", "run_all.sh", "requirements.txt",
     "schemas/dses-v0.2-definitions.schema.json", "schemas/dses-v0.2-derived.schema.json",
     "schemas/dses-v0.2-nonce-sidecar.schema.json", "schemas/dses-v0.2-outcome-events.schema.json",
     "schemas/dses-v0.2-package.schema.json",
-    "scripts/dses_core.py", "scripts/generate_example.py", "scripts/make_release.py",
+    "scripts/dses_core.py", "scripts/dses_derivation.py",
+    "scripts/generate_example.py", "scripts/make_release.py",
     "tests/run_regression.py", "site/index.html",
 ]
 # Files that legitimately name an older candidate and are never rewritten.
