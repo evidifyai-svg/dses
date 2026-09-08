@@ -37,8 +37,7 @@ VERSIONED = [
     "schemas/dses-v0.2-definitions.schema.json", "schemas/dses-v0.2-derived.schema.json",
     "schemas/dses-v0.2-nonce-sidecar.schema.json", "schemas/dses-v0.2-outcome-events.schema.json",
     "schemas/dses-v0.2-package.schema.json",
-    "scripts/dses_core.py", "scripts/dses_derivation.py",
-    "scripts/generate_example.py", "scripts/make_release.py",
+    "scripts/dses_core.py", "scripts/generate_example.py", "scripts/make_release.py",
     "tests/run_regression.py", "site/index.html",
 ]
 # Files that legitimately name an older candidate and are never rewritten.
@@ -48,6 +47,15 @@ HISTORY = ["ENVIRONMENTS.md", "ERRATA-v0.1.md"]
 # generate_example.py; release_lint L9 checks it directly against the spec's
 # Version line, so it is managed, just not by this script.
 REGENERATED = ["examples/example-package.json"]
+# Files whose sha256 is registered INSIDE the worked example. Their identity is
+# their digest, so a bump cannot rewrite them: changing one byte of a docstring
+# breaks the package's DRV-ENGINE binding and the shipped example stops
+# verifying. Their label is therefore frozen at the candidate in which the
+# engine itself last changed, which is a fact about content addressing and not
+# a stale string. release_lint L12 checks the digest is still the registered
+# one, so an edit here fails as a named invariant instead of as seven opaque
+# verifier failures.
+DIGEST_BOUND = ["scripts/dses_derivation.py"]
 CHANGELOG_HEADING = "## Annex C: Changelog"
 LABEL = re.compile(r"\b(\d+\.\d+\.\d+(?:-rc\d+)?)\b")
 

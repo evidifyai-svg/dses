@@ -301,9 +301,27 @@ def main():
     # That gap is how the rc11 archive came to contain a requirements.txt
     # declaring rc10 and a dses_derivation.py declaring rc3.
     sys.path.insert(0, os.path.join(ROOT, "scripts"))
-    from bump_version import VERSIONED, HISTORY, REGENERATED  # noqa: E402
+    from bump_version import VERSIONED, HISTORY, REGENERATED, DIGEST_BOUND  # noqa: E402
     from make_release import members  # noqa: E402
-    managed = set(VERSIONED) | set(HISTORY) | set(REGENERATED)
+    managed = set(VERSIONED) | set(HISTORY) | set(REGENERATED) | set(DIGEST_BOUND)
+    # A digest-bound file is managed only while its digest is still the one the
+    # worked example registers. Edit it and the package's DRV-ENGINE binding
+    # breaks, so say that here rather than leaving it to the verifier.
+    import hashlib
+    ex_path = os.path.join(ROOT, "examples", "example-package.json")
+    if os.path.exists(ex_path):
+        ex_src = open(ex_path, encoding="utf8").read()
+        for rel in DIGEST_BOUND:
+            fp = os.path.join(ROOT, rel)
+            if not os.path.exists(fp):
+                problems.append(f"L12 digest-bound file {rel} is absent")
+                continue
+            digest = hashlib.sha256(open(fp, "rb").read()).hexdigest()
+            if digest not in ex_src:
+                problems.append(f"L12 digest-bound file {rel} has been edited: its sha256 "
+                                f"{digest[:12]} is not registered in the worked example, so the "
+                                f"shipped package's engine binding no longer resolves; regenerate "
+                                f"the example or revert the edit")
     for p in members():
         rel = os.path.relpath(p, ROOT).replace(os.sep, "/")
         if rel in managed:
