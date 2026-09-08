@@ -341,9 +341,9 @@ RAIR, RSR, SRF, and EAR require that baseline, AI output, and evaluation state b
 
 The identity SRF = 1 − RSR holds only when validity partitions into correct and incorrect within the denominator. `partially_correct` and `not_classifiable` therefore MUST be excluded via the criterion's declared binary projection, and the exclusion counts disclosed. <!-- req:8.2 --> With E as the projection rule's evaluation state:
 
-- **RAIR** = P(E correct | baseline incorrect, AI correct)
-- **RSR** = P(E correct | baseline correct, AI incorrect); **SRF** = 1 − RSR
-- **EAR** = P(E **incorrect** AND E aligns with the AI under the metric definition's declared alignment relation | baseline correct, AI incorrect). The conjunction is required: movement toward an incorrect AI that stays within tolerance is not error adoption, and without it EAR is not bounded by SRF.
+- **RAIR**, reliance on AI rescue = P(E correct | baseline incorrect, AI correct)
+- **RSR**, retained self-reliance = P(E correct | baseline correct, AI incorrect); **SRF**, self-reliance failure = 1 − RSR
+- **EAR**, error adoption = P(E **incorrect** AND E aligns with the AI under the metric definition's declared alignment relation | baseline correct, AI incorrect). The conjunction is required: movement toward an incorrect AI that stays within tolerance is not error adoption, and without it EAR is not bounded by SRF.
 
   **The alignment relation is declared, not implied.** A metric definition whose `metric_name` is `EAR` MUST carry an `alignment_relation` executable <!-- req:8.9 -->, with an identifier, a code artifact, a digest, and fixtures, exactly as Section 4 requires of projection rules and estimators. Until rc4 this specification said "same-or-toward" in prose while the reference implementation compared for equality, and nothing in the package declared which was meant. Alignment is owned by the **metric definition**, not by the criterion, because two metrics may legitimately operationalize alignment differently against the same reference standard. For `alignment-same-v1`, alignment means exact agreement with the AI output; it declares itself valid only for `nominal` answer spaces, and the verifier enforces that against the criterion's declared `answer_space_semantics` <!-- req:8.9 -->. Ordered, interval, or continuous answer spaces require another declared relation, since "toward" presupposes an order a nominal space does not carry.
 
