@@ -137,18 +137,10 @@ not restart. Say which version you read; the attestation records it.
 
 ## 7. Compensation and conflicts
 
-<<<HONORARIUM: replace this whole block before sending. Two options, pick one
-and delete the other.
+There is no honorarium. This is unpaid work. If that is not worth your time,
+say so and decline; nothing else about this project changes if you do, and a
+decline costs you nothing with the author.
 
-OPTION A, no honorarium:
-There is no honorarium. This is unpaid work and you should decline if that is
-not worth your time. Nothing about the review changes if you decline.
-
-OPTION B, honorarium offered:
-An honorarium of $AMOUNT is offered on receipt of the attestation, payable
-whether your conclusion is favourable or not, and it is disclosed in the
-published attestation.
->>>
 
 State any relationship with Evidify LLC or the author in the attestation. If
 you are a collaborator on a study with the author, or a co-author, the
