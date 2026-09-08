@@ -31,7 +31,7 @@ records reproducibility must not itself be irreproducible.
 - adversarial suite: 158 cases, 158 rejected at the asserted rule, 0 not
 - quickstart: 2 valid examples passed, 6 targeted mutations rejected
 - vocabulary check: 833 schema terms, 0 findings
-- release manifest: 106 entries
+- release manifest: 109 entries
 <!-- gate-counts:end -->
 
 ## Environment A: Linux container
