@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the public DSES v0.2.0-rc12 archive from an explicit allowlist.
+"""Build the public DSES v0.2.0-rc13 archive from an explicit allowlist.
 
 The ZIP is deterministic for a fixed source tree: members are sorted and carry
 one fixed timestamp. Build artifacts, review notes, local environments, VCS
@@ -13,7 +13,7 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUT = ROOT.parent / "dses-v0.2.0-rc12-publication.zip"
+DEFAULT_OUT = ROOT.parent / "dses-v0.2.0-rc13-publication.zip"
 FILES = [
     "DSES-v0.1.md", "dses-v0.1.schema.json", "DSES-v0.2.md", "ERRATA-v0.1.md",
     "CLAIMS-CLASSIFICATION.md", "README.md", "IMPLEMENT.md",
@@ -63,7 +63,7 @@ def main():
     out = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_OUT
     # The output filename and the specification's Version line are two
     # statements of the same fact, and nothing used to check they agreed. This
-    # built dses-v0.2.0-rc12-publication.zip from an rc11 tree once, silently,
+    # built dses-v0.2.0-rc13-publication.zip from an rc11 tree once, silently,
     # and the resulting archive was one command away from being published under
     # a version it did not contain. If the filename names a version, it must be
     # the version in the tree.

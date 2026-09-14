@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DSES v0.2.0-rc12 adversarial regression suite.
+"""DSES v0.2.0-rc13 adversarial regression suite.
 
 Two hard rules for this harness, both from the fifth review round:
 
@@ -17,6 +17,7 @@ the named rule identifier appears in the failure output.
 Run from the package root: python3 tests/run_regression.py
 """
 import copy
+import hashlib
 import json
 import os
 import shutil
@@ -46,11 +47,23 @@ from cryptography.hazmat.primitives.asymmetric import ed25519 as _ed  # noqa: E4
 ANCHOR_SK = _ed.Ed25519PrivateKey.generate()
 
 CASES = []
+BOUNDARY = []
 
 
 def case(name, cls, origin):
     def deco(fn):
         CASES.append((name, cls, origin, fn))
+        return fn
+    return deco
+
+
+def boundary(name, req, origin):
+    """Register a boundary fixture. Unlike rule-asserting cases, a boundary
+    fixture passes when the verifier ACCEPTS and its output is what the
+    non-claim says it must be. These document what the verifier cannot know,
+    and are counted separately so they never inflate the rejection count."""
+    def deco(fn):
+        BOUNDARY.append((name, req, origin, fn))
         return fn
     return deco
 
@@ -2201,6 +2214,52 @@ def k11():
 
 
 
+# ================================================================ boundary fixtures
+# A rule-asserting fixture mutates a package and asserts a rule fires. A boundary
+# fixture does the opposite job: it shows a package the verifier cannot fault, in
+# two worlds the package cannot distinguish, and asserts the verifier says the
+# same thing in both and names the requirement it has not established.
+
+@boundary("indistinguishable worlds: the release event describes presentation after T1, or the implementation presented before T1 and emitted the same events (A8, 2.2b)", "2.2b", "rc13 delta, 2026-09-14")
+def boundary_a8_capture_path():
+    # The oracle lives HERE, in the test, and is never given to the verifier.
+    # World A is correspondence; World B is false emission. The same record is compatible
+    # with both, so the verifier cannot establish implementation correspondence from the
+    # package alone. The question A8 asks is whether the emitted event CORRESPONDS to what
+    # the implementation did, not whether some other surface is missing from the record;
+    # omission through an uncovered surface is a different limitation (v0.1 7.3 sole-path
+    # enumeration) and is deliberately not what this fixture tests.
+    worlds = {
+        "A": {"truthful_emission": True,
+              "note": "the implementation presented the designated AI-derived information "
+                      "after T1 was accepted, and the recorder emitted events saying so"},
+        "B": {"truthful_emission": False,
+              "note": "the implementation presented the designated AI-derived information "
+                      "BEFORE T1 was accepted, and the recorder nevertheless emitted the same "
+                      "event sequence representing presentation after T1"},
+    }
+    # Indistinguishability is asserted mechanically, not assumed: one serialization, one
+    # digest, written to both paths. If a future edit makes the two packages differ, the
+    # fixture fails rather than silently testing something weaker.
+    payload = json.dumps(GOOD, sort_keys=True).encode()
+    digest = hashlib.sha256(payload).hexdigest()
+    outputs, codes, digests = {}, {}, {}
+    with tempfile.TemporaryDirectory() as d:
+        for w in worlds:
+            p = os.path.join(d, f"pkg-{w}.json")
+            with open(p, "wb") as fh:
+                fh.write(payload)
+            digests[w] = hashlib.sha256(open(p, "rb").read()).hexdigest()
+            codes[w], outputs[w] = run_verifier(p)
+    indistinguishable = digests["A"] == digests["B"] == digest
+    accepted = codes["A"] == 0 and codes["B"] == 0
+    identical = outputs["A"] == outputs["B"]
+    names_req = "[A] 2.2b" in outputs["A"] and "[A] 2.2b" in outputs["B"]
+    ok = indistinguishable and accepted and identical and names_req
+    return ok, (f"identical_bytes={indistinguishable}, accepted A={codes['A']} B={codes['B']}, "
+                f"identical_output={identical}, 2.2b_listed_unestablished={names_req}")
+
+
 def main():
     passed = failed = 0
     for name, cls, origin, fn in CASES:
@@ -2213,7 +2272,17 @@ def main():
             failed += 1
             print(f"        {detail}")
     print(f"\n{len(CASES)} adversarial cases, {passed} rejected at the asserted rule, {failed} not")
-    sys.exit(1 if failed else 0)
+    bpassed = bfailed = 0
+    for name, req, origin, fn in BOUNDARY:
+        ok, detail = fn()
+        print(f"{'BND':5s} {'HELD     ' if ok else 'BROKEN   '} {name}   ({origin})")
+        if ok:
+            bpassed += 1
+        else:
+            bfailed += 1
+            print(f"        {detail}")
+    print(f"{len(BOUNDARY)} boundary fixtures, {bpassed} held, {bfailed} not")
+    sys.exit(1 if (failed or bfailed) else 0)
 
 
 if __name__ == "__main__":
