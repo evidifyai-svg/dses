@@ -3,7 +3,7 @@
   "authorities": {
     "anchor-authority-01": {
       "alg": "ed25519",
-      "public_key": "ef7f6e418f1fc6dd8a5ab0be91200f5fd6b3c91dbadc703d65ed8762cfd587e7",
+      "public_key": "95f8a6adcf8ca4de54db6e9de6e0da0a75dccec947a8d3859830a11f85132ea4",
       "key_ref": "anchor-authority-01-key-1"
     }
   }
