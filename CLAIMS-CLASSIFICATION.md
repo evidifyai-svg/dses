@@ -155,6 +155,7 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 | # | Requirement | Rule | Class | Support |
 |---|---|---|---|---|
 | 2.2 | Rewrite detection coverage-specific, per chain | CKPT-ANCHORED + coverage map | X | implemented |
+| 2.2b | Implementation correspondence is not asserted on the strength of a verifying record (A8): a signed, chained, anchored package can faithfully preserve a false event emitted upstream | none | **A** | not applicable: the boundary is demonstrated by the indistinguishable-worlds fixture in tests/run_regression.py, which requires identical verifier output for two worlds the package cannot distinguish |
 | 2.3 | Claim tiering used correctly in prose | none | **A** | not applicable; attested by the author, not by the reviewing system, since all review of this build to date was machine review (see Review provenance, Section 13) |
 | 2.4 | Threat model stated and claims scoped to it | none | **A** | not applicable |
 | 9.3a | Every cohort declares its unit of analysis, prespecified and anchored | UOA-DECLARED | S + X | implemented |
@@ -223,8 +224,8 @@ A conformance statement MUST NOT assert an **A** requirement as established, and
 
 ## Counts
 
-Verification class: **S** 33, **C** 30, **X** 90, **T** 4, **A** 22.
-Reference verifier support: **implemented** 124, **partial** 4, **not_implemented** 3, **not applicable** 15, **out of scope** 3.
+Verification class: **S** 33, **C** 30, **X** 90, **T** 4, **A** 23.
+Reference verifier support: **implemented** 124, **partial** 4, **not_implemented** 3, **not applicable** 16, **out of scope** 3.
 
 The requirements marked **not_implemented** are named explicitly in the specification and do not support any shipped conformance claim.
 
