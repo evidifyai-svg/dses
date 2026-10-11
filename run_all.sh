@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# DSES v0.2.0-rc13 release gate.
+# DSES v0.2.0-rc14 release gate.
 #
 # Verify the shipped bytes first. Regeneration happens only afterward in an
 # isolated temporary copy, so a broken shipped artifact cannot be overwritten
