@@ -1,4 +1,4 @@
-# Named Expert Review: DSES v0.2.0-rc13
+# Named Expert Review: DSES v0.2.0-rc14
 
 Prepared 2026-10-11 by Joshua M. Henderson, Ph.D., Evidify LLC. Supersedes the
 rc12 packet of 2026-09-07, which stays in the repository as the record of what
@@ -9,7 +9,7 @@ that names it. Expect two to six hours depending on lane.
 
 ## 1. What you are being asked to do
 
-Read the parts of the Decision-Sequence Evidence Schema (DSES™) v0.2.0-rc13
+Read the parts of the Decision-Sequence Evidence Schema (DSES™) v0.2.0-rc14
 that fall in your expertise, decide whether the claims there are correctly
 stated and correctly limited, and put your name on a short attestation that
 says what you reviewed and what you concluded, including objections.
@@ -58,23 +58,24 @@ not_implemented, not applicable, out of scope).
 
 ## 4. Materials
 
-Every link below is pinned to the tag `v0.2.0-rc13`, so the text you read is
+Every link below is pinned to the tag `v0.2.0-rc14`, so the text you read is
 the text you attest to. Do not read from the default branch; it moves.
 
-- Specification (v0.2 outcome layer): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/DSES-v0.2.md
-- Specification (v0.1 substrate, for context): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/DSES-v0.1.md
-- Claims table: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/CLAIMS-CLASSIFICATION.md
-- Conformance policy: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/CONFORMANCE-POLICY.md
-- Governance: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/GOVERNANCE.md
-- Scorecard (what is not established): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/SCORECARD.md
-- Claim ledger (what may and may not be said outside the spec): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/CLAIM-LEDGER.md
-- Terminology: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/TERMINOLOGY.md
-- Errata against v0.1, which travel with it: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/ERRATA-v0.1.md
-- Release notes for this candidate: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc13/docs/RELEASE-NOTES-v0.2.0-rc13.md
-- Signed archive: https://github.com/evidifyai-svg/dses/releases/tag/v0.2.0-rc13,
-  file `dses-v0.2.0-rc13-publication.zip`, 110 members,
-  sha256 8051e4f25e9bd366ba8cf2409361f804f2274c79baa84374c51d8d09f8f7b850
-- Archived copy with a citable DOI: https://doi.org/10.5281/zenodo.22757972
+- Specification (v0.2 outcome layer): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/DSES-v0.2.md
+- Specification (v0.1 substrate, for context): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/DSES-v0.1.md
+- Claims table: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/CLAIMS-CLASSIFICATION.md
+- Conformance policy: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/CONFORMANCE-POLICY.md
+- Governance: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/GOVERNANCE.md
+- Scorecard (what is not established): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/SCORECARD.md
+- Claim ledger (what may and may not be said outside the spec): https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/CLAIM-LEDGER.md
+- Terminology: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/TERMINOLOGY.md
+- Errata against v0.1, which travel with it: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/ERRATA-v0.1.md
+- Release notes for this candidate: https://github.com/evidifyai-svg/dses/blob/v0.2.0-rc14/docs/RELEASE-NOTES-v0.2.0-rc14.md
+- Signed archive: https://github.com/evidifyai-svg/dses/releases/tag/v0.2.0-rc14,
+  file `dses-v0.2.0-rc14-publication.zip`, 110 members,
+  sha256 ac0cd7998249ede899cd4a735cf68e03ec86026b1411950098ae46e83f970133
+- Archived copies with citable DOIs (the concept DOI resolves to the latest
+  version): https://doi.org/10.5281/zenodo.21960297
 
 Read the specification sections named in your appendix, then the matching
 rows of the claims table. Claim rows are linkable by line: append
@@ -83,7 +84,7 @@ rows of the claims table. Claim rows are linkable by line: append
 
 ```
 git clone https://github.com/evidifyai-svg/dses.git && cd dses
-git checkout v0.2.0-rc13   # the tag, not main
+git checkout v0.2.0-rc14   # the tag, not main
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 bash run_all.sh
@@ -99,9 +100,10 @@ a number in this packet.
 
 ## 4a. If you are holding the rc12 packet
 
-rc13 is a threat-model clarification. It adds no mechanism, no schema change,
-and no rule for anyone to implement. Three things changed, and each touches a
-lane:
+Two candidates have been cut since rc12. rc13 is a threat-model
+clarification and rc14 is dependency hygiene. Neither adds a mechanism, a
+schema change, or a rule for anyone to implement. rc13 changed three things,
+and each touches a lane:
 
 - Adversary A8, the event-emission and capture path, is a new row in the
   Section 2.4 threat model. A1 rewrites history after the fact; A8 supplies a
@@ -122,14 +124,16 @@ lane:
   both. It is counted separately from the 158 rule-asserting cases so it can
   never inflate the rejection count.
 
-Counts that moved: verification class A from 22 to 23, and reference verifier
-support "not applicable" from 15 to 16. Nothing in the statistics lane changed.
+Counts that moved in rc13: verification class A from 22 to 23, and reference
+verifier support "not applicable" from 15 to 16. Nothing in the statistics
+lane changed.
 
-One labeling error shipped in the archive and is disclosed here rather than
-left for you to find: the changelog entry for this version in DSES-v0.2.md
-still calls itself a "candidate delta, unreleased." It was written before the
-version was cut. The next candidate corrects the label; nothing else in that
-entry is affected.
+rc14 moves the pinned `cryptography` from 43.0.1 to 50.0.2 and `jsonschema`
+from 4.23.0 to 4.26.0, because published advisory databases list advisories
+against cryptography 43.0.1. It also corrects the rc13 changelog heading,
+which carried "candidate delta, unreleased" into that archive, and
+regenerates the worked example for the new label. Every gate count is
+unchanged.
 
 Appendix C question 4 is reworded. The rc12 packet asked it on the
 assumption that these records would likely be discoverable, and that
@@ -317,8 +321,8 @@ DSES NAMED EXPERT REVIEW ATTESTATION
 Reviewer:            [name, credentials]
 Affiliation:         [institution; "independent" if none]
 Lane:                [statistics | protocol and cryptography | health law and clinical governance]
-Version reviewed:    DSES v0.2.0-rc13
-Archive sha256:      8051e4f25e9bd366ba8cf2409361f804f2274c79baa84374c51d8d09f8f7b850
+Version reviewed:    DSES v0.2.0-rc14
+Archive sha256:      ac0cd7998249ede899cd4a735cf68e03ec86026b1411950098ae46e83f970133
 Sections reviewed:   [list]
 Claim rows reviewed: [list]
 Gate re-run:         [yes, environment; | no]

@@ -44,7 +44,7 @@ stays in the specification permanently either way.
 
 Reviewers are asked directly, given a scoped packet, and told which claim
 rows fall in their lane. The current packet is
-`docs/review/REVIEW-PACKET-v0.2.0-rc13.md`; earlier packets stay beside it as
+`docs/review/REVIEW-PACKET-v0.2.0-rc14.md`; earlier packets stay beside it as
 the record of what their holders were sent. Anyone may also file findings
 without being asked, through the repository's issues; unsolicited findings
 are handled under `GOVERNANCE.md` and are not attestations.
