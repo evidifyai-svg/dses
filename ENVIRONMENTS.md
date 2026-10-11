@@ -37,7 +37,7 @@ records reproducibility must not itself be irreproducible.
 ## Environment A: Linux container
 
 - Linux x86_64, Python 3.12
-- jcs 0.2.1, jsonschema 4.23.0, cryptography 43.0.1
+- jcs 0.2.1, jsonschema 4.26.0, cryptography 50.0.2
 - Last observed green: this candidate, on the tree the release archive was
   built from. Counts as in the block above.
 
@@ -57,6 +57,15 @@ interpreter than the one used to build the package, with a transitive set that
 resolved differently and produced identical results. A record here that names
 an older candidate than the one you are reading is a gap, and it is stated as
 one rather than carried forward.
+
+## Environment C: Linux, Python 3.13, fresh virtual environment
+
+- Linux x86_64, Python 3.13.16 in a fresh virtual environment, pip 26.2.1
+- Direct: jcs 0.2.1, jsonschema 4.26.0, cryptography 50.0.2
+- Transitive as resolved: attrs 26.1.0, cffi 2.1.1, jsonschema-specifications
+  2025.9.1, pycparser 3.11, referencing 0.37.0, rpds-py 2026.9.1
+- Last observed green: 0.2.0-rc14 (2026-10-11), on the tree the release
+  archive was built from. Counts as in the block above.
 
 ## What is still not established
 
