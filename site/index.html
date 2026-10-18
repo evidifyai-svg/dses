@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DSES: Decision-Sequence Evidence Schema</title>
-<meta name="description" content="An open standard for verifiable ordering of human judgment and AI exposure, with a recomputable outcome-evidence layer.">
+<meta name="description" content="An open specification for recording the order of a committed human judgment relative to AI-output presentation, with a recomputable outcome-evidence layer.">
 <link rel="canonical" href="https://dses.ai/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -74,10 +74,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
   "name": "Decision-Sequence Evidence Schema",
   "alternateName": "DSES",
   "headline": "Decision-Sequence Evidence Schema",
-  "description": "An open standard for verifiable ordering of human judgment and AI exposure, with a recomputable outcome-evidence layer.",
+  "description": "An open specification for recording the order of a committed human judgment relative to AI-output presentation, with a recomputable outcome-evidence layer.",
   "inLanguage": "en",
   "version": "0.2.0-rc14",
-  "dateModified": "2026-08-23",
+  "dateModified": "2026-10-18",
   "keywords": [
     "decision-sequence evidence",
     "provable order of judgment",
@@ -118,14 +118,15 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 
 <main>
 <div class="wrap hero">
-  <p class="eyebrow">An open standard, CC BY 4.0 / MIT</p>
-  <h1>Proof that the human decided first.</h1>
+  <p class="eyebrow">An open specification · CC BY 4.0 / MIT</p>
+  <h1>Record what the human committed before the AI was shown.</h1>
   <p class="lede">For a workflow that implements sequential disclosure, the
-  DSES™ specification makes one claim verifiable that ordinary audit trails,
+  DSES™ specification makes one thing recomputable that ordinary audit trails,
   provenance records, and attestations leave to trust: the recorded order of a
-  committed human judgment relative to specified AI exposure. At the strongest
-  class, the sequence is hash-chained, externally anchored, and independently
-  recomputable.</p>
+  committed human judgment relative to designated AI-output presentation. At the
+  strongest class, the sequence is hash-chained, externally anchored, and
+  recomputable offline by a third party. It does not record what anyone
+  perceived or thought.</p>
 
   <div class="transcript" role="img" aria-label="DSES reference verifier output: OL conformant, 2,205 checks, zero failures">
     <div class="tbar"><i></i><i></i><i></i></div>
@@ -150,15 +151,15 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
   <div class="secnum">§ 1</div>
   <div>
     <h2>The evidentiary class</h2>
-    <p class="note">DSES here is the Decision-Sequence Evidence Schema, an open
-    technical standard. It is not the Daily Spiritual Experience Scale, a
-    separate health-research instrument.</p>
+    <p class="note">This site documents the Decision-Sequence Evidence Schema
+    (DSES™), an open technical specification. It is unrelated to the Daily
+    Spiritual Experience Scale, a separate health-research instrument.</p>
     <p><b>Decision-sequence evidence</b> is evidence sufficient to reconstruct
     designated human and automated decision states and their ordering. It is the
     missing class in human-AI oversight: system logs record what a machine did,
-    and attestations record what a person says they did, but neither can
-    establish that an independent judgment existed <em>before</em> the machine's
-    output was seen.</p>
+    and attestations record what a person says they did, but neither records
+    whether a committed judgment existed <em>before</em> the machine's output
+    was presented.</p>
     <div class="defn"><b>Exposure boundary</b>: the boundary separating a
     committed pre-exposure decision state from specified AI information. A
     judgment recorded as a <b>pre-exposure commitment</b> crosses it exactly
@@ -182,7 +183,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
     <table>
       <tr><th>Need</th><th>Start</th><th>Boundary</th></tr>
       <tr><td>Was AI actually shown?</td><td class="mono">L1 / I1</td><td>Passive availability, presentation, exposure class, and final disposition. No pre-AI-state claim.</td></tr>
-      <tr><td>What changed after exposure?</td><td class="mono">L2 / I2</td><td>Sealed pre-AI state, reveal, revision, and hash-chain internal consistency. No historical-immutability or enforcement claim.</td></tr>
+      <tr><td>What changed after exposure?</td><td class="mono">L2 / I2</td><td>Committed pre-AI state, reveal, revision, and hash-chain internal consistency. No historical-integrity or enforcement claim.</td></tr>
       <tr><td>Was the result correct under a declared criterion?</td><td class="mono">0.2.0-rc14</td><td>Outcome linkage and recomputation. Release candidate; permanent identifiers remain unminted.</td></tr>
     </table>
     <p style="margin-top:14px"><a href="https://github.com/evidifyai-svg/dses/blob/main/IMPLEMENT.md">Implementation guide</a> ·
@@ -270,12 +271,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
     <p>Latest tagged release: <span class="mono" style="font-family:'IBM Plex Mono',monospace;font-size:14px">v0.1.2</span>.
     Current outcome-layer release candidate: <span class="mono" style="font-family:'IBM Plex Mono',monospace;font-size:14px">v0.2.0-rc14</span>.
     Identifiers are unminted pending named human expert review. This scorecard
-    is published with honest zeros, because a standard about prespecified
+    is published with honest zeros, because a specification about prespecified
     claims should prespecify its own success criteria.</p>
     <table>
       <tr><th>Signal</th><th>Now</th><th>Target 8/2027</th></tr>
       <tr><td>Independent implementations</td><td class="mono zero">0 <span class="zero">(1 partial; not counted)</span></td><td class="mono">2</td></tr>
-      <tr><td>Real deployments</td><td class="mono zero">0 <span class="zero">(1 reader study anchoring)</span></td><td class="mono">3</td></tr>
+      <tr><td>Real deployments</td><td class="mono zero">0</td><td class="mono">3</td></tr>
       <tr><td>Implementing organizations</td><td class="mono zero">0</td><td class="mono">5</td></tr>
       <tr><td>Interoperability reports</td><td class="mono zero">0</td><td class="mono">5</td></tr>
       <tr><td>Named human expert reviewers</td><td class="mono zero">0</td><td class="mono">3</td></tr>
@@ -283,6 +284,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
     </table>
     <p style="margin-top:14px"><a href="https://doi.org/10.5281/zenodo.21960297">Archived releases (Zenodo DOI)</a> ·
     <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6643919">Proving the First Read (SSRN)</a></p>
+    <p class="note" style="margin-top:10px">Published: <a href="https://doi.org/10.1016/j.acra.2026.09.007">Academic Radiology (2026)</a> ·
+    <a href="https://doi.org/10.1093/jamia/ocag152">JAMIA (2026)</a> ·
+    companion profiles on Zenodo: <a href="https://doi.org/10.5281/zenodo.22116248">clinical sequence</a>,
+    <a href="https://doi.org/10.5281/zenodo.22861692">continuous exposure</a></p>
   </div>
 </div></section>
 </main>
