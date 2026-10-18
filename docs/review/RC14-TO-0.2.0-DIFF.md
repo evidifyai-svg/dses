@@ -1,28 +1,28 @@
-# rc14 to 0.2.0: what changed for a reviewer holding the rc14 packet
+# rc14 to 0.2.0: what changed
 
-Prepared 2026-10-18 by Joshua M. Henderson, Ph.D., Evidify LLC. For the
-reviewers who were sent `REVIEW-PACKET-v0.2.0-rc14.md` on 2026-10-11 and
-told that the identifiers would rename at 0.2.0 with the diff handed over.
-This is that diff.
+Prepared 2026-10-18 by Joshua M. Henderson, Ph.D., Evidify LLC. For anyone
+who read, or is reading, DSES v0.2.0-rc14, including anyone holding
+`REVIEW-PACKET-v0.2.0-rc14.md`: this is the complete difference between the
+rc14 tag and the minted 0.2.0.
 
 ## The one-paragraph version
 
-Nothing you were asked to review changed. No requirement, rule, schema
-structure, fixture, or verifier line moved between rc14 and 0.2.0. The
-label `0.2.0-rc14` became `0.2.0` everywhere it appeared, the schema `$id`
-URLs moved from `/0.2.0-rc14/` to `/0.2.0/`, the worked example was
-regenerated once for the new label (fresh keys, fresh hashes, same
-structure and verdicts), and five pieces of prose that described the
-document as a candidate now describe it as a release. One of those five is
-the provenance section at the end of `DSES-v0.2.md`, which now records that
-no named human review completed before the mint, including yours. Your
-attestation, if you file one, is published in `docs/reviews/` under your
-name against the version and digest you reviewed, exactly as the packet
-said, and any objection is dispositioned in an erratum or in 0.2.1.
+No requirement, rule, schema structure, fixture, or verifier line moved
+between rc14 and 0.2.0. The label `0.2.0-rc14` became `0.2.0` everywhere it
+appeared, the schema `$id` URLs moved from `/0.2.0-rc14/` to `/0.2.0/`, the
+worked example was regenerated once for the new label (fresh keys, fresh
+hashes, same structure and verdicts), and the sentences that described the
+document as a candidate now describe it as a release. One of those is the
+provenance section at the end of `DSES-v0.2.md`, which now records that no
+named human expert review completed before the mint and states the policy
+for an attestation that arrives afterward: it is published verbatim in
+`docs/reviews/` under the reviewer's name, with the version and archive
+digest the reviewer was given, and any objection receives a written
+disposition the reviewer sees first.
 
-Attest to rc14 if that is what you read. The packet said so and it still
-holds: `v0.2.0-rc14` is a tag that does not move, and the text at that tag
-is the text 0.2.0 was minted from.
+If you read rc14, attest to rc14. The tag `v0.2.0-rc14` does not move, the
+text at that tag is the text 0.2.0 was minted from, and the attestation
+records the version read, as the packet says.
 
 ## Gate signature
 
@@ -260,13 +260,13 @@ index 857607e..92bc45b 100755
 ## Specification prose changes
 
 The Version line, Section 5.1b's version reference, the 8.4 heading and its
-first sentence, the Annex D sentence, the citation, the new Annex C entry
-for 0.2.0, and the provenance section. `-` lines are rc14, `+` lines are
-0.2.0.
+first sentence, the Section 11 sentence on identifier minting, the Annex D
+sentence, the citation, the new Annex C entry for 0.2.0, and the provenance
+section. `-` lines are rc14, `+` lines are 0.2.0.
 
 ```diff
 diff --git a/DSES-v0.2.md b/DSES-v0.2.md
-index 99a2676..3328338 100644
+index 99a2676..0d09884 100644
 --- a/DSES-v0.2.md
 +++ b/DSES-v0.2.md
 @@ -1,7 +1,7 @@
@@ -313,7 +313,7 @@ index 99a2676..3328338 100644
  ## 11. Schema discipline
  
 -**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0-rc14/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
-+**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0/` in this candidate. The permanent `/0.2.0/` identifiers are minted once, when public comment closes, and never reused, which is why this build is a release candidate rather than the release: an identifier that cannot be withdrawn should not be spent on a document still under review.
++**No conformant calculation or conformance claim may depend on an extension unless that extension is explicitly incorporated by a versioned normative definition artifact.** Schema isolation alone cannot prevent an extension from altering downstream semantics, so the constraint is stated as a requirement on calculations rather than on syntax. Core objects closed with `unevaluatedProperties: false` and a single namespaced `extensions` object; `event_type` bound to payload by discriminated union; integrity classes conditionally requiring their evidence and logically admissible on their face (an I3 claim requires at least one defining capability true, while truth of the evidence is the verifier's job); temporal fields constrained by calendar-aware patterns, with instant validity itself classified X because a regex cannot decide it; URIs pattern-constrained for the same reason; integers bounded to the JCS-safe range. Schema `$id`s are `/0.2.0/`. They were minted once, on October 18, 2026, and are never reused; the candidates that preceded this release carried `/0.2.0-rcN/` identifiers instead, because an identifier that cannot be withdrawn should not be spent on text that is still changing.
  
  ---
  
@@ -350,6 +350,5 @@ index 99a2676..3328338 100644
 
 `README.md` (version-status and publication-boundary sections), `SCORECARD.md`
 (reviewer row and date), `ERRATA-v0.2.md` (status line), and
-`ENVIRONMENTS.md` (mint environment added). None of these is in your lane's
-scope. They are listed so the set is closed; `git diff v0.2.0-rc14 v0.2.0`
-shows them in full once the tag exists.
+`ENVIRONMENTS.md` (mint environment added). They are listed so the set is
+closed; `git diff v0.2.0-rc14 v0.2.0` shows them in full once the tag exists.

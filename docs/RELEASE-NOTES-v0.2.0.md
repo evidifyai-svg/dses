@@ -21,19 +21,19 @@ or schema structure change from rc10.
 Named human expert review was requested in three lanes before the mint and
 none completed. As of 2026-10-18:
 
-- Protocol and cryptography: Rob Stradling (asked 8/26, followed up 10/5, no
-  reply), Rasmus Dahlberg (declined 10/6), Filippo Valsorda (asked 10/11,
-  pending).
-- Health law and clinical governance: Sara Gerke (asked 8/26, followed up
-  10/5, no reply), W. Nicholson Price II (declined 10/9), Michelle Mello
-  (asked 10/11, pending).
-- Statistics: Grayson Baird, review in motion in person, no written
-  attestation.
+- Protocol and cryptography: two reviewers were asked and did not reply or
+  declined; a third was asked on October 11, 2026 and had not yet responded.
+- Health law and clinical governance: two reviewers were asked and did not
+  reply or declined; a third was asked on October 11, 2026 and had not yet
+  responded.
+- Statistics: a named biostatistician's review was in progress in person,
+  with no written attestation.
 
 Zero attestations in `docs/reviews/`. Zero independent implementations
 (claim 7.3c). The author's ruling was to mint with the zero and record it.
-The provenance section of `DSES-v0.2.md` carries this record without names
-(lanes and dates only); this file and the PR carry the names.
+The provenance section of `DSES-v0.2.md` carries the same record. Reviewer
+identities are not recorded in this repository until an attestation is
+published under the reviewer's name.
 
 Standing policy for anything that arrives later: an attestation is published
 verbatim in `docs/reviews/` under the reviewer's name with the version and
