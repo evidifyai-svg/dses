@@ -13,8 +13,8 @@
   "projection_set": {
     "mode": "inline",
     "input_event_hashes": [
-      "1eab404708d1559222cdb442d2d66845737e934ed544dc556ddcc69d45350bb1",
-      "c2b5731192d0af4932b956a369089fc6f54e75c823f197a59ffce6e9a9cb095f"
+      "616152f0234dd2d90fa1c1b24caf88c3e55382e8c127036a161f906f5db1c417",
+      "c0067c27cdaaff92959d4bc692de29f2d7564c8dd94dbd1338cb3471d1d2a082"
     ]
   },
   "numerator": 1,
@@ -75,7 +75,7 @@
     }
   },
   "recomputability": {
-    "analysis_snapshot_ref": "cbe21cadb3359485b47dc3c3591676a3f86614204b4179cef4c074e5aa999c0e",
+    "analysis_snapshot_ref": "fb727fa4161ad4a4abe36f775e3cb0a4d27439e3c06413fac442f324e80d95cc",
     "definition_hashes": [
       {
         "artifact_id": "https://example.org/dses/metrics/ear-primary",
@@ -132,5 +132,5 @@
     "level": 0.95,
     "method": "Wilson"
   },
-  "artifact_hash": "416ba178b75dbac5df60caf90e7914595188914cd53dbcd56684248253dade10"
+  "artifact_hash": "068a1ea8f55e6af546cf74b63f4910ae5b208ffa5706040a159a37ce2c0977d7"
 }

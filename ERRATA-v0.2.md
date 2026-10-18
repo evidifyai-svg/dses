@@ -1,8 +1,9 @@
 # ERRATA: DSES v0.2.0
 
-**Applies to:** DSES v0.2.0, once published.
-**Status:** No errata. Version 0.2.0 is not yet released, and no erratum can
-exist against unpublished text.
+**Applies to:** DSES v0.2.0, minted October 18, 2026.
+**Status:** No errata as of the mint date. An objection from a named expert
+review received after the mint that changes published text is recorded here
+under the process below.
 
 ## Why this file exists before it has content
 

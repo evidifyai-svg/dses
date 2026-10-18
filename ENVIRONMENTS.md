@@ -15,7 +15,7 @@ with the ECMAScript number spellings. That check exists precisely because a
 non-conforming canonicalizer in a review environment once produced a false
 positive about artifact hashes that were, in fact, correct.
 
-## Gate output for this candidate
+## Gate output for this version
 
 This block is written by `scripts/check_environments.py --write` from the gate
 log and checked against the log on every `run_all.sh` run (step 7). It is the
@@ -38,8 +38,9 @@ records reproducibility must not itself be irreproducible.
 
 - Linux x86_64, Python 3.12
 - jcs 0.2.1, jsonschema 4.26.0, cryptography 50.0.2
-- Last observed green: this candidate, on the tree the release archive was
-  built from. Counts as in the block above.
+- Last observed green: 0.2.0-rc14 (2026-10-11), on the tree the release
+  archive was built from. Not re-run at the v0.2.0 mint; Environment D below is
+  the mint environment.
 
 ## Environment B: macOS, independent hardware, PyPI install
 
@@ -66,6 +67,18 @@ one rather than carried forward.
   2025.9.1, pycparser 3.11, referencing 0.37.0, rpds-py 2026.9.1
 - Last observed green: 0.2.0-rc14 (2026-10-11), on the tree the release
   archive was built from. Counts as in the block above.
+
+## Environment D: Linux, Python 3.13, fresh virtual environment (the v0.2.0 mint)
+
+- Linux x86_64, Python 3.13.16 in a fresh virtual environment, pip 26.2.1
+- Direct: jcs 0.2.1, jsonschema 4.26.0, cryptography 50.0.2
+- Transitive as resolved: attrs 26.1.0, cffi 2.1.1, jsonschema-specifications
+  2025.9.1, pycparser 3.11, referencing 0.37.0, rpds-py 2026.9.1
+- Node v22.22.0 for the language guard
+- Last observed green: 0.2.0 (2026-10-18), on the tree the release archive was
+  built from, and again on a fresh clone of that tree in a second fresh virtual
+  environment, and a third time on the unpacked archive. Counts as in the block
+  above.
 
 ## What is still not established
 
