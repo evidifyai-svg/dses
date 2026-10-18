@@ -66,8 +66,9 @@ ALL GREEN in Environment D (Linux x86_64, Python 3.13.16, fresh venv, pinned
 requirements, Node 22) on the mint tree, on a fresh clone of the pushed
 branch in a second fresh venv, and on the unpacked archive in a new empty
 directory with zero extra files. Archive sha256 is recorded in the pull
-request, the tag message, the GitHub release, and Zenodo. It is not recorded
-inside the archive.
+request, the tag message and the GitHub release, and goes into the Zenodo
+record's description by hand (see below). It is not recorded inside the
+archive.
 
 ## What is still not established
 
@@ -78,3 +79,26 @@ same reference code. See claim 7.3c and `SCORECARD.md`.
 
 No normative change. No reviewer disposition, because no objection was
 received. No change to any lint rule, guard, or allowlist.
+
+## Post-release record (2026-10-18)
+
+- Tag `v0.2.0` (annotated) on `baaef23`, the squash-merge of #13. GitHub
+  release `v0.2.0` published 22:16 UTC as Latest, not a prerelease. The
+  release asset `dses-v0.2.0-publication.zip` was downloaded back from the
+  release and re-hashed: sha256
+  `a4a9b7f1beb0434bf55a48a581447c53d904e0930e59aac53a0c79c25b3375a1`,
+  matching the gate.
+- Environment B reproduced the archive before the tag was created: macOS
+  26.6.2 (arm64), Python 3.14.6, cryptography 50.0.2, jsonschema 4.26.0,
+  jsonschema-specifications 2025.9.1, jcs 0.2.1. The gate ran ALL GREEN, and
+  the tag command ran only after the locally built archive hashed to the same
+  sha256. `ENVIRONMENTS.md` ships inside the archive, so it keeps its 0.2.0
+  text; Environment B moves into it at the next version.
+- Zenodo: the GitHub integration created version 10.5281/zenodo.23460192
+  under concept 10.5281/zenodo.21960297. The file it deposited is GitHub's
+  source snapshot of tag `v0.2.0`, not the gate-built archive. The gate-built
+  archive is the release asset above, and it rebuilds from that snapshot.
+  Zenodo shows the publication date in Geneva time, 2026-10-19, until it is
+  edited.
+- dses.ai was deployed from main after the release and shows the archive
+  digest and "minted October 18, 2026".
