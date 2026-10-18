@@ -34,17 +34,24 @@ a statistic means what its name suggests. That is what the people named here
 were asked about.
 
 The specification discloses in its provenance section that its adversarial
-review rounds were conducted by AI systems and that its reference
-implementation was written by one. The build tooling refuses to mint a
-non-candidate version while that disclosure stands unresolved. These
-attestations are how it gets resolved, and the disclosure of AI involvement
-stays in the specification permanently either way.
+review rounds were conducted by an AI system and that its reference
+implementation was written by AI systems. Version 0.2.0 was minted on
+October 18, 2026 with no completed attestation, and its provenance section
+records that state lane by lane. An attestation received after the mint is
+published here under the reviewer's name, with the version and archive
+digest the reviewer was given; a disposition that changes published text is
+handled as an erratum under `ERRATA-v0.2.md` or carried into 0.2.1. The
+disclosure of AI involvement stays in the specification permanently either
+way.
 
 ## Requesting a review
 
 Reviewers are asked directly, given a scoped packet, and told which claim
 rows fall in their lane. The current packet is
 `docs/review/REVIEW-PACKET-v0.2.0-rc14.md`; earlier packets stay beside it as
-the record of what their holders were sent. Anyone may also file findings
+the record of what their holders were sent. The packet covers rc14. Version
+0.2.0 differs from rc14 only as recorded in
+`docs/review/RC14-TO-0.2.0-DIFF.md`, and an attestation against rc14 is
+accepted and published as an attestation of rc14. Anyone may also file findings
 without being asked, through the repository's issues; unsolicited findings
 are handled under `GOVERNANCE.md` and are not attestations.
