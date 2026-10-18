@@ -13,9 +13,9 @@
   "projection_set": {
     "mode": "inline",
     "input_event_hashes": [
-      "092a5c979d68c11f1ab86c5fb3303b0672370007529e8e6e9722bd18e75d1132",
-      "099834fb6335e1cc07871775a64c0a64665da1f1463c63fa35d5c43295c8984e",
-      "d6a9f30b68e41abff46c7fc7d51afb064937fc92efd13b4a88864a27b467b739"
+      "250790634d475d1a1a244f2be1e48a5d29efcd76248e1b3d1bac28e5e40fc7c8",
+      "9abbb4cfa60f64e0e1602c35ac833a4c9181f6e45544b50b859db011ba0f17ed",
+      "dff87126f0710af1b183995b966ffc0d2736165dc436a3dc5cb269ccf62b3f66"
     ]
   },
   "numerator": 1,
@@ -76,7 +76,7 @@
     }
   },
   "recomputability": {
-    "analysis_snapshot_ref": "48c14a937bf1605cb221bb06d437e35b588aea3d9217e6c882be1f0fce0646cb",
+    "analysis_snapshot_ref": "5b7cbc361a285498cdeb586c9dd990760fc434b05f0492068c3f8101adcc7d6b",
     "definition_hashes": [
       {
         "artifact_id": "https://example.org/dses/metrics/rair-primary",
@@ -133,5 +133,5 @@
     "level": 0.95,
     "method": "Wilson"
   },
-  "artifact_hash": "2433173ed8fab2350ce23d9ae814644fd38eda2da5d5880ba01c7737e05c4e35"
+  "artifact_hash": "fd0e38df9d2aed7c054a6b295460478a5af27a4c51102589946aade90873b64f"
 }

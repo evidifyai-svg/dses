@@ -14,7 +14,7 @@ helpers, and the verification commands.
 |---|---|---|
 | Record whether and how AI reached a person | Passive exposure logging at L1/I1 | [`quickstart/passive-exposure.json`](quickstart/passive-exposure.json) |
 | Preserve pre-AI, reveal, and post-AI states with internally consistent ordering | Decision trajectory at L2/I2 | [`quickstart/sealed-sequence.json`](quickstart/sealed-sequence.json) |
-| Bind outcomes and adjudication to a sequence | Outcome layer release candidate | [`DSES-v0.2.md`](DSES-v0.2.md) |
+| Bind outcomes and adjudication to a sequence | Outcome layer at v0.2.0 | [`DSES-v0.2.md`](DSES-v0.2.md) |
 
 After installing the pinned dependencies, verify both quickstart flows with:
 
@@ -28,17 +28,20 @@ before publishing compatibility or conformance language.
 
 ## Version status
 
-- **v0.1.2** is the latest tagged and archived release. Its normative sequence
-  vocabulary remains in [`DSES-v0.1.md`](DSES-v0.1.md) and
-  [`dses-v0.1.schema.json`](dses-v0.1.schema.json).
-- **v0.2.0-rc14** is the current release candidate for the outcome-evidence
-  layer. Its permanent `0.2.0` schema identifiers are intentionally unminted
-  pending public comment and named human expert review.
-- A release candidate is not a permanent release. Implementation reports may
-  target it, but must name `0.2.0-rc14` exactly and expect change before 0.2.0.
+- **v0.2.0** is the current release of the outcome-evidence layer, minted
+  October 18, 2026 from candidate rc14. Its `0.2.0` schema identifiers are
+  permanent under `GOVERNANCE.md`.
+- **v0.1.2** remains the latest release of the sequence layer. Its normative
+  vocabulary is in [`DSES-v0.1.md`](DSES-v0.1.md) and
+  [`dses-v0.1.schema.json`](dses-v0.1.schema.json), and v0.2.0 extends it
+  without modifying it.
+- v0.2.0 was minted with zero completed named human expert reviews and zero
+  independent implementations. The specification's provenance section states
+  the record as of the mint date, and `SCORECARD.md` carries the counts.
+  Implementation reports that targeted a candidate must name the exact
+  candidate they ran against.
 
-This repository and `dses.ai` use `0.2.0-rc14` for the current candidate. The
-older v0.1 tags remain immutable rather than being relabeled.
+The v0.1 and v0.2.0-rcN tags remain immutable rather than being relabeled.
 
 ## Implement with the boundaries intact
 
@@ -56,7 +59,7 @@ pilot. Organizations willing to publish an implementation report can join the
 [`Founding Implementer program`](FOUNDING-IMPLEMENTERS.md); its counts remain at
 zero until the stated evidence is public.
 
-## Reproduce every claim in the v0.2 candidate
+## Reproduce every claim in v0.2.0
 
 ```sh
 python3 -m venv .venv && source .venv/bin/activate
@@ -114,7 +117,7 @@ suffix has internal-consistency evidence only. This is the substance of
 
 - `DSES-v0.1.md` and `dses-v0.1.schema.json`: sequence specification and event
   schema
-- `DSES-v0.2.md`: outcome-evidence layer release candidate
+- `DSES-v0.2.md`: outcome-evidence layer, v0.2.0
 - `IMPLEMENT.md`: external implementer route and version guidance
 - `quickstart/`: passive and sealed sequence examples plus tiny helpers
 - `IMPLEMENTATION-CHECKLIST.md`: pre-pilot evidence and governance checklist
@@ -147,10 +150,12 @@ Two licenses apply, with directory-level scope stated explicitly.
 
 ## Publication boundary
 
-This candidate is not the permanent `0.2.0`. RFC 3161 token parsing, independent
-recomputation, and conformance-grade current-payload-disposition replay are
-explicitly not implemented and do not support shipped conformance claims.
-Before minting permanent schema identifiers, remaining external release steps
-include contributor attribution, named protocol/cryptography and statistical
-review, and clean-machine reproduction from the archive. These are not
-represented as verifier-established properties.
+v0.2.0 is the permanent release of this layer. RFC 3161 token parsing,
+independent recomputation, and conformance-grade current-payload-disposition
+replay are explicitly not implemented and do not support shipped conformance
+claims. Named protocol/cryptography, statistical, and health-law review were
+requested before the mint and none completed; the specification's provenance
+section records that, and an attestation received later is published in
+`docs/reviews/` and dispositioned in an erratum or in 0.2.1. Clean-machine
+reproduction from the archive is recorded in `ENVIRONMENTS.md`. None of this is
+represented as a verifier-established property.
