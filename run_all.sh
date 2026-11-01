@@ -55,8 +55,10 @@ mkdir -p "$TMP/pkg/examples/derived" "$TMP/pkg/examples/decision-sequences" "$TM
 )
 
 echo
-echo "=== 7. normative coherence: prose vocabulary agrees with the schemas ==="
+echo "=== 7. normative coherence: prose agrees with the schemas and with the artifacts it renders ==="
 python3 scripts/check_vocabulary.py
+python3 scripts/check_rendered_claims.py
+python3 tests/run_rendered_claims.py
 }
 
 # Steps 0 through 7 are captured so that step 8 can check the environment
