@@ -1,0 +1,432 @@
+{
+  "schema": "dses-rendered-claims/1",
+  "document": "RELIANCE-CONTEXT-EXAMPLE.md",
+  "sources": {
+    "artifact": "examples/derived/derived-rair-subject-0417-v1.json",
+    "governance": "artifacts/secondary_use_governance.json"
+  },
+  "note": "Every number in the v0.2.0 rendered example, each tied to the field it renders or set aside with a reason. Read by scripts/check_rendered_claims.py in gate step 7.",
+  "claims": [
+    {
+      "quote": "(RAIR): 1 of 3, or 33%",
+      "number": "1",
+      "expr": "artifact.numerator"
+    },
+    {
+      "quote": "(RAIR): 1 of 3, or 33%",
+      "number": "3",
+      "expr": "artifact.denominator"
+    },
+    {
+      "quote": "(RAIR): 1 of 3, or 33%",
+      "number": "33%",
+      "expr": "pct1(artifact.value)"
+    },
+    {
+      "quote": "in two of three opportunities",
+      "number": "two",
+      "expr": "artifact.denominator - artifact.numerator"
+    },
+    {
+      "quote": "in two of three opportunities",
+      "number": "three",
+      "expr": "artifact.denominator"
+    },
+    {
+      "quote": "2026-06-30, 121 days",
+      "number": "121",
+      "expr": "days(artifact.observation_window.start, artifact.observation_window.end)",
+      "note": "Whole days elapsed from start to end, the way timedelta.days and the verifier's maturation and lag checks count days. The window ends at 23:59:59 on June 30, so the exact span is one second short of 122 days; the verifier's window check prints it as 122.00d, and a calendar count of March 1 to June 30 inclusive is 122."
+    },
+    {
+      "quote": "95% interval (Wilson): 6% to 79%",
+      "number": "95%",
+      "expr": "pct1(artifact.interval.level)"
+    },
+    {
+      "quote": "95% interval (Wilson): 6% to 79%",
+      "number": "6%",
+      "expr": "pct1(artifact.interval.lower)"
+    },
+    {
+      "quote": "95% interval (Wilson): 6% to 79%",
+      "number": "79%",
+      "expr": "pct1(artifact.interval.upper)"
+    },
+    {
+      "quote": "over all 10 of this reader's assigned",
+      "number": "10",
+      "expr": "artifact.reliance_context.subject_decision_instance_count"
+    },
+    {
+      "quote": "not merely the 8 metric-eligible ones",
+      "number": "8",
+      "expr": "artifact.reliance_context.metric_eligible_count"
+    },
+    {
+      "quote": "Assigned decision instances | 10 |",
+      "number": "10",
+      "expr": "artifact.reliance_context.subject_decision_instance_count"
+    },
+    {
+      "quote": "Linkage | 9 linked, 1 decision record missing",
+      "number": "9",
+      "expr": "artifact.reliance_context.linkage_breakdown.linked"
+    },
+    {
+      "quote": "Linkage | 9 linked, 1 decision record missing",
+      "number": "1",
+      "expr": "artifact.reliance_context.linkage_breakdown.decision_record_missing"
+    },
+    {
+      "quote": "Maturation | 8 mature, 1 pending, 1 not applicable",
+      "number": "8",
+      "expr": "artifact.reliance_context.maturation_breakdown.mature"
+    },
+    {
+      "quote": "Maturation | 8 mature, 1 pending, 1 not applicable",
+      "number": "1",
+      "occurrence": 1,
+      "expr": "artifact.reliance_context.maturation_breakdown.pending"
+    },
+    {
+      "quote": "Maturation | 8 mature, 1 pending, 1 not applicable",
+      "number": "1",
+      "occurrence": 2,
+      "expr": "artifact.reliance_context.maturation_breakdown.not_applicable"
+    },
+    {
+      "quote": "Adjudication | 7 determinate, 1 indeterminate, 2 not adjudicated",
+      "number": "7",
+      "expr": "artifact.reliance_context.adjudication_breakdown.determinate"
+    },
+    {
+      "quote": "Adjudication | 7 determinate, 1 indeterminate, 2 not adjudicated",
+      "number": "1",
+      "expr": "artifact.reliance_context.adjudication_breakdown.indeterminate"
+    },
+    {
+      "quote": "Adjudication | 7 determinate, 1 indeterminate, 2 not adjudicated",
+      "number": "2",
+      "expr": "artifact.reliance_context.adjudication_breakdown.not_adjudicated"
+    },
+    {
+      "quote": "Metric-eligible | 8 |",
+      "number": "8",
+      "expr": "artifact.reliance_context.metric_eligible_count"
+    },
+    {
+      "quote": "Two of this reader's instances never became metric-eligible",
+      "number": "Two",
+      "expr": "artifact.reliance_context.subject_decision_instance_count - artifact.reliance_context.metric_eligible_count"
+    },
+    {
+      "quote": "Over the 8 metric-eligible cases",
+      "number": "8",
+      "expr": "artifact.reliance_context.metric_eligible_count"
+    },
+    {
+      "quote": "This reader's independent baseline judgment | 2 | 5 | 1 |",
+      "number": "2",
+      "expr": "artifact.reliance_context.baseline_validity_breakdown.correct"
+    },
+    {
+      "quote": "This reader's independent baseline judgment | 2 | 5 | 1 |",
+      "number": "5",
+      "expr": "artifact.reliance_context.baseline_validity_breakdown.incorrect"
+    },
+    {
+      "quote": "This reader's independent baseline judgment | 2 | 5 | 1 |",
+      "number": "1",
+      "expr": "artifact.reliance_context.baseline_validity_breakdown.excluded"
+    },
+    {
+      "quote": "**The AI's output** | **6** | **1** | **1**",
+      "number": "6",
+      "expr": "artifact.reliance_context.ai_validity_breakdown.correct"
+    },
+    {
+      "quote": "**The AI's output** | **6** | **1** | **1**",
+      "number": "1",
+      "occurrence": 1,
+      "expr": "artifact.reliance_context.ai_validity_breakdown.incorrect"
+    },
+    {
+      "quote": "**The AI's output** | **6** | **1** | **1**",
+      "number": "1",
+      "occurrence": 2,
+      "expr": "artifact.reliance_context.ai_validity_breakdown.excluded"
+    },
+    {
+      "quote": "The reader's judgment after seeing the AI | 3 | 3 | 2 |",
+      "number": "3",
+      "occurrence": 1,
+      "expr": "artifact.reliance_context.evaluation_validity_breakdown.correct"
+    },
+    {
+      "quote": "The reader's judgment after seeing the AI | 3 | 3 | 2 |",
+      "number": "3",
+      "occurrence": 2,
+      "expr": "artifact.reliance_context.evaluation_validity_breakdown.incorrect"
+    },
+    {
+      "quote": "The reader's judgment after seeing the AI | 3 | 3 | 2 |",
+      "number": "2",
+      "expr": "artifact.reliance_context.evaluation_validity_breakdown.excluded"
+    },
+    {
+      "quote": "Adjudication status | 7 determinate, 1 indeterminate",
+      "number": "7",
+      "expr": "artifact.reliance_context.adjudication_status_breakdown.determinate"
+    },
+    {
+      "quote": "Adjudication status | 7 determinate, 1 indeterminate",
+      "number": "1",
+      "expr": "artifact.reliance_context.adjudication_status_breakdown.indeterminate"
+    },
+    {
+      "quote": "Commensurability | 7 commensurable, 1 noncommensurable",
+      "number": "7",
+      "expr": "artifact.reliance_context.commensurability_breakdown.commensurable"
+    },
+    {
+      "quote": "Commensurability | 7 commensurable, 1 noncommensurable",
+      "number": "1",
+      "expr": "artifact.reliance_context.commensurability_breakdown.noncommensurable"
+    },
+    {
+      "quote": "vendor-pe-cad-2.1 (all 8)",
+      "number": "8",
+      "expr": "key(artifact.reliance_context.ai_system_breakdown, \"vendor-pe-cad-2.1\")"
+    },
+    {
+      "quote": "Exposure class | 7 categorical, 1 directive",
+      "number": "7",
+      "expr": "artifact.reliance_context.exposure_class_breakdown.CATEGORICAL"
+    },
+    {
+      "quote": "Exposure class | 7 categorical, 1 directive",
+      "number": "1",
+      "expr": "artifact.reliance_context.exposure_class_breakdown.DIRECTIVE"
+    },
+    {
+      "quote": "Contributing decision instances | 3 |",
+      "number": "3",
+      "expr": "artifact.disclosures.design_structure.contributing_instances"
+    },
+    {
+      "quote": "Distinct readers | 1 |",
+      "number": "1",
+      "expr": "artifact.disclosures.design_structure.distinct_readers"
+    },
+    {
+      "quote": "Distinct cases | 3 |",
+      "number": "3",
+      "expr": "artifact.disclosures.design_structure.distinct_cases"
+    },
+    {
+      "quote": "Panel agreement (kappa-fleiss-v1, 10 items, 2 assessors) | 1.00",
+      "number": "10",
+      "expr": "artifact.disclosures.panel_agreement.items"
+    },
+    {
+      "quote": "Panel agreement (kappa-fleiss-v1, 10 items, 2 assessors) | 1.00",
+      "number": "2",
+      "expr": "artifact.disclosures.panel_agreement.assessments_per_item"
+    },
+    {
+      "quote": "Panel agreement (kappa-fleiss-v1, 10 items, 2 assessors) | 1.00",
+      "number": "1.00",
+      "expr": "artifact.disclosures.panel_agreement.value"
+    },
+    {
+      "quote": "One reader and three cases behind three instances",
+      "number": "One",
+      "expr": "artifact.disclosures.design_structure.distinct_readers"
+    },
+    {
+      "quote": "One reader and three cases behind three instances",
+      "number": "three",
+      "occurrence": 1,
+      "expr": "artifact.disclosures.design_structure.distinct_cases"
+    },
+    {
+      "quote": "One reader and three cases behind three instances",
+      "number": "three",
+      "occurrence": 2,
+      "expr": "artifact.disclosures.design_structure.contributing_instances"
+    },
+    {
+      "quote": "not three independent trials",
+      "number": "three",
+      "expr": "artifact.disclosures.design_structure.contributing_instances"
+    },
+    {
+      "quote": "1 of 3 is 33%",
+      "number": "1",
+      "expr": "artifact.numerator"
+    },
+    {
+      "quote": "1 of 3 is 33%",
+      "number": "3",
+      "expr": "artifact.denominator"
+    },
+    {
+      "quote": "1 of 3 is 33%",
+      "number": "33%",
+      "expr": "pct1(artifact.value)"
+    },
+    {
+      "quote": "the 95% interval runs",
+      "number": "95%",
+      "expr": "pct1(artifact.interval.level)"
+    },
+    {
+      "quote": "from 6% to 79%. Three opportunities",
+      "number": "6%",
+      "expr": "pct1(artifact.interval.lower)"
+    },
+    {
+      "quote": "from 6% to 79%. Three opportunities",
+      "number": "79%",
+      "expr": "pct1(artifact.interval.upper)"
+    },
+    {
+      "quote": "from 6% to 79%. Three opportunities",
+      "number": "Three",
+      "expr": "artifact.denominator"
+    },
+    {
+      "quote": "The three instances come from one reader",
+      "number": "three",
+      "expr": "artifact.disclosures.design_structure.contributing_instances"
+    },
+    {
+      "quote": "The three instances come from one reader",
+      "number": "one",
+      "expr": "artifact.disclosures.design_structure.distinct_readers"
+    },
+    {
+      "quote": "Six to seventy-nine per cent",
+      "number": "Six",
+      "expr": "rnd(pct1(artifact.interval.lower))"
+    },
+    {
+      "quote": "Six to seventy-nine per cent",
+      "number": "seventy-nine",
+      "expr": "rnd(pct1(artifact.interval.upper))"
+    },
+    {
+      "quote": "It is the three cases where this reader was wrong",
+      "number": "three",
+      "expr": "artifact.denominator"
+    },
+    {
+      "quote": "The AI was wrong in one of eight cases here.",
+      "number": "one",
+      "expr": "artifact.reliance_context.ai_validity_breakdown.incorrect"
+    },
+    {
+      "quote": "The AI was wrong in one of eight cases here.",
+      "number": "eight",
+      "expr": "artifact.reliance_context.metric_eligible_count"
+    },
+    {
+      "quote": "one case was not commensurable",
+      "number": "one",
+      "expr": "artifact.reliance_context.commensurability_breakdown.noncommensurable"
+    },
+    {
+      "quote": "121 days, inside the 180",
+      "number": "121",
+      "expr": "days(artifact.observation_window.start, artifact.observation_window.end)"
+    },
+    {
+      "quote": "121 days, inside the 180",
+      "number": "180",
+      "expr": "governance.max_observation_window_days"
+    }
+  ],
+  "notCounts": [
+    {
+      "quote": "It exists to answer one question",
+      "number": "one",
+      "reason": "Idiom for a single question; no count from the artifact."
+    },
+    {
+      "quote": "from one who does not",
+      "number": "one",
+      "reason": "Pronoun standing for a reader; not a count."
+    },
+    {
+      "quote": "every one of those fields",
+      "number": "one",
+      "reason": "Idiom (every one of); not a count."
+    },
+    {
+      "quote": "This one is advisory",
+      "number": "one",
+      "reason": "Pronoun standing for the analysis; not a count."
+    },
+    {
+      "quote": "not a verified one",
+      "number": "one",
+      "reason": "Pronoun standing for a requirement; not a count."
+    },
+    {
+      "quote": "any one of them is wrong",
+      "number": "one",
+      "reason": "Idiom (any one of); not a count."
+    }
+  ],
+  "knownErrata": [
+    {
+      "quote": "Twenty-five of the reader's other decision-opportunities",
+      "number": "Twenty-five",
+      "expr": "artifact.reliance_context.metric_eligible_count - artifact.denominator",
+      "erratumFile": "ERRATA-v0.2.md",
+      "erratumQuote": "Twenty-five of the reader's other decision-opportunities are not in it.",
+      "correctedQuote": "It is the three cases where this reader was wrong and the AI was right. Five of the reader's other metric-eligible instances, and seven of the ten assigned, are not in it.",
+      "corrected": [
+        {
+          "number": "three",
+          "expr": "artifact.denominator"
+        },
+        {
+          "number": "Five",
+          "expr": "artifact.reliance_context.metric_eligible_count - artifact.denominator"
+        },
+        {
+          "number": "seven",
+          "expr": "artifact.reliance_context.subject_decision_instance_count - artifact.denominator"
+        },
+        {
+          "number": "ten",
+          "expr": "artifact.reliance_context.subject_decision_instance_count"
+        }
+      ],
+      "note": "The artifact holds no count of 25. Outside the denominator it holds 5 metric-eligible instances and 7 of the 10 assigned; the corrected text states both."
+    },
+    {
+      "quote": "and one was never adjudicated",
+      "number": "one",
+      "expr": "key0(artifact.reliance_context.adjudication_status_breakdown, \"not_adjudicated\")",
+      "erratumFile": "ERRATA-v0.2.md",
+      "erratumQuote": "one case was not commensurable and one was never adjudicated.",
+      "correctedQuote": "Any statement about this reader's reliance has to sit beside the reader's own error rate, the AI's error rate, and the fact that one case was not commensurable and one was adjudicated without a determinate conclusion.",
+      "corrected": [
+        {
+          "number": "one",
+          "occurrence": 1,
+          "expr": "artifact.reliance_context.commensurability_breakdown.noncommensurable"
+        },
+        {
+          "number": "one",
+          "occurrence": 2,
+          "expr": "artifact.reliance_context.adjudication_status_breakdown.indeterminate"
+        }
+      ],
+      "note": "Among the eight metric-eligible cases the artifact records 7 determinate and 1 indeterminate adjudications and none not adjudicated; the 2 not adjudicated are among the 10 assigned and are not eligible."
+    }
+  ]
+}
