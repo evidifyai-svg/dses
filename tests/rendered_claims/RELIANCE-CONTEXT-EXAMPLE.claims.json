@@ -33,12 +33,6 @@
       "expr": "artifact.denominator"
     },
     {
-      "quote": "2026-06-30, 121 days",
-      "number": "121",
-      "expr": "days(artifact.observation_window.start, artifact.observation_window.end)",
-      "note": "Whole days elapsed from start to end, the way timedelta.days and the verifier's maturation and lag checks count days. The window ends at 23:59:59 on June 30, so the exact span is one second short of 122 days; the verifier's window check prints it as 122.00d, and a calendar count of March 1 to June 30 inclusive is 122."
-    },
-    {
       "quote": "95% interval (Wilson): 6% to 79%",
       "number": "95%",
       "expr": "pct1(artifact.interval.level)"
@@ -338,11 +332,6 @@
     },
     {
       "quote": "121 days, inside the 180",
-      "number": "121",
-      "expr": "days(artifact.observation_window.start, artifact.observation_window.end)"
-    },
-    {
-      "quote": "121 days, inside the 180",
       "number": "180",
       "expr": "governance.max_observation_window_days"
     }
@@ -427,6 +416,40 @@
         }
       ],
       "note": "Among the eight metric-eligible cases the artifact records 7 determinate and 1 indeterminate adjudications and none not adjudicated; the 2 not adjudicated are among the 10 assigned and are not eligible."
+    },
+    {
+      "quote": "2026-06-30, 121 days",
+      "number": "121",
+      "expr": "caldays(artifact.observation_window.start, artifact.observation_window.end)",
+      "erratumFile": "ERRATA-v0.2.md",
+      "erratumQuote": "2026-03-01 to 2026-06-30, 121 days",
+      "correctedQuote": "2026-03-01 to 2026-06-30, 122 days",
+      "corrected": [
+        {
+          "number": "122",
+          "expr": "caldays(artifact.observation_window.start, artifact.observation_window.end)"
+        }
+      ],
+      "note": "Erratum 3. The window covers March 1 to June 30 inclusive, 122 calendar days; the verifier's window check reports 122.00 days. 121 is whole days elapsed."
+    },
+    {
+      "quote": "121 days, inside the 180",
+      "number": "121",
+      "expr": "caldays(artifact.observation_window.start, artifact.observation_window.end)",
+      "erratumFile": "ERRATA-v0.2.md",
+      "erratumQuote": "121 days, inside the 180 authorised by governance.",
+      "correctedQuote": "122 days, inside the 180 authorised by governance.",
+      "corrected": [
+        {
+          "number": "122",
+          "expr": "caldays(artifact.observation_window.start, artifact.observation_window.end)"
+        },
+        {
+          "number": "180",
+          "expr": "governance.max_observation_window_days"
+        }
+      ],
+      "note": "Erratum 3, second place the window length appears."
     }
   ]
 }
