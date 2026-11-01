@@ -1,9 +1,87 @@
 # ERRATA: DSES v0.2.0
 
 **Applies to:** DSES v0.2.0, minted October 18, 2026.
-**Status:** No errata as of the mint date. An objection from a named expert
-review received after the mint that changes published text is recorded here
-under the process below.
+**Status:** Two errata recorded November 1, 2026, both against
+`RELIANCE-CONTEXT-EXAMPLE.md`, and one open methods question recorded as not an
+erratum. v0.2.0 text remains published unaltered; these
+errata travel with it. The process for recording them is below the entries.
+
+## Erratum 1: The count of decision-opportunities outside the RAIR denominator
+
+**Section and original text.** `RELIANCE-CONTEXT-EXAMPLE.md`, "What the context
+changes," third paragraph: "It is the three cases where this reader was wrong
+and the AI was right. Twenty-five of the reader's other decision-opportunities
+are not in it."
+
+**Problem.** The artifact the example renders
+(`examples/derived/derived-rair-subject-0417-v1.json`) records 10 assigned
+decision instances, 8 metric-eligible, and a denominator of 3. Nothing in it
+supports twenty-five. A reader would reasonably conclude the subject had about
+28 decision-opportunities in the window, and that the denominator was a far
+smaller slice of the reader's work than it is. The verifier recomputes every
+figure in the artifact; it does not check numbers written in the prose around
+it, and this one was not drawn from the artifact.
+
+**Corrected text.** "It is the three cases where this reader was wrong and the
+AI was right. Five of the reader's other metric-eligible instances, and seven of
+the ten assigned, are not in it."
+
+**Consequential edits.** None in the artifact or the specification. The next
+version adds a check that every count stated in a rendered example is present in
+the artifact it renders.
+
+**Why an erratum.** The example is the part of the release addressed to review
+bodies and counsel. A wrong denominator in the one document written to show how
+a denominator must travel is the failure the reliance context exists to prevent.
+
+## Erratum 2: "Never adjudicated" for a case that was adjudicated
+
+**Section and original text.** `RELIANCE-CONTEXT-EXAMPLE.md`, "What the context
+changes," fourth paragraph: "Any statement about this reader's reliance has to
+sit beside the reader's own error rate, the AI's error rate, and the fact that
+one case was not commensurable and one was never adjudicated."
+
+**Problem.** The paragraph describes the eight metric-eligible cases. Among them
+the artifact records adjudication status as 7 determinate and 1 indeterminate,
+and Annex B of the specification describes that case as "an indeterminate
+adjudication": it was
+adjudicated, and the panel reached no determinate conclusion. The two cases the
+artifact counts as not adjudicated are among the ten assigned instances and are
+not metric-eligible. A reader would reasonably conclude that one eligible case
+lacked adjudication altogether, which conflates two categories the schema keeps
+apart.
+
+**Corrected text.** "Any statement about this reader's reliance has to sit
+beside the reader's own error rate, the AI's error rate, and the fact that one
+case was not commensurable and one was adjudicated without a determinate
+conclusion."
+
+**Consequential edits.** None in the artifact or the specification.
+
+**Why an erratum.** Indeterminate and not adjudicated are distinct categories
+in the reliance context precisely so that a case the panel could not resolve is
+not mistaken for a case nobody reviewed. The example blurred the distinction it
+exists to show.
+
+## Not an erratum: the interval paragraphs
+
+The same critique also questioned the example's statement that the Wilson
+interval's independence assumption is violated for this artifact and that the
+interval is optimistic. That statement follows Section 8.12, which says an
+individual-level metric pools repeated instances within one professional, that
+the interval is then computed under a violated assumption and will generally
+understate uncertainty, and that a reader holding the design counts can inflate
+it. The example is consistent with the normative text, so there is no erratum
+against the example. Whether Section 8.12 should treat the subject of a
+subject-scoped metric as a cluster at all is a methods question for named
+statistical review, recorded here so it is not lost, and it is not decided by
+this file.
+
+**Provenance of both findings.** Found by the author on November 1, 2026: the
+first while checking an AI-assisted critique of the published example against
+the artifact, the second while writing a check that ties every count in the
+example to the artifact it renders. No named expert reviewer is credited
+because none made either finding.
 
 ## Why this file exists before it has content
 
