@@ -35,6 +35,8 @@ integer and decimal constants, + - * /, unary minus, and these functions:
   pct1(x)        100 * x, a proportion written as a percentage
   rnd(x)         x rounded to a whole number, halves up
   days(a, b)     whole days elapsed from instant a to instant b
+  caldays(a, b)  calendar days from the date of a to the date of b,
+                 both dates included
   key(o, name)   field name of o, for names that are not identifiers
   key0(o, name)  as key, but an absent field reads as 0; the only way to
                  read an absence as zero, so that choice is visible
@@ -212,6 +214,7 @@ FUNCS = {
     "pct1": lambda x: 100.0 * x,
     "rnd": lambda x: float(math.floor(x + 0.5)),
     "days": lambda a, b: float((_parse_time(b) - _parse_time(a)).days),
+    "caldays": lambda a, b: float((_parse_time(b).date() - _parse_time(a).date()).days + 1),
     "key": _key,
     "key0": lambda obj, name: (obj.get(name, 0) if isinstance(obj, dict) else _key(obj, name)),
 }
@@ -453,7 +456,7 @@ def check_file(path: Path, root: Path = ROOT) -> Report:
             report.counts["corrections"] += len(claimed)
             report.known.append(f"{doc.label}: {stated!r} in {entry['quote']!r} disagrees with {entry['expr']} = "
                                 f"{computed:g}; recorded in {name}, whose corrected text agrees with the artifact "
-                                f"({len(claimed)} numbers)")
+                                f"({len(claimed)} number{'' if len(claimed) == 1 else 's'})")
 
     for i in range(len(doc.tokens)):
         if i not in covered:

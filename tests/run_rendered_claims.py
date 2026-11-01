@@ -87,10 +87,10 @@ def replace_once(old: str, new: str) -> Callable[[str], str]:
 shipped = crc.check_file(CLAIMS)
 c = shipped.counts
 expect("shipped claims pass", not shipped.failures, "; ".join(m for _, m in shipped.failures[:5]))
-expect("shipped claims carry exactly the two recorded errata", c["known_errata"] == 2, str(c))
+expect("shipped claims carry exactly the recorded errata (three errata, four places)", c["known_errata"] == 4, str(c))
 expect("every number in the shipped example is accounted for",
        c["claims"] + c["not_counts"] + c["known_errata"] == c["numbers"] and c["numbers"] > 0, str(c))
-expect("every number in both corrected texts is verified", c["corrections"] == 6, str(c))
+expect("every number in every corrected text is verified", c["corrections"] == 9, str(c))
 
 # ---- tokens, values, rounding, expressions ----------------------------------
 
@@ -109,6 +109,8 @@ for stated, computed, want in [("33%", 100 / 3, True), ("34%", 100 / 3, False), 
 expect("rnd rounds halves up", crc.evaluate("rnd(2.5)", {}) == 3 and crc.evaluate("rnd(pct1(0.7923))", {}) == 79)
 expect("days counts whole days elapsed",
        crc.evaluate("days('2026-03-01T00:00:00Z', '2026-06-30T23:59:59Z')", {}) == 121)
+expect("caldays counts calendar days with both dates included",
+       crc.evaluate("caldays('2026-03-01T00:00:00Z', '2026-06-30T23:59:59Z')", {}) == 122)
 expect("key0 reads an absent count as zero", crc.evaluate("key0(x, 'absent')", {"x": {}}) == 0)
 for bad in ["__import__('os').getcwd()", "x.__class__", "open('f')", "pct(1, 0)", "x.y", "[1][0]", "'a' + 'b'"]:
     try:

@@ -1,7 +1,7 @@
 # ERRATA: DSES v0.2.0
 
 **Applies to:** DSES v0.2.0, minted October 18, 2026.
-**Status:** Two errata recorded November 1, 2026, both against
+**Status:** Three errata recorded November 1, 2026, all against
 `RELIANCE-CONTEXT-EXAMPLE.md`, and one open methods question recorded as not an
 erratum. v0.2.0 text remains published unaltered; these
 errata travel with it. The process for recording them is below the entries.
@@ -63,6 +63,34 @@ in the reliance context precisely so that a case the panel could not resolve is
 not mistaken for a case nobody reviewed. The example blurred the distinction it
 exists to show.
 
+## Erratum 3: The length of the observation window
+
+**Section and original text.** `RELIANCE-CONTEXT-EXAMPLE.md`, "The same artifact,
+as DSES requires it to travel": "Observation window: 2026-03-01 to 2026-06-30,
+121 days". And "What the context changes," sixth paragraph: "121 days, inside
+the 180 authorised by governance."
+
+**Problem.** The artifact's window runs from the first instant of March 1 to the
+last second of June 30, 2026. That is 122 calendar days, March 1 through June 30
+inclusive, and the reference verifier's window check, which works in exact
+seconds, reports the span as 122.00 days. The example's 121 is the number of
+whole days elapsed between the two instants, one second short of 122. A reader
+who checks the stated dates against a calendar counts 122 and would reasonably
+conclude that the example miscounted its own window, in the document written to
+show how a figure must travel. No conclusion changes: either length is inside
+the 180-day maximum the governance artifact authorizes.
+
+**Corrected text.** "Observation window: 2026-03-01 to 2026-06-30, 122 days" and
+"122 days, inside the 180 authorised by governance."
+
+**Consequential edits.** None in the artifact or the specification. The
+rendered-claims check counts the window in calendar days, both dates included.
+
+**Why an erratum.** The published figure is not the one the verifier reports
+for the same window. An erratum is required when published text asserts
+something the implementation does not establish, whether or not anyone outside
+noticed, and a note on how days were counted would leave the number standing.
+
 ## Not an erratum: the interval paragraphs
 
 The same critique also questioned the example's statement that the Wilson
@@ -77,11 +105,11 @@ subject-scoped metric as a cluster at all is a methods question for named
 statistical review, recorded here so it is not lost, and it is not decided by
 this file.
 
-**Provenance of both findings.** Found by the author on November 1, 2026: the
-first while checking an AI-assisted critique of the published example against
-the artifact, the second while writing a check that ties every count in the
-example to the artifact it renders. No named expert reviewer is credited
-because none made either finding.
+**Provenance of the three findings.** Found by the author on November 1, 2026:
+the first while checking an AI-assisted critique of the published example
+against the artifact, the second and third while writing a check that ties every
+count in the example to the artifact it renders. No named expert reviewer is
+credited because none made any of the three findings.
 
 ## Why this file exists before it has content
 
