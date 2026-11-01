@@ -2,7 +2,8 @@
 
 **Applies to:** DSES v0.2.0, minted October 18, 2026.
 **Status:** Two errata recorded November 1, 2026, both against
-`RELIANCE-CONTEXT-EXAMPLE.md`. v0.2.0 text remains published unaltered; these
+`RELIANCE-CONTEXT-EXAMPLE.md`, and one open methods question recorded as not an
+erratum. v0.2.0 text remains published unaltered; these
 errata travel with it. The process for recording them is below the entries.
 
 ## Erratum 1: The count of decision-opportunities outside the RAIR denominator
@@ -33,59 +34,54 @@ the artifact it renders.
 bodies and counsel. A wrong denominator in the one document written to show how
 a denominator must travel is the failure the reliance context exists to prevent.
 
-## Erratum 2: The claim that the Wilson interval's independence assumption is violated
+## Erratum 2: "Never adjudicated" for a case that was adjudicated
 
-**Section and original text.** `RELIANCE-CONTEXT-EXAMPLE.md`, under "Design
-structure of the denominator, and panel agreement": "One reader and three cases
-behind three instances is a repeated-measures structure, not three independent
-trials, and the artifact says so rather than leaving a committee to assume
-otherwise. The interval below is computed under an independence assumption
-these counts show to be violated."
+**Section and original text.** `RELIANCE-CONTEXT-EXAMPLE.md`, "What the context
+changes," fourth paragraph: "Any statement about this reader's reliance has to
+sit beside the reader's own error rate, the AI's error rate, and the fact that
+one case was not commensurable and one was never adjudicated."
 
-And under "What the context changes," second paragraph: "**And the interval is
-optimistic.** The three instances come from one reader, so they are clustered
-rather than independent, and the Wilson interval assumes independence. Six to
-seventy-nine per cent is the narrow reading. The design counts are disclosed so
-that a statistician receiving this artifact can inflate the interval
-accordingly instead of having to ask for the raw data first."
+**Problem.** The paragraph describes the eight metric-eligible cases. Among them
+the artifact records adjudication status as 7 determinate and 1 indeterminate,
+and Annex B of the specification describes that case as "an indeterminate
+adjudication": it was
+adjudicated, and the panel reached no determinate conclusion. The two cases the
+artifact counts as not adjudicated are among the ten assigned instances and are
+not metric-eligible. A reader would reasonably conclude that one eligible case
+lacked adjudication altogether, which conflates two categories the schema keeps
+apart.
 
-**Problem.** The counts do not show the assumption is violated. With one reader
-and three distinct cases, the Wilson interval is a statement about this reader
-on cases drawn the way these were, and treating the three as exchangeable draws
-is the ordinary reading of a single-reader binomial interval. Clustering by
-reader matters when a rate is generalized across clinicians, which this artifact
-does not do. Whether the three cases are exchangeable depends on how cases were
-assigned, a sampling question the assignment artifact bears on and the design
-counts alone cannot settle. A reader would reasonably conclude that the interval
-is known to be too narrow and should be inflated. That conclusion is not
-supported.
+**Corrected text.** "Any statement about this reader's reliance has to sit
+beside the reader's own error rate, the AI's error rate, and the fact that one
+case was not commensurable and one was adjudicated without a determinate
+conclusion."
 
-**Corrected text.** First passage: "One reader and three cases behind three
-instances. The interval below treats the three as exchangeable draws from the
-cases this reader could have met under this assignment, which is the reading a
-binomial interval for one reader supports. It describes this reader on cases
-like these. It does not describe clinicians in general, and no estimate from one
-reader can."
+**Consequential edits.** None in the artifact or the specification.
 
-Second passage: "**And the interval is about this reader only.** Three instances
-from one reader support a statement about that reader on cases drawn the way
-these were. Whether the three are exchangeable depends on how cases were
-assigned, which the assignment artifact records and the counts alone cannot
-settle. The design counts are disclosed so that a statistician receiving this
-artifact can choose the sampling model, and widen the interval if the assignment
-warrants it, without first asking for the raw data."
+**Why an erratum.** Indeterminate and not adjudicated are distinct categories
+in the reliance context precisely so that a case the panel could not resolve is
+not mistaken for a case nobody reviewed. The example blurred the distinction it
+exists to show.
 
-**Consequential edits.** None in the artifact, the schema, or the verifier. The
-specification's requirement that design structure be disclosed stands; only the
-example's interpretation of it changes.
+## Not an erratum: the interval paragraphs
 
-**Why an erratum.** The original text asserted a statistical fact the design
-counts do not establish. The honest-labeling rule applies to statements about
-uncertainty as much as to statements about integrity.
+The same critique also questioned the example's statement that the Wilson
+interval's independence assumption is violated for this artifact and that the
+interval is optimistic. That statement follows Section 8.12, which says an
+individual-level metric pools repeated instances within one professional, that
+the interval is then computed under a violated assumption and will generally
+understate uncertainty, and that a reader holding the design counts can inflate
+it. The example is consistent with the normative text, so there is no erratum
+against the example. Whether Section 8.12 should treat the subject of a
+subject-scoped metric as a cluster at all is a methods question for named
+statistical review, recorded here so it is not lost, and it is not decided by
+this file.
 
-**Provenance of both findings.** Found by the author on November 1, 2026, while
-checking an AI-assisted critique of the published example against the artifact.
-No named expert reviewer is credited because none made the finding.
+**Provenance of both findings.** Found by the author on November 1, 2026: the
+first while checking an AI-assisted critique of the published example against
+the artifact, the second while writing a check that ties every count in the
+example to the artifact it renders. No named expert reviewer is credited
+because none made either finding.
 
 ## Why this file exists before it has content
 
