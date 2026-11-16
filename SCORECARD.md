@@ -23,3 +23,8 @@ this table on purpose.
 
 `FOUNDING-IMPLEMENTERS.md` defines the public artifacts required before any of
 the implementation, deployment, report, or transcript counts move.
+
+The evidence behind those counts is published in `registry/`, and named expert
+reviews in `docs/reviews/`. `registry/tools/check_registry.py` derives each
+count from the published files and fails when this table says anything else,
+so a count moves only in the pull request that publishes its evidence.
