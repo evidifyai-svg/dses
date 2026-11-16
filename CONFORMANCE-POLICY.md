@@ -1,7 +1,8 @@
 # DSES Conformance Policy
 
-Version 1.0, August 2026. This policy governs use of the phrase "DSES
-Conformant" and equivalents.
+Version 1.1, November 2026. This policy governs use of the phrase "DSES
+Conformant" and equivalents. Version 1.1 names where the registry lives and how
+to submit to it, and changes no requirement of version 1.0 (August 2026).
 
 ## Anyone may implement
 
@@ -29,6 +30,12 @@ Conformant" only when both of the following hold:
    maintained by Evidify LLC: the gate output, the specification version and
    archive hash verified against, and the environment record (OS, runtime,
    pinned dependency versions).
+
+The registry is the `registry/` directory of the specification repository.
+`registry/README.md` gives the transcript format, a tool that records one
+(`registry/tools/make_transcript.py`), and the submission steps. A transcript
+is listed under `registry/transcripts/` only when the recorded run exited with
+zero failures against the published archive digest for the named version.
 
 Registry listing is free. The registry exists so that a conformance claim is
 always checkable by a third party against a named transcript, which is the

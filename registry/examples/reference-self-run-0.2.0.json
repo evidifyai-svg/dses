@@ -1,0 +1,42 @@
+{
+  "transcript_format": "dses-registry-transcript/1",
+  "implementation": "reference",
+  "organization": "Evidify LLC (reference implementation)",
+  "accountable_lead": "Joshua M. Henderson, Ph.D.",
+  "dses_version": "0.2.0",
+  "claim_scope": "Format example only. Reference implementation verifying its own shipped example package",
+  "specification_archive": {
+    "file": "dses-v0.2.0-publication.zip",
+    "sha256": "a4a9b7f1beb0434bf55a48a581447c53d904e0930e59aac53a0c79c25b3375a1"
+  },
+  "subjects": [
+    {
+      "file": "example-package.json",
+      "sha256": "3d2ddde404069d59b3ab9c82b47bd73e2b8b828e0f38b7969155a8f0ed7ce6aa"
+    }
+  ],
+  "command": [
+    "python3",
+    "scripts/dses_verify.py",
+    "--anchor-trust",
+    "examples/anchor-trust-store.json",
+    "--quiet"
+  ],
+  "exit_code": 0,
+  "started_utc": "2026-11-16T19:12:20Z",
+  "finished_utc": "2026-11-16T19:12:20Z",
+  "output_sha256": "1ee2d43580db5ef72f048dcdebe572b460b2086822fa2f8dcd623927c242c48a",
+  "output": "\n2205 checks, 0 failures\n\nPROFILE: OL\n  PASS  membership commitment\n  PASS  all members tracked\n  PASS  no duplicate members\n  PASS  terminal linkage accounting\n  PASS  v0.1 sequences resolve and verify\n  PASS  mature cases adjudicated\n  PASS  status recorded for every linked case\n  PASS  checkpoint coverage meets policy\n  PASS  metrics recompute from snapshot\n  PASS  snapshot per published metric\n  PASS  derived artifacts resolve\n  PASS  definitions resolve\n\nOL CONFORMANT\n\nNormative attestations required by CLAIMS-CLASSIFICATION\n(requirements no verifier can establish; a conformance claim MUST NOT assert them):\n  [A] 3.2e  No copy of a destroyed nonce survives\n  [A] 3.2g  Hiding nonce was unpredictably generated\n  [A] 3.6e  Key custody\n  [A] 10.2  An I2-or-above claimant makes a verifier and sample export available\n  [A] 10.3  A deployment publishes its Evidentiary Considerations section\n  [A] 5.1d  Manifest not curated before commitment\n  [A] 6.3g  The originating v0.1 deployment's own integrity class\n  [A] 6.4  Linkage accuracy rates correct\n  [A] 6.11e  Adjudicators actually blinded\n  [A] 8.12  Interval independence assumptions, agreement-statistic limits, and exclusion informativeness are stated; their adequacy for any design is not mechanically established\n  [A] 8.8  How well an estimate characterizes reality\n  [A] 2.2b  Implementation correspondence is not asserted on the strength of a verifying record (A8): a signed, chained, anchored package can faithfully preserve a false event emitted upstream\n  [A] 2.3  Claim tiering used correctly in prose\n  [A] 2.4  Threat model stated and claims scoped to it\n  [A] 9.3p  Case-mix disclosure is established; adjustment adequacy and any risk-adjusted claim are not mechanically established\n  [A] 9.3q  Privacy basis and professional identity mode are declared; validity of the legal basis is external\n  [A] 9.3r  Pseudonymous subject binding does not establish the civil identity of the professional\n  [A] 9.3k  Discoverability, privilege, legal usability, legal authority, and sufficiency under external law are not established by DSES\n  [A] 9.4  That a metric is used only for its declared purpose by its authorised recipients\n  [A] 9.4b  That a high-stakes review body actually performs the declared case review, notice/access, and appeal safeguards\n  [A] 9.5  Adequacy of case-mix adjustment or any empirical/Bayesian reference distribution as a characterization of professional practice\n  [A] 11  No conformant calculation depends on an unincorporated extension\n  [A] 14  A conformant package makes the ten Annex E reconstruction questions answerable from the package plus an external trust root\n\nLimitations of THIS verification invocation (not normative attestations):\n  [-] Anchor authority honesty and non-equivocation (A7) are trust-policy assumptions\n  [-] No separately held witness supplied: rewrite detection is limited to the verified external-anchor coverage map; unanchored suffixes establish internal consistency only (ERRATA-v0.1 Erratum 1)\n  [-] Recomputation called dses_derivation.recompute_metric, the SAME orchestration the generator called, over the same loaded rule modules and the same dses_core canonicalization. This establishes that the declared rules reproduce the registered counts; it does not establish agreement between two independently written implementations (claim 7.3c)\n  [-] RFC 3161 anchor profiles, if present, were not parsed and were not credited\n",
+  "environment": {
+    "os": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "python": "3.13.18",
+    "packages": {
+      "jcs": "0.2.1",
+      "jsonschema": "4.26.0",
+      "cryptography": "50.0.2"
+    },
+    "extra": {}
+  },
+  "limitations": "Self-run of the reference verifier on the reference example. It shows the transcript format and establishes nothing about any outside implementation."
+}

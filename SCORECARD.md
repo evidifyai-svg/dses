@@ -10,7 +10,7 @@ are for August 2027.
 | Real deployments | 0 (1 reader study anchoring, Brown/Emory) | 3 |
 | Implementing organizations | 0 | 5 |
 | Named external expert reviewers (crypto, biostat, health law) | 0 human (2 AI deep reviews published; six experts asked before the v0.2.0 mint, none completed; one in-person statistics review in progress with no written attestation) | 3 |
-| Interoperability reports | 0 | 5 |
+| Implementation or interoperability reports | 0 | 5 |
 | Conformance transcripts in registry | 0 | 3 |
 | FHIR mapping | not started | draft IG |
 | RFC 3161 profile parsing | pending | implemented |
@@ -23,3 +23,11 @@ this table on purpose.
 
 `FOUNDING-IMPLEMENTERS.md` defines the public artifacts required before any of
 the implementation, deployment, report, or transcript counts move.
+
+The evidence behind those counts is published in `registry/`, and named expert
+reviews in `docs/reviews/`. `registry/tools/check_registry.py` derives each
+count from the published files and fails when this table says anything else,
+so a count moves only in the pull request that publishes its evidence. The
+counting rules were added to `FOUNDING-IMPLEMENTERS.md` in November 2026 with
+every count still at zero. The reports row was relabeled then to match that
+document's existing definition; no count and no target changed.

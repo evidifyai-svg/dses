@@ -45,6 +45,53 @@ An implementation may report a failed or partial result. A well-documented
 failure can reveal an interoperability defect and still qualify as an
 implementation report, but it does not create a conformance transcript.
 
+## When a count moves
+
+Each count in `SCORECARD.md` is derived from files published in `registry/`, or
+in `docs/reviews/` for named reviews, and moves only in the pull request that
+publishes them. These rules were written in November 2026 while every count
+was zero, so that no count is defined after the evidence for it arrives.
+
+- **Implementing organizations.** One per named organization with a published
+  entry whose own staff built or maintain an emitter, adapter, or verifier,
+  whether independently engineered or built on the reference code, and whatever
+  the verification result. An organization that supplies readers, cases, or a
+  site to a study run on Evidify infrastructure is a study site, not an
+  implementing organization.
+- **Independent implementations.** A published entry whose implementation was
+  engineered and is maintained outside Evidify, reuses no reference emitter
+  code, and names an accountable human technical lead. Use of AI tools is
+  disclosed in the entry and does not by itself disqualify an implementation.
+  An attempt with no accountable human engineer is not counted.
+- **Real deployments.** A published entry with a bounded workflow in which real
+  actors, not test or synthetic sessions, produced records under a named
+  version of the DSES specification. The entry states the setting (reader study, acceptance test, or
+  production passive logging), the dates of the first and last record, and an
+  aggregate record count. The count is of workflows, not emitters. A deployment
+  that runs on the reference implementation counts as a deployment, is labeled
+  as using the reference emitter, and moves no implementation or organization
+  count. A study that is designed, approved, or loaded with cases but has
+  recorded no real session is anchoring, not a deployment.
+- **Implementation or interoperability reports.** One per report published
+  under `registry/reports/` from the templates there. A report of a failed or
+  partial result counts. The scorecard row read "Interoperability reports"
+  through October 2026 while this document defined the target as five
+  implementation or interoperability reports; the row now carries this
+  document's wording, and the target is unchanged.
+- **Conformance transcripts.** One per transcript listed under
+  `registry/transcripts/`, which requires both conditions of
+  `CONFORMANCE-POLICY.md`. A recorded run with failures is evidence for an
+  implementation report and is not a conformance transcript.
+- **Named expert reviews.** One per attestation published in `docs/reviews/`
+  under the reviewer's name. An attestation with objections counts. A review in
+  progress, or one given only in conversation, does not. Any relationship
+  between the reviewer and the author or Evidify LLC is stated in the
+  attestation itself, so that a reader can judge for themselves. The count is
+  of named reviews and is not a statement about any reviewer's independence.
+
+`registry/tools/check_registry.py` applies these rules to the published files
+and fails when the scorecard disagrees.
+
 ## Participation boundaries
 
 - No patient-level data needs to be public.
