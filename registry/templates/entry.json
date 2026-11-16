@@ -1,0 +1,37 @@
+{
+  "slug": "",
+  "status": "published",
+  "organization": "",
+  "accountable_lead": "",
+  "contact": "",
+  "workflow": "",
+  "evidence_question": "",
+  "dses_version": "",
+  "capture_level": "",
+  "integrity_class": "",
+  "implementation": {
+    "kind": "emitter",
+    "language": "",
+    "source_location": "",
+    "independence": "independent",
+    "reference_code_reused": "none",
+    "maintained_by": "",
+    "ai_assistance": ""
+  },
+  "deployment": {
+    "status": "none",
+    "setting": "",
+    "first_record_date": "",
+    "last_record_date": "",
+    "record_count_aggregate": null,
+    "emitter": "own"
+  },
+  "evidence_package": {
+    "location": "",
+    "sha256": "",
+    "data_class": "synthetic"
+  },
+  "reports": [],
+  "transcripts": [],
+  "limitations": ""
+}

@@ -15,6 +15,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Full release gate
         run: bash run_all.sh
+      - name: Registry agrees with the scorecard
+        run: |
+          python3 registry/tools/check_registry.py --self-test
+          python3 registry/tools/check_registry.py
       - name: Manifest integrity
         run: |
           python3 - << 'PY'

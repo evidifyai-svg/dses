@@ -1,0 +1,8 @@
+{
+  "_comment": "Published DSES specification archives a transcript may be verified against. The digest is the one carried in the annotated release tag. A version not listed here is added by pull request with the tag that carries its digest.",
+  "0.2.0": {
+    "tag": "v0.2.0",
+    "file": "dses-v0.2.0-publication.zip",
+    "sha256": "a4a9b7f1beb0434bf55a48a581447c53d904e0930e59aac53a0c79c25b3375a1"
+  }
+}
